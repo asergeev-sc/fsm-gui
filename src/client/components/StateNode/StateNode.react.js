@@ -76,7 +76,7 @@ class StateNode extends Component {
 
     return (
       <Draggable
-        grid={[isSnap ? snapGridStep : 0, isSnap ? snapGridStep : 0]}
+        grid={isSnap ? [snapGridStep, snapGridStep] : null}
       >
         <g>
           <rect
