@@ -21,13 +21,16 @@ StateNode is
   <StateNode
     name="State_0"
     code="0"
-    x={20}
-    y={20}
+    x={_scope.state.x}
+    y={_scope.state.y}
     isFinalState={true}
     isHighlighted={true}
-    isSnap={true}
+    isSnap={false}
     onClick={() => console.log('onClick')}
     onDoubleClick={() => console.log('onDoubleClick')}
+    onDragStart={(e, data) => console.log('DragStart', e, data)} 
+    onDragStop={(e, data) => console.log('DragStop', e, data)} 
+    onDrag={_scope.handleDrag.bind(_scope)} 
   />
 </svg>
 

@@ -12,7 +12,17 @@ export default
 class StateNodeScope extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      x: 20,
+      y: 20
+    };
+  }
+
+  handleDrag(e, draggableData) {
+    this.setState({
+      x: this.state.x + draggableData.deltaX,
+      y: this.state.y + draggableData.deltaY
+    });
   }
 
   render() {

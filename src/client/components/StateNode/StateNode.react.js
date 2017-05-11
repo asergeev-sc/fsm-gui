@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import Draggable from 'react-draggable';
+import { DraggableCore } from 'react-draggable';
 import './StateNode.less';
 
 const propTypes = {
@@ -19,7 +19,10 @@ const propTypes = {
   isFinalState: PropTypes.bool,
   isSnap: PropTypes.bool,
   onClick: PropTypes.func,
-  onDoubleClick: PropTypes.func
+  onDoubleClick: PropTypes.func,
+  onDragStart: PropTypes.func,
+  onDragStop: PropTypes.func,
+  onDrag: PropTypes.func
 };
 const defaultProps = {
   entryActions: null,
@@ -36,11 +39,26 @@ const defaultProps = {
   isFinalState: false,
   isSnap: false,
   onClick: () => {},
-  onDoubleClick: () => {}
+  onDoubleClick: () => {},
+  onDragStart: () => {},
+  onDragStop: () => {},
+  onDrag: () => {}
 };
 
 export default
 class StateNode extends Component {
+  handleStart(e, data) {
+    this.props.onDragStart(e, data);
+  }
+
+  handleStop(e, data) {
+    this.props.onDragStop(e, data);
+  }
+
+  handleDrag(e, data) {
+    this.props.onDrag(e, data);
+  }
+
   render() {
     const {
       name,
@@ -59,7 +77,10 @@ class StateNode extends Component {
       isFinalState,
       isSnap,
       onClick,
-      onDoubleClick
+      onDoubleClick,
+      onDragStart,
+      onDragStop,
+      onDrag
     } = this.props;
 
     const finalStateCircle = isFinalState ? (
@@ -75,8 +96,12 @@ class StateNode extends Component {
     ) : null;
 
     return (
-      <Draggable
+      <DraggableCore
         grid={isSnap ? [snapGridStep, snapGridStep] : null}
+        onStart={this.handleStart.bind(this)}
+        onStop={this.handleStop.bind(this)}
+        onDrag={this.handleDrag.bind(this)}
+        position={{x: 0, y: 0}}
       >
         <g>
           <rect
@@ -103,8 +128,8 @@ class StateNode extends Component {
           <text
             x={x}
             y={y}
-            font-family="monospaced"
-            font-size="35"
+            fontFamily="monospace"
+            fontSize="16"
             alignmentBaseline="middle"
             textAnchor="middle"
           >
@@ -112,7 +137,7 @@ class StateNode extends Component {
           </text>
           {finalStateCircle}
         </g>
-      </Draggable>
+      </DraggableCore>
     );
   }
 }
