@@ -101,7 +101,6 @@ class StateNode extends Component {
         onStart={this.handleStart.bind(this)}
         onStop={this.handleStop.bind(this)}
         onDrag={this.handleDrag.bind(this)}
-        position={{x: 0, y: 0}}
       >
         <g>
           <rect

@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { DraggableCore } from 'react-draggable';
 import './Transition.less';
 
 const propTypes = {
@@ -80,30 +81,8 @@ class Transition extends Component {
         onStart={this.handleStart.bind(this)}
         onStop={this.handleStop.bind(this)}
         onDrag={this.handleDrag.bind(this)}
-        position={{x: 0, y: 0}}
       >
         <g>
-          <rect
-            x={x - radius}
-            y={y - radius}
-            width={radius * 2}
-            height={radius * 2}
-            fill="#fff"
-            stroke={isHighlighted ? highlightColor : 'none'}
-            strokeWidth={lineWidth}
-            onClick={onClick}
-            onDoubleClick={onDoubleClick}
-            onDrag={() => console.log('drag')}
-          />
-          <circle
-            cx={x}
-            cy={y}
-            r={radius}
-            fill="none"
-            stroke={color}
-            strokeWidth={lineWidth}
-            >
-          </circle>
           <text
             x={x}
             y={y}
