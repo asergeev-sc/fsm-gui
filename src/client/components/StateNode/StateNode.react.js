@@ -17,7 +17,7 @@ const propTypes = {
   y: PropTypes.number,
   isHighlighted: PropTypes.bool,
   isFinalState: PropTypes.bool,
-  isSnapGrid: PropTypes.bool,
+  isSnap: PropTypes.bool,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func
 };
@@ -34,7 +34,7 @@ const defaultProps = {
   y: 0,
   isHighlighted: false,
   isFinalState: false,
-  isSnapGrid: false,
+  isSnap: false,
   onClick: () => {},
   onDoubleClick: () => {}
 };
@@ -57,7 +57,7 @@ class StateNode extends Component {
       y,
       isHighlighted,
       isFinalState,
-      isSnapGrid,
+      isSnap,
       onClick,
       onDoubleClick
     } = this.props;
@@ -76,7 +76,7 @@ class StateNode extends Component {
 
     return (
       <Draggable
-        grid={[snapGridStep, snapGridStep]}
+        grid={[isSnap ? snapGridStep : 0, isSnap ? snapGridStep : 0]}
       >
         <g>
           <rect
