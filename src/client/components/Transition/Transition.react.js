@@ -14,7 +14,6 @@ const propTypes = {
   pointsColor2: PropTypes.string,
   pointSize: PropTypes.number,
   color: PropTypes.string,
-  highlightColor: PropTypes.string,
   snapGridStep: PropTypes.number,
   bezier: PropTypes.arrayOf(PropTypes.number),
   isHighlighted: PropTypes.bool,
@@ -23,12 +22,11 @@ const propTypes = {
   onBezierChange: PropTypes.func
 };
 const defaultProps = {
-  lineWidth: 2,
+  lineWidth: 1,
   description: '',
   color: '#000',
   arrowPosition: 0,
-  arrowSize: 100,
-  highlightColor: "#f00",
+  arrowSize: 20,
   pointsColor1: "#0f0",
   pointsColor2: "#f00",
   pointSize: 8,
@@ -90,7 +88,6 @@ class Transition extends Component {
       arrowSize,
       lineWidth,
       color,
-      highlightColor,
       pointsColor1,
       pointsColor2,
       pointSize,
@@ -224,9 +221,8 @@ class Transition extends Component {
             stroke={color}
             markerStart={arrowPosition === 1 ? 'url(#fsm--transition__arrow)' : 'none'}
             markerEnd={arrowPosition === 2 ? 'url(#fsm--transition__arrow)' : 'none'}
+            strokeWidth={lineWidth}
           />
-          {bezierHelper1}
-          {bezierHelper2}
           <text
             x={inputTextPosition.x}
             y={inputTextPosition.y}
@@ -237,6 +233,8 @@ class Transition extends Component {
           >
             {input}
           </text>
+          {bezierHelper1}
+          {bezierHelper2}
         </g>
       </DraggableCore>
     );

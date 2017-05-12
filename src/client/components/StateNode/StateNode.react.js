@@ -28,7 +28,7 @@ const defaultProps = {
   entryActions: null,
   exitActions: null,
   radius: 60,
-  lineWidth: 2,
+  lineWidth: 1,
   color: '#000',
   highlightColor: "#f00",
   description: '',
@@ -108,7 +108,7 @@ class StateNode extends Component {
             y={y - radius}
             width={radius * 2}
             height={radius * 2}
-            fill="#fff"
+            fill="transparent"
             stroke={isHighlighted ? highlightColor : 'none'}
             strokeWidth={lineWidth}
             onClick={onClick}
