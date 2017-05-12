@@ -4,7 +4,8 @@ import Bezier from 'bezier-js';
 import './Transition.less';
 
 const propTypes = {
-  name: PropTypes.string.isRequired,
+  input: PropTypes.string.isRequired,
+  description: PropTypes.string,
   actions: PropTypes.arrayOf(PropTypes.string),
   lineWidth: PropTypes.number,
   pointsColor1: PropTypes.string,
@@ -12,7 +13,6 @@ const propTypes = {
   pointSize: PropTypes.number,
   color: PropTypes.string,
   highlightColor: PropTypes.string,
-  description: PropTypes.string,
   snapGridStep: PropTypes.number,
   bezier: PropTypes.arrayOf(PropTypes.number),
   isHighlighted: PropTypes.bool,
@@ -24,9 +24,9 @@ const propTypes = {
 };
 const defaultProps = {
   lineWidth: 2,
+  description: '',
   color: '#000',
   highlightColor: "#f00",
-  description: '',
   pointsColor1: "#0f0",
   pointsColor2: "#f00",
   pointSize: 8,
@@ -84,7 +84,7 @@ class Transition extends Component {
 
   render() {
     const {
-      name,
+      input,
       actions,
       lineWidth,
       color,
@@ -103,9 +103,9 @@ class Transition extends Component {
       onDoubleClick
     } = this.props;
 
-    console.log('bz:', bezier);
-
-    let d = new Bezier(...bezier).toSVG();
+    let curve = new Bezier(...bezier);
+    let d = curve.toSVG();
+    let inputTextPosition = curve.get(0.5);
 
     let bezierHelper1 = isShowBezierHelpers ? (
       <g>
@@ -114,6 +114,7 @@ class Transition extends Component {
           onDrag={this.handlePoint1Drag.bind(this)}
         >
           <rect
+            className="fsm--transition__point"
             x={bezier[0] - pointSize / 2 }
             y={bezier[1] - pointSize / 2}
             width={pointSize}
@@ -128,6 +129,7 @@ class Transition extends Component {
           onDrag={this.handlePoint2Drag.bind(this)}
           >
           <rect
+            className="fsm--transition__point"
             x={bezier[2] - pointSize / 2 }
             y={bezier[3] - pointSize / 2}
             width={pointSize}
@@ -155,6 +157,7 @@ class Transition extends Component {
           onDrag={this.handlePoint4Drag.bind(this)}
         >
           <rect
+            className="fsm--transition__point"
             x={bezier[6] - pointSize / 2 }
             y={bezier[7] - pointSize / 2}
             width={pointSize}
@@ -169,6 +172,7 @@ class Transition extends Component {
           onDrag={this.handlePoint3Drag.bind(this)}
         >
           <rect
+            className="fsm--transition__point"
             x={bezier[4] - pointSize / 2 }
             y={bezier[5] - pointSize / 2}
             width={pointSize}
@@ -204,6 +208,16 @@ class Transition extends Component {
           />
           {bezierHelper1}
           {bezierHelper2}
+          <text
+            x={inputTextPosition.x}
+            y={inputTextPosition.y}
+            fontFamily="monospace"
+            fontSize="16"
+            alignmentBaseline="middle"
+            textAnchor="middle"
+          >
+            {input}
+          </text>
         </g>
       </DraggableCore>
     );

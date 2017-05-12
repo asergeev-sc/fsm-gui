@@ -20,7 +20,7 @@ Transition is
     xmlns="http://www.w3.org/2000/svg"
   >
     <Transition
-      name="Transition_0"
+      input="Transition_0"
       isHighlighted={true}
       isSnap={false}
       onClick={() => console.log('onClick')}
