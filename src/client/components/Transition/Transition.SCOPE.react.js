@@ -12,7 +12,14 @@ export default
 class TransitionScope extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      bezier: [100,25 , 10,90 , 110,100 , 150,195]
+    };
+  }
+
+  handleBezierChange(bezier) {
+    console.log(bezier);
+    this.setState({ bezier });
   }
 
   render() {

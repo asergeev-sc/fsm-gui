@@ -1,58 +1,71 @@
 import React, { Component, PropTypes } from 'react';
 import { DraggableCore } from 'react-draggable';
+import Bezier from 'bezier-js';
 import './Transition.less';
 
 const propTypes = {
   name: PropTypes.string.isRequired,
   actions: PropTypes.arrayOf(PropTypes.string),
   lineWidth: PropTypes.number,
+  pointsColor1: PropTypes.string,
+  pointsColor2: PropTypes.string,
+  pointSize: PropTypes.number,
   color: PropTypes.string,
   highlightColor: PropTypes.string,
   description: PropTypes.string,
   snapGridStep: PropTypes.number,
-  x1: PropTypes.number,
-  y1: PropTypes.number,
-  x2: PropTypes.number,
-  y2: PropTypes.number,
+  bezier: PropTypes.arrayOf(PropTypes.number),
   isHighlighted: PropTypes.bool,
   isSnap: PropTypes.bool,
+  isShowBezierHelpers: PropTypes.bool,
+  onBezierChange: PropTypes.func,
   onClick: PropTypes.func,
-  onDoubleClick: PropTypes.func,
-  onDragStart: PropTypes.func,
-  onDragStop: PropTypes.func,
-  onDrag: PropTypes.func
+  onDoubleClick: PropTypes.func
 };
 const defaultProps = {
   lineWidth: 2,
   color: '#000',
   highlightColor: "#f00",
   description: '',
+  pointsColor1: "#0f0",
+  pointsColor2: "#f00",
+  pointSize: 8,
   snapGridStep: 30,
-  x1: 10,
-  y1: 10,
-  x2: 50,
-  y2: 50,
+  bezier: [100,25 , 10,90 , 110,100 , 150,195],
   isHighlighted: false,
   isSnap: false,
+  isShowBezierHelpers: false,
+  onBezierChange: () => {},
   onClick: () => {},
-  onDoubleClick: () => {},
-  onDragStart: () => {},
-  onDragStop: () => {},
-  onDrag: () => {}
+  onDoubleClick: () => {}
 };
 
 export default
 class Transition extends Component {
   handleStart(e, data) {
-    this.props.onDragStart(e, data);
+    console.log('start');
   }
 
   handleStop(e, data) {
-    this.props.onDragStop(e, data);
+    console.log('stop');
   }
 
   handleDrag(e, data) {
-    this.props.onDrag(e, data);
+    console.log('drag');
+  }
+
+  handlePoint1Drag(e, data) {
+    let bezier = [...this.props.bezier];
+    bezier[2] = bezier[2] + data.deltaX;
+    bezier[3] = bezier[3] + data.deltaY;
+    this.props.onBezierChange(bezier);
+  }
+
+  handlePoint2Drag(e, data) {
+    let bezier = [...this.props.bezier];
+    bezier[4] = bezier[4] + data.deltaX;
+    bezier[5] = bezier[5] + data.deltaY;
+    this.props.onBezierChange(bezier);
   }
 
   render() {
@@ -62,18 +75,95 @@ class Transition extends Component {
       lineWidth,
       color,
       highlightColor,
+      pointsColor1,
+      pointsColor2,
+      pointSize,
       description,
       snapGridStep,
-      x,
-      y,
+      bezier,
       isHighlighted,
       isSnap,
+      isShowBezierHelpers,
       onClick,
-      onDoubleClick,
-      onDragStart,
-      onDragStop,
-      onDrag
+      onBezierChange,
+      onDoubleClick
     } = this.props;
+
+    console.log('bz:', bezier);
+
+    let d = new Bezier(...bezier).toSVG();
+
+    let bezierHelper1 = isShowBezierHelpers ? (
+      <g>
+        <DraggableCore
+          grid={isSnap ? [snapGridStep, snapGridStep] : null}
+          onDrag={this.handlePoint1Drag.bind(this)}
+          >
+          <rect
+            x={bezier[2] - pointSize / 2 }
+            y={bezier[3] - pointSize / 2}
+            width={pointSize}
+            height={pointSize}
+            fill={pointsColor2}
+            stroke={pointsColor2}
+            strokeWidth={1}
+          />
+        </DraggableCore>
+        <line
+          x1={bezier[0]}
+          y1={bezier[1]}
+          x2={bezier[2]}
+          y2={bezier[3]}
+          stroke={pointsColor2}
+          strokeDasharray="3, 3"
+        />
+        <rect
+            x={bezier[0] - pointSize / 2 }
+            y={bezier[1] - pointSize / 2}
+            width={pointSize}
+            height={pointSize}
+            fill={pointsColor1}
+            stroke={pointsColor1}
+            strokeWidth={1}
+         />
+      </g>
+    ) : null;
+
+    let bezierHelper2 = isShowBezierHelpers ? (
+      <g>
+        <DraggableCore
+          grid={isSnap ? [snapGridStep, snapGridStep] : null}
+          onDrag={this.handlePoint2Drag.bind(this)}
+          >
+          <rect
+            x={bezier[4] - pointSize / 2 }
+            y={bezier[5] - pointSize / 2}
+            width={pointSize}
+            height={pointSize}
+            fill={pointsColor2}
+            stroke={pointsColor2}
+            strokeWidth={1}
+          />
+        </DraggableCore>
+        <line
+          x1={bezier[4]}
+          y1={bezier[5]}
+          x2={bezier[6]}
+          y2={bezier[7]}
+          stroke={pointsColor2}
+          strokeDasharray="3, 3"
+          />
+        <rect
+            x={bezier[6] - pointSize / 2 }
+            y={bezier[7] - pointSize / 2}
+            width={pointSize}
+            height={pointSize}
+            fill={pointsColor1}
+            stroke={pointsColor1}
+            strokeWidth={1}
+         />
+      </g>
+    ) : null;
 
     return (
       <DraggableCore
@@ -83,16 +173,13 @@ class Transition extends Component {
         onDrag={this.handleDrag.bind(this)}
       >
         <g>
-          <text
-            x={x}
-            y={y}
-            fontFamily="monospace"
-            fontSize="16"
-            alignmentBaseline="middle"
-            textAnchor="middle"
-          >
-            {name}
-          </text>
+          <path
+            d={d}
+            fill="none"
+            stroke={color}
+          />
+          {bezierHelper1}
+          {bezierHelper2}
         </g>
       </DraggableCore>
     );

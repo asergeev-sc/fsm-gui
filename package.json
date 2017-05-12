@@ -72,6 +72,7 @@
     "write-file-webpack-plugin": "^3.4.2"
   },
   "dependencies": {
+    "bezier-js": "2.2.3",
     "d3": "^4.8.0",
     "radium": "^0.18.2",
     "react-digraph": "^1.0.12",
