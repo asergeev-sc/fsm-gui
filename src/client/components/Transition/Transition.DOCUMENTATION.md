@@ -23,10 +23,9 @@ Transition is
       input="Transition_0"
       isHighlighted={true}
       isSnap={false}
-      onClick={() => console.log('onClick')}
       bezier={_scope.state.bezier}
       isShowBezierHelpers={true}
-  
+      arrowPosition={2}
       onBezierChange={_scope.handleBezierChange.bind(_scope)}
       onDoubleClick={() => console.log('onDoubleClick')}
     />

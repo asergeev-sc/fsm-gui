@@ -7,6 +7,8 @@ const propTypes = {
   input: PropTypes.string.isRequired,
   description: PropTypes.string,
   actions: PropTypes.arrayOf(PropTypes.string),
+  arrowPosition: PropTypes.number,
+  arrowSize: PropTypes.number,
   lineWidth: PropTypes.number,
   pointsColor1: PropTypes.string,
   pointsColor2: PropTypes.string,
@@ -18,14 +20,14 @@ const propTypes = {
   isHighlighted: PropTypes.bool,
   isSnap: PropTypes.bool,
   isShowBezierHelpers: PropTypes.bool,
-  onBezierChange: PropTypes.func,
-  onClick: PropTypes.func,
-  onDoubleClick: PropTypes.func
+  onBezierChange: PropTypes.func
 };
 const defaultProps = {
   lineWidth: 2,
   description: '',
   color: '#000',
+  arrowPosition: 0,
+  arrowSize: 100,
   highlightColor: "#f00",
   pointsColor1: "#0f0",
   pointsColor2: "#f00",
@@ -35,9 +37,7 @@ const defaultProps = {
   isHighlighted: false,
   isSnap: false,
   isShowBezierHelpers: false,
-  onBezierChange: () => {},
-  onClick: () => {},
-  onDoubleClick: () => {}
+  onBezierChange: () => {}
 };
 
 export default
@@ -86,6 +86,8 @@ class Transition extends Component {
     const {
       input,
       actions,
+      arrowPosition,
+      arrowSize,
       lineWidth,
       color,
       highlightColor,
@@ -98,9 +100,7 @@ class Transition extends Component {
       isHighlighted,
       isSnap,
       isShowBezierHelpers,
-      onClick,
-      onBezierChange,
-      onDoubleClick
+      onBezierChange
     } = this.props;
 
     let curve = new Bezier(...bezier);
@@ -193,6 +193,10 @@ class Transition extends Component {
       </g>
     ) : null;
 
+    let markerPath = arrowPosition === 1 ?
+      `M${arrowSize},0 L${arrowSize},${arrowSize / 2} L${0},${arrowSize / 4}` :
+      `M0,0 L0,${arrowSize / 2} L${arrowSize},${arrowSize / 4}`;
+
     return (
       <DraggableCore
         grid={isSnap ? [snapGridStep, snapGridStep] : null}
@@ -201,10 +205,25 @@ class Transition extends Component {
         onDrag={this.handleDrag.bind(this)}
       >
         <g>
+          <defs>
+            <marker
+              id="fsm--transition__arrow"
+              markerWidth={arrowSize}
+              markerHeight={arrowSize}
+              refX={arrowPosition === 1 ? arrowSize / 2 : arrowSize}
+              refY={arrowSize / 4}
+              orient="auto"
+              markerUnits="strokeWidth"
+            >
+              <path d={markerPath} fill={color} />
+            </marker>
+          </defs>
           <path
             d={d}
             fill="none"
             stroke={color}
+            markerStart={arrowPosition === 1 ? 'url(#fsm--transition__arrow)' : 'none'}
+            markerEnd={arrowPosition === 2 ? 'url(#fsm--transition__arrow)' : 'none'}
           />
           {bezierHelper1}
           {bezierHelper2}
