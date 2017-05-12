@@ -56,15 +56,29 @@ class Transition extends Component {
 
   handlePoint1Drag(e, data) {
     let bezier = [...this.props.bezier];
-    bezier[2] = bezier[2] + data.deltaX;
-    bezier[3] = bezier[3] + data.deltaY;
+    bezier[0] = bezier[0] + data.deltaX;
+    bezier[1] = bezier[1] + data.deltaY;
     this.props.onBezierChange(bezier);
   }
 
   handlePoint2Drag(e, data) {
     let bezier = [...this.props.bezier];
+    bezier[2] = bezier[2] + data.deltaX;
+    bezier[3] = bezier[3] + data.deltaY;
+    this.props.onBezierChange(bezier);
+  }
+
+  handlePoint3Drag(e, data) {
+    let bezier = [...this.props.bezier];
     bezier[4] = bezier[4] + data.deltaX;
     bezier[5] = bezier[5] + data.deltaY;
+    this.props.onBezierChange(bezier);
+  }
+
+  handlePoint4Drag(e, data) {
+    let bezier = [...this.props.bezier];
+    bezier[6] = bezier[6] + data.deltaX;
+    bezier[7] = bezier[7] + data.deltaY;
     this.props.onBezierChange(bezier);
   }
 
@@ -98,6 +112,20 @@ class Transition extends Component {
         <DraggableCore
           grid={isSnap ? [snapGridStep, snapGridStep] : null}
           onDrag={this.handlePoint1Drag.bind(this)}
+        >
+          <rect
+            x={bezier[0] - pointSize / 2 }
+            y={bezier[1] - pointSize / 2}
+            width={pointSize}
+            height={pointSize}
+            fill={pointsColor1}
+            stroke={pointsColor1}
+            strokeWidth={1}
+          />
+        </DraggableCore>
+        <DraggableCore
+          grid={isSnap ? [snapGridStep, snapGridStep] : null}
+          onDrag={this.handlePoint2Drag.bind(this)}
           >
           <rect
             x={bezier[2] - pointSize / 2 }
@@ -117,15 +145,6 @@ class Transition extends Component {
           stroke={pointsColor2}
           strokeDasharray="3, 3"
         />
-        <rect
-            x={bezier[0] - pointSize / 2 }
-            y={bezier[1] - pointSize / 2}
-            width={pointSize}
-            height={pointSize}
-            fill={pointsColor1}
-            stroke={pointsColor1}
-            strokeWidth={1}
-         />
       </g>
     ) : null;
 
@@ -133,8 +152,22 @@ class Transition extends Component {
       <g>
         <DraggableCore
           grid={isSnap ? [snapGridStep, snapGridStep] : null}
-          onDrag={this.handlePoint2Drag.bind(this)}
-          >
+          onDrag={this.handlePoint4Drag.bind(this)}
+        >
+          <rect
+            x={bezier[6] - pointSize / 2 }
+            y={bezier[7] - pointSize / 2}
+            width={pointSize}
+            height={pointSize}
+            fill={pointsColor1}
+            stroke={pointsColor1}
+            strokeWidth={1}
+          />
+        </DraggableCore>
+        <DraggableCore
+          grid={isSnap ? [snapGridStep, snapGridStep] : null}
+          onDrag={this.handlePoint3Drag.bind(this)}
+        >
           <rect
             x={bezier[4] - pointSize / 2 }
             y={bezier[5] - pointSize / 2}
@@ -152,16 +185,7 @@ class Transition extends Component {
           y2={bezier[7]}
           stroke={pointsColor2}
           strokeDasharray="3, 3"
-          />
-        <rect
-            x={bezier[6] - pointSize / 2 }
-            y={bezier[7] - pointSize / 2}
-            width={pointSize}
-            height={pointSize}
-            fill={pointsColor1}
-            stroke={pointsColor1}
-            strokeWidth={1}
-         />
+        />
       </g>
     ) : null;
 
