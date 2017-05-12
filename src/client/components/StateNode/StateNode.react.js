@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { DraggableCore } from 'react-draggable';
+import { getCirclePath } from '../../svg-utils';
 import './StateNode.less';
 
 const propTypes = {
@@ -84,15 +85,12 @@ class StateNode extends Component {
     } = this.props;
 
     const finalStateCircle = isFinalState ? (
-      <circle
-        cx={x}
-        cy={y}
-        r={radius - radius / 10 }
+      <path
+        d={getCirclePath(x, y, radius - radius / 10)}
         fill="none"
         stroke={color}
         strokeWidth={lineWidth}
-      >
-      </circle>
+      />
     ) : null;
 
     return (
@@ -115,15 +113,12 @@ class StateNode extends Component {
             onDoubleClick={onDoubleClick}
             onDrag={() => console.log('drag')}
           />
-          <circle
-            cx={x}
-            cy={y}
-            r={radius}
+          <path
+            d={getCirclePath(x, y, radius)}
             fill="none"
             stroke={color}
             strokeWidth={lineWidth}
-            >
-          </circle>
+          />
           <text
             x={x}
             y={y}
