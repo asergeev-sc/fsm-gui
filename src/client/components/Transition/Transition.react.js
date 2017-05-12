@@ -109,6 +109,14 @@ class Transition extends Component {
 
     let bezierHelper1 = isShowBezierHelpers ? (
       <g>
+        <line
+          x1={bezier[0]}
+          y1={bezier[1]}
+          x2={bezier[2]}
+          y2={bezier[3]}
+          stroke={pointsColor2}
+          strokeDasharray="3, 3"
+        />
         <DraggableCore
           grid={isSnap ? [snapGridStep, snapGridStep] : null}
           onDrag={this.handlePoint1Drag.bind(this)}
@@ -139,19 +147,19 @@ class Transition extends Component {
             strokeWidth={1}
           />
         </DraggableCore>
-        <line
-          x1={bezier[0]}
-          y1={bezier[1]}
-          x2={bezier[2]}
-          y2={bezier[3]}
-          stroke={pointsColor2}
-          strokeDasharray="3, 3"
-        />
       </g>
     ) : null;
 
     let bezierHelper2 = isShowBezierHelpers ? (
       <g>
+        <line
+          x1={bezier[4]}
+          y1={bezier[5]}
+          x2={bezier[6]}
+          y2={bezier[7]}
+          stroke={pointsColor2}
+          strokeDasharray="3, 3"
+        />
         <DraggableCore
           grid={isSnap ? [snapGridStep, snapGridStep] : null}
           onDrag={this.handlePoint4Drag.bind(this)}
@@ -182,14 +190,6 @@ class Transition extends Component {
             strokeWidth={1}
           />
         </DraggableCore>
-        <line
-          x1={bezier[4]}
-          y1={bezier[5]}
-          x2={bezier[6]}
-          y2={bezier[7]}
-          stroke={pointsColor2}
-          strokeDasharray="3, 3"
-        />
       </g>
     ) : null;
 
