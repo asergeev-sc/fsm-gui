@@ -1,22 +1,26 @@
 import React, { Component, PropTypes } from 'react';
 import './Toolbar.less';
 
+const propTypes = {
+  actions: PropTypes.arrayOf(PropTypes.shape({
+    action: PropTypes.func,
+    iconSVG: PropTypes.string,
+    disabled: PropTypes.bool
+  }))
+};
+const defaultProps = {
+  actions: []
+};
+
 export default
 class Toolbar extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { };
-  }
-
   render() {
     return (
-      <div className="toolbar">
+      <div className="fsm--toolbar">
       </div>
     );
   }
 }
 
-Toolbar.propTypes = {
-};
-Toolbar.defaultProps = {
-};
+Toolbar.propTypes = propTypes;
+Toolbar.defaultProps = defaultProps;

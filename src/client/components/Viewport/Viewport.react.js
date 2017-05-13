@@ -3,45 +3,56 @@ import sizeMe from 'react-sizeme';
 import './Viewport.less';
 
 const propTypes = {
+  isAllowMove: PropTypes.bool,
   gridSize: PropTypes.number,
   scale: PropTypes.number,
   size: PropTypes.object,
   onWheel: PropTypes.func,
   onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func
+  onMouseLeave: PropTypes.func,
+  onMove: PropTypes.func
 };
 const defaultProps = {
+  isAllowMove: true,
   gridSize: 8,
   scale: 1,
   size: null,
   onWheel: () => {},
   onMouseMove: () => {},
-  onMouseLeave: () => {}
+  onMouseLeave: () => {},
+  onMove: () => {}
 };
 
 class Viewport extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isTrackMouse: false
+      isMouseInside: false,
+      isMouseDown: false
     };
   }
 
+  handleMouseDown(e) {
+    this.setState({ isMouseDown: true });
+  }
+
+  handleMouseUp(e) {
+    this.setState({ isMouseDown: false });
+  }
+
   handleMouseEnter(e) {
-    this.setState({ isTrackMouse: true });
+    this.setState({ isMouseInside: true });
   }
 
   handleMouseLeave(e) {
-    this.setState({ isTrackMouse: false });
+    this.setState({ isMouseInside: false });
     this.props.onMouseLeave(e, { x: null, y: null });
   }
 
   handleMouseMove(e) {
-    if(this.state.isTrackMouse) {
-      const viewportMouseX = (e.clientX - this.props.size.position.left) / this.props.scale;
-      const viewportMouseY = (e.clientY - this.props.size.position.top) / this.props.scale;
-      this.props.onMouseMove(e, { x: viewportMouseX, y: viewportMouseY });
-    }
+    const viewportMouseX = (e.clientX - this.props.size.position.left) / this.props.scale;
+    const viewportMouseY = (e.clientY - this.props.size.position.top) / this.props.scale;
+    this.props.onMouseMove(e, { x: viewportMouseX, y: viewportMouseY });
   }
 
   handleWheel(e) {
@@ -52,12 +63,15 @@ class Viewport extends Component {
 
   render() {
     const {
+      isAllowMove,
       gridSize,
       onWheel,
       scale,
       size,
       children
     } = this.props;
+
+    const { isMouseDown } = this.state;
 
     const viewportWidth = size.width / scale;
     const viewportHeight = size.height / scale;
@@ -77,11 +91,13 @@ class Viewport extends Component {
 
     return (
       <div
-        className="fsm--viewport"
+        className={`fsm--viewport ${(isAllowMove && isMouseDown) ? 'fsm--viewport--move-allowed' : ''}`}
         onWheel={this.handleWheel.bind(this)}
         onMouseEnter={this.handleMouseEnter.bind(this)}
         onMouseLeave={this.handleMouseLeave.bind(this)}
         onMouseMove={this.handleMouseMove.bind(this)}
+        onMouseDown={this.handleMouseDown.bind(this)}
+        onMouseUp={this.handleMouseUp.bind(this)}
       >
         <svg
           version="1.1"
