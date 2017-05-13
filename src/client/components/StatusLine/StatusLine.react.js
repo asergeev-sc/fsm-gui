@@ -38,7 +38,7 @@ class StatusLine extends Component {
             Zoom:
           </div>
           <div className="fsm--status-line__value">
-            {viewportScale.toString().slice(0, 4)}
+            {Math.floor(viewportScale * 100)}%
           </div>
         </div>
         <div className="fsm--status-line__mouse-position">
