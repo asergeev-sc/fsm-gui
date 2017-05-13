@@ -15,6 +15,8 @@ Viewport is
 <div style={{ display:'flex', width: '640px', height: '480px', outline: '1px solid #333' }}>
   <Viewport 
     scale={2}
+    onWheel={e => console.log('onWheel', e)}
+    onMouseMove={(e, mousePosition) => console.log(e, mousePosition)}
   >
     {_scope.state.viewportChildren}
   </Viewport>
