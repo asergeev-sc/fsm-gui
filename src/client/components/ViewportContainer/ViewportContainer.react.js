@@ -35,6 +35,11 @@ export default class ViewportContainer extends Component {
       scale = maxScale;
     }
     this.props.actions.updateViewportScale(scale);
+
+    // TODO
+    // const x = this.props.viewportPanOffset.x / (scale - this.props.viewportScale);
+    // const y = this.props.viewportPanOffset.y / (scale - this.props.viewportScale);
+    // this.props.actions.updateViewportPanOffset({ x, y });
   }
 
   handleMouseMove(e, mousePosition) {
