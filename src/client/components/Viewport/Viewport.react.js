@@ -3,16 +3,20 @@ import sizeMe from 'react-sizeme';
 import './Viewport.less';
 
 const propTypes = {
+  gridSize: PropTypes.number,
   scale: PropTypes.number,
   size: PropTypes.object,
   onWheel: PropTypes.func,
-  onMouseMove: PropTypes.func
+  onMouseMove: PropTypes.func,
+  onMouseLeave: PropTypes.func
 };
 const defaultProps = {
+  gridSize: 8,
   scale: 1,
   size: null,
   onWheel: () => {},
-  onMouseMove: () => {}
+  onMouseMove: () => {},
+  onMouseLeave: () => {}
 };
 
 class Viewport extends Component {
@@ -29,13 +33,13 @@ class Viewport extends Component {
 
   handleMouseLeave(e) {
     this.setState({ isTrackMouse: false });
+    this.props.onMouseLeave(e, { x: null, y: null });
   }
 
   handleMouseMove(e) {
     if(this.state.isTrackMouse) {
       const viewportMouseX = (e.clientX - this.props.size.position.left) / this.props.scale;
       const viewportMouseY = (e.clientY - this.props.size.position.top) / this.props.scale;
-      console.log(viewportMouseX, viewportMouseY);
       this.props.onMouseMove(e, { x: viewportMouseX, y: viewportMouseY });
     }
   }
@@ -47,6 +51,7 @@ class Viewport extends Component {
 
   render() {
     const {
+      gridSize,
       onWheel,
       scale,
       size,
@@ -55,6 +60,19 @@ class Viewport extends Component {
 
     const viewportWidth = size.width / scale;
     const viewportHeight = size.height / scale;
+
+    const bigGridSize = gridSize * 10;
+    const defs = (
+      <defs key={Math.random()}>
+        <pattern id="smallGrid" width={gridSize} height={gridSize} patternUnits="userSpaceOnUse">
+          <path d={`M ${gridSize} 0 L 0 0 0 ${gridSize}`} fill="none" stroke="gray" strokeWidth="0.5"/>
+        </pattern>
+        <pattern id="grid" width={bigGridSize} height={bigGridSize} patternUnits="userSpaceOnUse">
+          <rect width={bigGridSize} height={bigGridSize} fill="url(#smallGrid)"/>
+          <path d={`M ${bigGridSize} 0 L 0 0 0 ${bigGridSize}`} fill="none" stroke="gray" strokeWidth="1"/>
+        </pattern>
+      </defs>
+    );
 
     return (
       <div
@@ -68,9 +86,11 @@ class Viewport extends Component {
           version="1.1"
           width="100%"
           height="100%"
-          viewBox={`0 0 ${viewportWidth} ${viewportWidth}`}
+          viewBox={`0 0 ${viewportWidth} ${viewportHeight}`}
           xmlns="http://www.w3.org/2000/svg"
         >
+          {defs}
+          <rect width="100%" height="100%" fill="url(#grid)" />
           {children}
         </svg>
       </div>

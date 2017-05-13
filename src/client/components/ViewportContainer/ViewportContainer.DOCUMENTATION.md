@@ -1,6 +1,6 @@
 ### Synopsis
 
-Viewport is 
+ViewportContainer is 
 *Write here a short introduction and/or overview that explains **what** component is.*
 
 ### Props Reference
@@ -13,20 +13,13 @@ Viewport is
 
 ```
 <div style={{ display:'flex', width: '640px', height: '480px', outline: '1px solid #333' }}>
-  <Viewport
-    scale={2}
-    onWheel={e => console.log('onWheel', e)}
-    onMouseMove={(e, mousePosition) => console.log(e, mousePosition)}
-    gridSize={8}
-  >
-    {_scope.state.viewportChildren}
-  </Viewport>
+  <ViewportContainer />
 </div>
 ```
 
 ### Component Name
 
-Viewport
+ViewportContainer
 
 ### License
 

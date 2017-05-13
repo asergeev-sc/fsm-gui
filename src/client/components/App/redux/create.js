@@ -1,6 +1,5 @@
 import { createStore as _createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
-import Immutable from 'immutable';
 import reducer from './reducer';
 
 export default function createStore(data) {

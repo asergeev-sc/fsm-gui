@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import './App.less';
 
 const store = createStore();
+window.__FSM_REDUX_STORE__ = store;
 
 const propTypes = {
 
