@@ -6,6 +6,7 @@ import * as viewportActions from '../App/redux/reducer/viewport';
 
 const scaleFactor = 0.0012;
 const minScale = 0.01;
+const maxScale = 5;
 const gridSize = 8;
 
 const propTypes = {
@@ -27,6 +28,9 @@ export default class ViewportContainer extends Component {
     let scale = this.props.viewportScale - e.deltaY * scaleFactor;
     if(scale < minScale) {
       scale = minScale;
+    }
+    if(scale > maxScale) {
+      scale = maxScale;
     }
     this.props.actions.updateViewportScale(scale);
   }
