@@ -17,7 +17,6 @@ const viewportChildren = [
       isShowBezierHelpers={true}
       arrowPosition={2}
       onBezierChange={() => {}}
-      onDoubleClick={() => console.log('onDoubleClick')}
     />
   )
 ];
@@ -28,8 +27,27 @@ class ViewportScope extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      viewportChildren
+      viewportChildren,
+      scale: 1,
+      panOffsetX: 0,
+      panOffsetY: 0
     };
+  }
+
+  handleWheel(e) {
+    let scale = this.state.scale - e.deltaY / 500;
+
+    if(scale < 0) {
+      scale = 0.1;
+    }
+
+    this.setState({ scale });
+  }
+
+  handlePan(e, draggableData) {
+    let panOffsetX = this.state.panOffsetX + draggableData.deltaX / this.state.scale;
+    let panOffsetY = this.state.panOffsetY + draggableData.deltaY / this.state.scale;
+    this.setState({ panOffsetX, panOffsetY });
   }
 
   render() {

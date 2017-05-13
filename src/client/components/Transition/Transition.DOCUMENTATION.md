@@ -27,7 +27,6 @@ Transition is
       isShowBezierHelpers={true}
       arrowPosition={2}
       onBezierChange={_scope.handleBezierChange.bind(_scope)}
-      onDoubleClick={() => console.log('onDoubleClick')}
     />
   </svg>
 </div>

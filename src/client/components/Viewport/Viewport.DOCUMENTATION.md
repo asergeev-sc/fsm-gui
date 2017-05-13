@@ -14,11 +14,14 @@ Viewport is
 ```
 <div style={{ display:'flex', width: '640px', height: '480px', outline: '1px solid #333' }}>
   <Viewport
-    scale={2}
-    onWheel={e => console.log('onWheel', e)}
+    scale={_scope.state.scale}
+    onWheel={_scope.handleWheel.bind(_scope)}
     onMouseMove={(e, mousePosition) => console.log(e, mousePosition)}
+    onPan={_scope.handlePan.bind(_scope)}
     gridSize={8}
     isAllowMove={true}
+    panOffsetX={_scope.state.panOffsetX}
+    panOffsetY={_scope.state.panOffsetY}
   >
     {_scope.state.viewportChildren}
   </Viewport>

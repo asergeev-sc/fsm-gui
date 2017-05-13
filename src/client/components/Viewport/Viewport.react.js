@@ -1,26 +1,34 @@
 import React, { Component, PropTypes } from 'react';
+import { DraggableCore } from 'react-draggable';
 import sizeMe from 'react-sizeme';
 import './Viewport.less';
 
+const workareaWidth = 10000;
+const workareaHeight = 10000;
+
 const propTypes = {
-  isAllowMove: PropTypes.bool,
+  isAllowPan: PropTypes.bool,
   gridSize: PropTypes.number,
   scale: PropTypes.number,
   size: PropTypes.object,
   onWheel: PropTypes.func,
   onMouseMove: PropTypes.func,
   onMouseLeave: PropTypes.func,
-  onMove: PropTypes.func
+  onPan: PropTypes.func,
+  panOffsetX: PropTypes.number,
+  panOffsetY: PropTypes.number
 };
 const defaultProps = {
-  isAllowMove: true,
-  gridSize: 8,
+  isAllowPan: true,
+  gridSize: 10,
   scale: 1,
   size: null,
   onWheel: () => {},
   onMouseMove: () => {},
   onMouseLeave: () => {},
-  onMove: () => {}
+  onPan: () => {},
+  panOffsetX: 0,
+  panOffsetY: 0
 };
 
 class Viewport extends Component {
@@ -28,16 +36,16 @@ class Viewport extends Component {
     super(props);
     this.state = {
       isMouseInside: false,
-      isMouseDown: false
+      isPanning: false
     };
   }
 
   handleMouseDown(e) {
-    this.setState({ isMouseDown: true });
+    this.setState({ isPanning: true });
   }
 
   handleMouseUp(e) {
-    this.setState({ isMouseDown: false });
+    this.setState({ isPanning: false });
   }
 
   handleMouseEnter(e) {
@@ -61,17 +69,25 @@ class Viewport extends Component {
     this.props.onWheel(e);
   }
 
+  handleDrag(e, data) {
+    if(this.props.isAllowPan) {
+      this.props.onPan(e, data);
+    }
+  }
+
   render() {
     const {
-      isAllowMove,
+      isAllowPan,
       gridSize,
       onWheel,
       scale,
       size,
-      children
+      children,
+      panOffsetX,
+      panOffsetY
     } = this.props;
 
-    const { isMouseDown } = this.state;
+    const { isPanning } = this.state;
 
     const viewportWidth = size.width / scale;
     const viewportHeight = size.height / scale;
@@ -91,25 +107,33 @@ class Viewport extends Component {
 
     return (
       <div
-        className={`fsm--viewport ${(isAllowMove && isMouseDown) ? 'fsm--viewport--move-allowed' : ''}`}
+        className={`fsm--viewport ${(isPanning) ? 'fsm--viewport--panning' : ''}`}
         onWheel={this.handleWheel.bind(this)}
+        onMouseDown={this.handleMouseDown.bind(this)}
+        onMouseUp={this.handleMouseUp.bind(this)}
         onMouseEnter={this.handleMouseEnter.bind(this)}
         onMouseLeave={this.handleMouseLeave.bind(this)}
         onMouseMove={this.handleMouseMove.bind(this)}
-        onMouseDown={this.handleMouseDown.bind(this)}
-        onMouseUp={this.handleMouseUp.bind(this)}
       >
-        <svg
-          version="1.1"
-          width="100%"
-          height="100%"
-          viewBox={`0 0 ${viewportWidth} ${viewportHeight}`}
-          xmlns="http://www.w3.org/2000/svg"
+        <DraggableCore
+          onDrag={this.handleDrag.bind(this)}
         >
-          {defs}
-          <rect width="100%" height="100%" fill="url(#grid)" />
-          {children}
-        </svg>
+          <svg
+            version="1.1"
+            width="100%"
+            height="100%"
+            viewBox={`0 0 ${viewportWidth} ${viewportHeight}`}
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            {defs}
+
+              <g transform={`translate(${panOffsetX},${panOffsetY})`}>
+                <rect width={workareaWidth} height={workareaHeight} fill="url(#grid)" />
+                {children}
+              </g>
+
+          </svg>
+        </DraggableCore>
       </div>
     );
   }
