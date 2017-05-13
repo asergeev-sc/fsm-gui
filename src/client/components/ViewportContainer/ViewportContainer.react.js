@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as viewportActions from '../App/redux/reducer/viewport';
 
-const scaleFactor = 0.0012;
+const scaleFactor = 0.0006;
 const minScale = 0.1;
 const maxScale = 5;
 const gridSize = 10;
