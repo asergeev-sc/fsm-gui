@@ -35,7 +35,12 @@ export default class StatusLineContainer extends Component {
 
     const mousePositionX = cursorPosition.x - viewportPanOffset.x;
     const mousePositionY = cursorPosition.y - viewportPanOffset.y;
-    const isOutOfViewport = mousePositionX < 0 || mousePositionY < 0;
+    const isOutOfViewport = (
+      mousePositionX < 0 ||
+      mousePositionY < 0 ||
+      mousePositionX > 10000 || // 10000 - viewport size. TODO - move it to configurable options
+      mousePositionY > 10000
+    );
 
     return (
       <StatusLine
