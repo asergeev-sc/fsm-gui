@@ -4,7 +4,7 @@ const UPDATE_VIEWPORT_SCALE = 'fsm/viewport/UPDATE_VIEWPORT_SCALE';
 const UPDATE_VIEWPORT_PAN_OFFSET = 'fsm/viewport/UPDATE_VIEWPORT_PAN_OFFSET';
 
 const initialState = {
-  cursorPosition: {},
+  cursorPosition: { x: 0, y: 0 },
   viewportRect: {},
   viewportScale: 1,
   viewportPanOffset: { x: 0, y: 0 }
