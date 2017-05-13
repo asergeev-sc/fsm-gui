@@ -46,6 +46,7 @@ class Viewport extends Component {
 
   handleWheel(e) {
     e.preventDefault();
+    this.handleMouseMove(e);
     this.props.onWheel(e);
   }
 

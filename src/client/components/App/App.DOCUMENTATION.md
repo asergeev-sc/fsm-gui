@@ -12,7 +12,7 @@ App is
 ### Code Example
 
 ```
-<div style={{ display:'flex', width: '100%', height: '50vh', outline: '1px solid #333' }}>
+<div style={{ display:'flex', width: '100%', height: '50vh' }}>
   <App />
 </div>
 ```
