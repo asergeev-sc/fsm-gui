@@ -6,6 +6,7 @@ import * as viewportActions from '../App/redux/reducer/viewport';
 
 const scaleFactor = 0.0012;
 const minScale = 0.01;
+const gridSize = 8;
 
 const propTypes = {
   cursorPosition: PropTypes.object,
@@ -39,10 +40,14 @@ export default class ViewportContainer extends Component {
   }
 
   render() {
-    console.log(this.props.viewportScale);
+    const {
+      viewportScale
+    } = this.props;
+
     return (
       <Viewport
-        scale={2}
+        scale={viewportScale}
+        gridSize={viewportScale > 0.2 ? gridSize : 0 }
         onWheel={this.handleWheel.bind(this)}
         onMouseMove={this.handleMouseMove.bind(this)}
         onMouseLeave={this.handleMouseLeave.bind(this)}
