@@ -5,14 +5,31 @@
 
 import React, { Component, PropTypes } from 'react';
 import { showroomScopeDecorator } from 'opuscapita-showroom-client';
+import Transition from '../Transition';
 
+const viewportChildren = [
+  (
+    <Transition
+      input="Transition_0"
+      isHighlighted={true}
+      isSnap={false}
+      bezier={[100,25 , 10,90 , 110,100 , 150,195]}
+      isShowBezierHelpers={true}
+      arrowPosition={2}
+      onBezierChange={() => {}}
+      onDoubleClick={() => console.log('onDoubleClick')}
+    />
+  )
+];
 
 @showroomScopeDecorator
 export default
 class ViewportScope extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      viewportChildren
+    };
   }
 
   render() {

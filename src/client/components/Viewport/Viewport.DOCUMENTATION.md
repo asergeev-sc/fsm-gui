@@ -12,7 +12,13 @@ Viewport is
 ### Code Example
 
 ```
-<Viewport />
+<div style={{ display:'flex', width: '640px', height: '480px', outline: '1px solid #333' }}>
+  <Viewport 
+    scale={2}
+  >
+    {_scope.state.viewportChildren}
+  </Viewport>
+</div>
 ```
 
 ### Component Name
