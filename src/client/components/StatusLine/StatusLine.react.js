@@ -4,13 +4,22 @@ import './StatusLine.less';
 const propTypes = {
   mousePositionX: PropTypes.number,
   mousePositionY: PropTypes.number,
-  viewportScale: PropTypes.number
+  viewportScale: PropTypes.number,
+  onZoomClick: PropTypes.func
+};
+
+const defaultProps = {
+  onZoomClick: () => {}
 };
 
 const maxValueLength = 6;
 
 export default
 class StatusLine extends Component {
+  handleZoomClick(e) {
+    this.props.onZoomClick(e);
+  }
+
   render() {
     const {
       mousePositionX,
@@ -20,7 +29,11 @@ class StatusLine extends Component {
 
     return (
       <div className="fsm--status-line">
-        <div className="fsm--status-line__scale">
+        <div
+          className="fsm--status-line__scale fsm--status-line__action"
+          title="Reset"
+          onClick={this.handleZoomClick.bind(this)}
+        >
           <div className="fsm--status-line__label">
             Zoom:
           </div>
