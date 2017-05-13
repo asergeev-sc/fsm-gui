@@ -20,7 +20,7 @@ const propTypes = {
 };
 const defaultProps = {
   isAllowPan: true,
-  gridSize: 10,
+  gridSize: 40,
   scale: 1,
   size: null,
   onWheel: () => {},

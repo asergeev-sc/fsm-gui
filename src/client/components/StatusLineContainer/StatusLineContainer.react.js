@@ -7,14 +7,16 @@ import * as viewportActions from '../App/redux/reducer/viewport';
 const propTypes = {
   cursorPosition: PropTypes.object,
   viewportRect: PropTypes.object,
-  viewportScale: PropTypes.number
+  viewportScale: PropTypes.number,
+  viewportPanOffset: PropTypes.object
 };
 
 @connect(
   state => ({
     cursorPosition: state.viewport.cursorPosition,
     viewportRect: state.viewport.viewportRect,
-    viewportScale: state.viewport.viewportScale
+    viewportScale: state.viewport.viewportScale,
+    viewportPanOffset: state.viewport.viewportPanOffset
   }),
   dispatch => ({ actions: bindActionCreators(viewportActions, dispatch) })
 )
@@ -27,13 +29,18 @@ export default class StatusLineContainer extends Component {
     const {
       cursorPosition,
       viewportRect,
-      viewportScale
+      viewportScale,
+      viewportPanOffset
     } = this.props;
+
+    const mousePositionX = cursorPosition.x - viewportPanOffset.x;
+    const mousePositionY = cursorPosition.y - viewportPanOffset.y;
+    const isOutOfViewport = mousePositionX < 0 || mousePositionY < 0;
 
     return (
       <StatusLine
-        mousePositionX={cursorPosition.x}
-        mousePositionY={cursorPosition.y}
+        mousePositionX={isOutOfViewport ? null : mousePositionX}
+        mousePositionY={isOutOfViewport ? null : mousePositionY}
         viewportScale={viewportScale}
         onZoomClick={this.handleZoomClick.bind(this)}
       />

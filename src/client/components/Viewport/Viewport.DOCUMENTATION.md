@@ -18,7 +18,7 @@ Viewport is
     onWheel={_scope.handleWheel.bind(_scope)}
     onMouseMove={(e, mousePosition) => console.log(e, mousePosition)}
     onPan={_scope.handlePan.bind(_scope)}
-    gridSize={8}
+    gridSize={20}
     isAllowMove={true}
     panOffsetX={_scope.state.panOffsetX}
     panOffsetY={_scope.state.panOffsetY}

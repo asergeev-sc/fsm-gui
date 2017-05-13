@@ -5,21 +5,23 @@ import { connect } from 'react-redux';
 import * as viewportActions from '../App/redux/reducer/viewport';
 
 const scaleFactor = 0.0012;
-const minScale = 0.01;
+const minScale = 0.1;
 const maxScale = 5;
-const gridSize = 8;
+const gridSize = 10;
 
 const propTypes = {
   cursorPosition: PropTypes.object,
   viewportRect: PropTypes.object,
-  viewportScale: PropTypes.number
+  viewportScale: PropTypes.number,
+  viewportPanOffset: PropTypes.object
 };
 
 @connect(
   state => ({
     cursorPosition: state.viewport.cursorPosition,
     viewportRect: state.viewport.viewportRect,
-    viewportScale: state.viewport.viewportScale
+    viewportScale: state.viewport.viewportScale,
+    viewportPanOffset: state.viewport.viewportPanOffset
   }),
   dispatch => ({ actions: bindActionCreators(viewportActions, dispatch) })
 )
@@ -43,18 +45,28 @@ export default class ViewportContainer extends Component {
     this.props.actions.updateCursorPosition(mousePosition);
   }
 
+  handlePan(e, draggableData) {
+    let x = this.props.viewportPanOffset.x + draggableData.deltaX / this.props.viewportScale;
+    let y = this.props.viewportPanOffset.y + draggableData.deltaY / this.props.viewportScale;
+    this.props.actions.updateViewportPanOffset({ x, y });
+  }
+
   render() {
     const {
-      viewportScale
+      viewportScale,
+      viewportPanOffset
     } = this.props;
 
     return (
       <Viewport
         scale={viewportScale}
-        gridSize={viewportScale > 0.2 ? gridSize : 0 }
+        gridSize={gridSize}
         onWheel={this.handleWheel.bind(this)}
         onMouseMove={this.handleMouseMove.bind(this)}
         onMouseLeave={this.handleMouseLeave.bind(this)}
+        onPan={this.handlePan.bind(this)}
+        panOffsetX={viewportPanOffset.x}
+        panOffsetY={viewportPanOffset.y}
       >
         {null}
       </Viewport>
