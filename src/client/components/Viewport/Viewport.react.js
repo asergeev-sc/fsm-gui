@@ -9,6 +9,7 @@ const workareaHeight = 10000;
 const propTypes = {
   isAllowPan: PropTypes.bool,
   gridSize: PropTypes.number,
+  isShowGrid: PropTypes.bool,
   scale: PropTypes.number,
   size: PropTypes.object,
   onWheel: PropTypes.func,
@@ -21,6 +22,7 @@ const propTypes = {
 const defaultProps = {
   isAllowPan: true,
   gridSize: 40,
+  isShowGrid: false,
   scale: 1,
   size: null,
   onWheel: () => {},
@@ -79,6 +81,7 @@ class Viewport extends Component {
     const {
       isAllowPan,
       gridSize,
+      isShowGrid,
       onWheel,
       scale,
       size,
@@ -127,7 +130,7 @@ class Viewport extends Component {
           >
             {defs}
             <g transform={`translate(${panOffsetX},${panOffsetY})`}>
-              <rect width={workareaWidth} height={workareaHeight} fill="url(#grid)" />
+            <rect width={workareaWidth} height={workareaHeight} fill={isShowGrid ? 'url(#grid)' : 'none'} />
               {children}
             </g>
           </svg>

@@ -10,6 +10,7 @@ import Transition from '../Transition';
 const viewportChildren = [
   (
     <Transition
+      key="Transition_0"
       input="Transition_0"
       isHighlighted={true}
       isSnap={false}

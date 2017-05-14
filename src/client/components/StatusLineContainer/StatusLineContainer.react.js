@@ -8,7 +8,8 @@ const propTypes = {
   cursorPosition: PropTypes.object,
   viewportRect: PropTypes.object,
   viewportScale: PropTypes.number,
-  viewportPanOffset: PropTypes.object
+  viewportPanOffset: PropTypes.object,
+  showGrid: PropTypes.bool
 };
 
 @connect(
@@ -16,7 +17,8 @@ const propTypes = {
     cursorPosition: state.viewport.cursorPosition,
     viewportRect: state.viewport.viewportRect,
     viewportScale: state.viewport.viewportScale,
-    viewportPanOffset: state.viewport.viewportPanOffset
+    viewportPanOffset: state.viewport.viewportPanOffset,
+    showGrid: state.viewport.showGrid
   }),
   dispatch => ({ actions: bindActionCreators(viewportActions, dispatch) })
 )
@@ -25,12 +27,17 @@ export default class StatusLineContainer extends Component {
     this.props.actions.updateViewportScale(1);
   }
 
+  handleGridButtonClick(e) {
+    this.props.actions.updateViewportShowGrid(!this.props.showGrid);
+  }
+
   render() {
     const {
       cursorPosition,
       viewportRect,
       viewportScale,
-      viewportPanOffset
+      viewportPanOffset,
+      showGrid
     } = this.props;
 
     const mousePositionX = cursorPosition.x - viewportPanOffset.x;
@@ -47,7 +54,9 @@ export default class StatusLineContainer extends Component {
         mousePositionX={isOutOfViewport ? null : mousePositionX}
         mousePositionY={isOutOfViewport ? null : mousePositionY}
         viewportScale={viewportScale}
+        isShowGrid={showGrid}
         onZoomClick={this.handleZoomClick.bind(this)}
+        onGridButtonClick={this.handleGridButtonClick.bind(this)}
       />
     );
   }

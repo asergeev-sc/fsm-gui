@@ -19,6 +19,7 @@ Viewport is
     onMouseMove={(e, mousePosition) => console.log(e, mousePosition)}
     onPan={_scope.handlePan.bind(_scope)}
     gridSize={20}
+    isShowGrid={true}
     isAllowMove={true}
     panOffsetX={_scope.state.panOffsetX}
     panOffsetY={_scope.state.panOffsetY}

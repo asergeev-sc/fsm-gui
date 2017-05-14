@@ -49,7 +49,8 @@ const propTypes = {
   cursorPosition: PropTypes.object,
   viewportRect: PropTypes.object,
   viewportScale: PropTypes.number,
-  viewportPanOffset: PropTypes.object
+  viewportPanOffset: PropTypes.object,
+  showGrid: PropTypes.bool
 };
 
 @connect(
@@ -57,7 +58,8 @@ const propTypes = {
     cursorPosition: state.viewport.cursorPosition,
     viewportRect: state.viewport.viewportRect,
     viewportScale: state.viewport.viewportScale,
-    viewportPanOffset: state.viewport.viewportPanOffset
+    viewportPanOffset: state.viewport.viewportPanOffset,
+    showGrid: state.viewport.showGrid
   }),
   dispatch => ({ actions: bindActionCreators(viewportActions, dispatch) })
 )
@@ -93,13 +95,15 @@ export default class ViewportContainer extends Component {
   render() {
     const {
       viewportScale,
-      viewportPanOffset
+      viewportPanOffset,
+      showGrid
     } = this.props;
 
     return (
       <Viewport
         scale={viewportScale}
         gridSize={gridSize}
+        isShowGrid={showGrid}
         onWheel={this.handleWheel.bind(this)}
         onMouseMove={this.handleMouseMove.bind(this)}
         onMouseLeave={this.handleMouseLeave.bind(this)}

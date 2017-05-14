@@ -1,15 +1,22 @@
 import React, { Component, PropTypes } from 'react';
 import './StatusLine.less';
+import Button from 'opuscapita-react-ui-buttons/lib/Button';
+
+import gridOnSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/border_inner.svg';
+import gridOffSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/border_clear.svg';
 
 const propTypes = {
   mousePositionX: PropTypes.number,
   mousePositionY: PropTypes.number,
   viewportScale: PropTypes.number,
-  onZoomClick: PropTypes.func
+  onZoomClick: PropTypes.func,
+  isShowGrid: PropTypes.bool,
+  onGridButtonClick: PropTypes.func
 };
 
 const defaultProps = {
-  onZoomClick: () => {}
+  onZoomClick: () => {},
+  onGridButtonClick: () => {}
 };
 
 const maxValueLength = 6;
@@ -20,11 +27,16 @@ class StatusLine extends Component {
     this.props.onZoomClick(e);
   }
 
+  handleGridButtonClick(e) {
+    this.props.onGridButtonClick(e);
+  }
+
   render() {
     const {
       mousePositionX,
       mousePositionY,
-      viewportScale
+      viewportScale,
+      isShowGrid
     } = this.props;
 
     return (
@@ -37,10 +49,20 @@ class StatusLine extends Component {
           <div className="fsm--status-line__label">
             Zoom:
           </div>
-          <div className="fsm--status-line__value">
+          <div className="fsm--status-line__value fsm--status-line__value--zoom">
             {Math.floor(viewportScale * 100)}%
           </div>
         </div>
+
+        <div className="fsm--status-line__controls-right">
+          <Button
+            svg={isShowGrid ? gridOffSVG : gridOnSVG}
+            title={isShowGrid ? 'Hide grid' : 'Show grid'}
+            color="#333"
+            onClick={this.handleGridButtonClick.bind(this)}
+          />
+        </div>
+
         <div className="fsm--status-line__mouse-position">
           <div className="fsm--status-line__label">
             X:
