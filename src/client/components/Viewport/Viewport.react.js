@@ -130,7 +130,12 @@ class Viewport extends Component {
           >
             {defs}
             <g transform={`translate(${panOffsetX},${panOffsetY})`}>
-            <rect width={workareaWidth} height={workareaHeight} fill={isShowGrid ? 'url(#grid)' : 'none'} />
+              <rect
+                width={workareaWidth}
+                height={workareaHeight}
+                fill={isShowGrid ? 'url(#grid)' : 'none'}
+                stroke="#333"
+              />
               {children}
             </g>
           </svg>
