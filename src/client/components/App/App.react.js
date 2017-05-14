@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import createStore from './redux/create';
 import { Provider } from 'react-redux';
+import ToolbarContainer from '../ToolbarContainer';
 import ViewportContainer from '../ViewportContainer';
 import StatusLineContainer from '../StatusLineContainer';
 import './App.less';
@@ -22,6 +23,7 @@ class App extends Component {
     return (
       <Provider store={store} key="provider">
         <div className="fsm--app">
+          <ToolbarContainer />
           <ViewportContainer />
           <StatusLineContainer />
         </div>

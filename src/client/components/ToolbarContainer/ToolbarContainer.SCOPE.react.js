@@ -5,11 +5,11 @@
 
 import React, { Component, PropTypes } from 'react';
 import { showroomScopeDecorator } from 'opuscapita-showroom-client';
-
+import { Provider } from 'react-redux';
 
 @showroomScopeDecorator
 export default
-class ToolbarButtonScope extends Component {
+class ToolbarContainerScope extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -17,16 +17,18 @@ class ToolbarButtonScope extends Component {
 
   render() {
     return (
-      <div>
-        {this._renderChildren()}
-      </div>
+      <Provider store={window.__FSM_REDUX_STORE__} key="provider">
+        <div>
+          {this._renderChildren()}
+        </div>
+      </Provider>
     );
   }
 }
 
-ToolbarButtonScope.contextTypes = {
+ToolbarContainerScope.contextTypes = {
   i18n: PropTypes.object
 };
-ToolbarButtonScope.childContextTypes = {
+ToolbarContainerScope.childContextTypes = {
   i18n: PropTypes.object
 };

@@ -1,19 +1,19 @@
 import React from 'react';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
-import ToolbarButton from '.';
+import ToolbarContainer from '.';
 
-describe('<ToolbarButton />', () => {
+describe('<ToolbarContainer />', () => {
   /* Recommended test-cases
 
   it('should have default props', () => {
-    let component = <ToolbarButton />;
+    let component = <ToolbarContainer />;
     expect(component.props.testProp).to.equal('Give me back my label!');
     expect(component.props.onClick).to.be.a('function');
   });
   it('should have the right class name', () => {
-    let wrapper = shallow(<ToolbarButton className="test-class-name" />);
-    expect(wrapper).to.have.className('toolbar-button');
+    let wrapper = shallow(<ToolbarContainer className="test-class-name" />);
+    expect(wrapper).to.have.className('toolbar-container');
     expect(wrapper).to.have.className('test-class-name');
   });
 

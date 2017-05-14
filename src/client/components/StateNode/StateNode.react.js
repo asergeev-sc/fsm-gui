@@ -99,7 +99,7 @@ class StateNode extends PureComponent {
     const circlePath = (
       <path
         d={getCirclePath(x, y, radius)}
-        fill="none"
+        fill="#fff"
         stroke={color}
         strokeWidth={lineWidth}
         ref={ref => (this.circlePathElement = ref)}
