@@ -107,11 +107,11 @@ class StateNode extends PureComponent {
     );
 
     const circlePoints = this.circlePathElement ? pathToPoints(this.circlePathElement, 32) : null;
-    const polygonizedCircle = circlePoints ? pointsToPath(circlePoints, true) : null;
+    const segmentedCircle = circlePoints ? pointsToPath(circlePoints, true) : null;
 
     const debugPath = isDebug ? (
       <path
-        d={polygonizedCircle}
+        d={segmentedCircle}
         fill="none"
         stroke={'#0ff'}
         strokeWidth={lineWidth}
