@@ -40,7 +40,7 @@ const debugViewportChildren = [
   )
 ];
 
-const scaleFactor = 0.0006;
+const scaleFactor = 0.06;
 const minScale = 0.1;
 const maxScale = 5;
 const gridSize = 10;
@@ -63,7 +63,9 @@ const propTypes = {
 )
 export default class ViewportContainer extends Component {
   handleWheel(e) {
-    let scale = this.props.viewportScale - e.deltaY * scaleFactor;
+    let scale = e.deltaY > 0 ?
+      this.props.viewportScale - scaleFactor :
+      this.props.viewportScale + scaleFactor;
     if(scale < minScale) {
       scale = minScale;
     }
