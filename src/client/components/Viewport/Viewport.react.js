@@ -126,12 +126,10 @@ class Viewport extends Component {
             xmlns="http://www.w3.org/2000/svg"
           >
             {defs}
-
-              <g transform={`translate(${panOffsetX},${panOffsetY})`}>
-                <rect width={workareaWidth} height={workareaHeight} fill="url(#grid)" />
-                {children}
-              </g>
-
+            <g transform={`translate(${panOffsetX},${panOffsetY})`}>
+              <rect width={workareaWidth} height={workareaHeight} fill="url(#grid)" />
+              {children}
+            </g>
           </svg>
         </DraggableCore>
       </div>

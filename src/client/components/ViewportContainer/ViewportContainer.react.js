@@ -4,6 +4,42 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as viewportActions from '../App/redux/reducer/viewport';
 
+
+// TODO remove debug helpers
+import Transition from '../Transition';
+import StateNode from '../StateNode';
+const debugViewportChildren = [
+  (
+    <g key="group">
+      <Transition
+        input="Transition_0"
+        isHighlighted={true}
+        isSnap={false}
+        bezier={[100,25 , 10,90 , 110,100 , 150,195]}
+        isShowBezierHelpers={true}
+        arrowPosition={2}
+        onBezierChange={() => {}}
+        key="Transition_0"
+      />
+      <StateNode
+        name="State_0"
+        code="0"
+        x={300}
+        y={300}
+        isFinalState={true}
+        isHighlighted={true}
+        isSnap={false}
+        onClick={() => console.log('onClick')}
+        onDoubleClick={() => console.log('onDoubleClick')}
+        onDragStart={(e, data) => console.log('DragStart', e, data)}
+        onDragStop={(e, data) => console.log('DragStop', e, data)}
+        onDrag={() => {}}
+        key="State_0"
+      />
+    </g>
+  )
+];
+
 const scaleFactor = 0.0006;
 const minScale = 0.1;
 const maxScale = 5;
@@ -34,12 +70,8 @@ export default class ViewportContainer extends Component {
     if(scale > maxScale) {
       scale = maxScale;
     }
-    this.props.actions.updateViewportScale(scale);
 
-    // TODO
-    // const x = this.props.viewportPanOffset.x / (scale - this.props.viewportScale);
-    // const y = this.props.viewportPanOffset.y / (scale - this.props.viewportScale);
-    // this.props.actions.updateViewportPanOffset({ x, y });
+    this.props.actions.updateViewportScale(scale);
   }
 
   handleMouseMove(e, mousePosition) {
@@ -73,7 +105,7 @@ export default class ViewportContainer extends Component {
         panOffsetX={viewportPanOffset.x}
         panOffsetY={viewportPanOffset.y}
       >
-        {null}
+        {debugViewportChildren}
       </Viewport>
     );
   }

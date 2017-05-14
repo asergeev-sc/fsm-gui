@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { DraggableCore } from 'react-draggable';
 import Bezier from 'bezier-js';
 import './Transition.less';
@@ -39,7 +39,7 @@ const defaultProps = {
 };
 
 export default
-class Transition extends Component {
+class Transition extends PureComponent {
   handleStart(e, data) {
     console.log('start');
   }

@@ -1,6 +1,6 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { DraggableCore } from 'react-draggable';
-import { getCirclePath } from '../../svg-utils';
+import { getCirclePath, pathToPoints, pointsToPath } from '../../svg-utils';
 import './StateNode.less';
 
 const propTypes = {
@@ -19,6 +19,7 @@ const propTypes = {
   isHighlighted: PropTypes.bool,
   isFinalState: PropTypes.bool,
   isSnap: PropTypes.bool,
+  isDebug: PropTypes.bool,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onDragStart: PropTypes.func,
@@ -39,6 +40,7 @@ const defaultProps = {
   isHighlighted: false,
   isFinalState: false,
   isSnap: false,
+  isDebug: true,
   onClick: () => {},
   onDoubleClick: () => {},
   onDragStart: () => {},
@@ -47,7 +49,7 @@ const defaultProps = {
 };
 
 export default
-class StateNode extends Component {
+class StateNode extends PureComponent {
   handleStart(e, data) {
     this.props.onDragStart(e, data);
   }
@@ -77,6 +79,7 @@ class StateNode extends Component {
       isHighlighted,
       isFinalState,
       isSnap,
+      isDebug,
       onClick,
       onDoubleClick,
       onDragStart,
@@ -92,6 +95,31 @@ class StateNode extends Component {
         strokeWidth={lineWidth}
       />
     ) : null;
+
+    const circlePath = (
+      <path
+        d={getCirclePath(x, y, radius)}
+        fill="none"
+        stroke={color}
+        strokeWidth={lineWidth}
+        ref={ref => (this.circlePathElement = ref)}
+      />
+    );
+
+    const circlePoints = this.circlePathElement ? pathToPoints(this.circlePathElement, 32) : null;
+    const polygonizedCircle = circlePoints ? pointsToPath(circlePoints, true) : null;
+
+    const debugPath = isDebug ? (
+      <path
+        d={polygonizedCircle}
+        fill="none"
+        stroke={'#0ff'}
+        strokeWidth={lineWidth}
+      />
+    ) : null;
+    if(isDebug) {
+      console.log(`StateNode ${name}`, this);
+    }
 
     return (
       <DraggableCore
@@ -113,12 +141,8 @@ class StateNode extends Component {
             onDoubleClick={onDoubleClick}
             onDrag={() => console.log('drag')}
           />
-          <path
-            d={getCirclePath(x, y, radius)}
-            fill="none"
-            stroke={color}
-            strokeWidth={lineWidth}
-          />
+          {circlePath}
+          {debugPath}
           <text
             x={x}
             y={y}
