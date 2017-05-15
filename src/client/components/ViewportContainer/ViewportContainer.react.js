@@ -6,12 +6,12 @@ import * as viewportActions from '../App/redux/reducer/viewport';
 
 
 // TODO remove debug helpers
-import Transition from '../Transition';
+import BezierTransition from '../BezierTransition';
 import StateNode from '../StateNode';
 const debugViewportChildren = [
   (
     <g key="group">
-      <Transition
+      <BezierTransition
         input="Transition_0"
         isHighlighted={true}
         isSnap={false}

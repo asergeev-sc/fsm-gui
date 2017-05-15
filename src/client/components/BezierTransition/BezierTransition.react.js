@@ -1,7 +1,7 @@
 import React, { PureComponent, PropTypes } from 'react';
 import { DraggableCore } from 'react-draggable';
 import Bezier from 'bezier-js';
-import './Transition.less';
+import './BezierTransition.less';
 
 const propTypes = {
   input: PropTypes.string.isRequired,
@@ -39,7 +39,7 @@ const defaultProps = {
 };
 
 export default
-class Transition extends PureComponent {
+class BezierTransition extends PureComponent {
   handleStart(e, data) {
     console.log('start');
   }
@@ -228,7 +228,7 @@ class Transition extends PureComponent {
             y={inputTextPosition.y}
             fontFamily="monospace"
             fontSize="16"
-            alignmentBaseline="middle"
+д            alignmentBaseline="middle"
             textAnchor="middle"
           >
             {input}
@@ -241,5 +241,5 @@ class Transition extends PureComponent {
   }
 }
 
-Transition.propTypes = propTypes;
-Transition.defaultProps = defaultProps;
+BezierTransition.propTypes = propTypes;
+BezierTransition.defaultProps = defaultProps;

@@ -19,7 +19,7 @@ Transition is
     height="100%"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <Transition
+    <BezierTransition
       input="Transition_0"
       isHighlighted={true}
       isSnap={false}
@@ -34,7 +34,7 @@ Transition is
 
 ### Component Name
 
-Transition
+BezierTransition
 
 ### License
 

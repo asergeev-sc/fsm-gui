@@ -5,11 +5,11 @@
 
 import React, { Component, PropTypes } from 'react';
 import { showroomScopeDecorator } from 'opuscapita-showroom-client';
-import Transition from '../Transition';
+import BezierTransition from '../BezierTransition';
 
 const viewportChildren = [
   (
-    <Transition
+    <BezierTransition
       key="Transition_0"
       input="Transition_0"
       isHighlighted={true}

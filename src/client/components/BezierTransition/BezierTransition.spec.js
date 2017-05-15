@@ -1,9 +1,9 @@
 import React from 'react';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
-import Transition from '.';
+import BezierTransition from '.';
 
-describe('<Transition />', () => {
+describe('<BezierTransition />', () => {
   /* Recommended test-cases
 
   it('should have default props', () => {

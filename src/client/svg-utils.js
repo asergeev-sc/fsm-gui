@@ -10,7 +10,6 @@ export function pathToPoints(path, samples) {
 	  const point = path.getPointAtLength(i / samples * path.getTotalLength());
     points.push(point);
   }
-  console.log(points);
   return points;
 }
 
