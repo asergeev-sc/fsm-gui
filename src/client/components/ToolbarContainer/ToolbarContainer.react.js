@@ -6,7 +6,6 @@ import * as viewportActions from '../App/redux/reducer/viewport';
 
 const propTypes = {};
 
-
 @connect(
   state => ({
     cursorPosition: state.viewport.cursorPosition,
@@ -19,9 +18,7 @@ const propTypes = {};
 export default class ToolbarContainer extends Component {
   render() {
     return (
-      <div className="toolbar-container">
-        <Toolbar />
-      </div>
+      <Toolbar />
     );
   }
 }

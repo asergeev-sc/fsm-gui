@@ -149,7 +149,6 @@ const defaultProps = {
 export default
 class Toolbar extends PureComponent {
   render() {
-    console.log(backSVG);
     const {
       controls
     } = this.props;

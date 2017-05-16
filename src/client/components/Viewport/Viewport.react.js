@@ -60,8 +60,8 @@ class Viewport extends Component {
   }
 
   handleMouseMove(e) {
-    const viewportMouseX = (e.clientX - this.props.size.position.left) / this.props.scale;
-    const viewportMouseY = (e.clientY - this.props.size.position.top) / this.props.scale;
+    const viewportMouseX = (e.clientX - this.props.size.position.left) / this.props.scale - this.props.panOffsetX;
+    const viewportMouseY = (e.clientY - this.props.size.position.top) / this.props.scale - this.props.panOffsetY;
     this.props.onMouseMove(e, { x: viewportMouseX, y: viewportMouseY });
   }
 

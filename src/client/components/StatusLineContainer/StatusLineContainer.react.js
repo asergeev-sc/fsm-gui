@@ -40,19 +40,17 @@ export default class StatusLineContainer extends Component {
       showGrid
     } = this.props;
 
-    const mousePositionX = cursorPosition.x - viewportPanOffset.x;
-    const mousePositionY = cursorPosition.y - viewportPanOffset.y;
     const isOutOfViewport = (
-      mousePositionX < 0 ||
-      mousePositionY < 0 ||
-      mousePositionX > 10000 || // 10000 - viewport size. TODO - move it to configurable options
-      mousePositionY > 10000
+      cursorPosition.x < 0 ||
+      cursorPosition.y < 0 ||
+      cursorPosition.x > 10000 || // 10000 - viewport size. TODO - move it to configurable options
+      cursorPosition.y > 10000
     );
 
     return (
       <StatusLine
-        mousePositionX={isOutOfViewport ? null : mousePositionX}
-        mousePositionY={isOutOfViewport ? null : mousePositionY}
+        mousePositionX={isOutOfViewport ? null : cursorPosition.x}
+        mousePositionY={isOutOfViewport ? null : cursorPosition.y}
         viewportScale={viewportScale}
         isShowGrid={showGrid}
         onZoomClick={this.handleZoomClick.bind(this)}

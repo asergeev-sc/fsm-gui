@@ -9,11 +9,12 @@ import { showroomScopeDecorator } from 'opuscapita-showroom-client';
 
 @showroomScopeDecorator
 export default
-class BezierTransitionScope extends Component {
+class TransitionScope extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      bezier: [100,25 , 10,90 , 110,100 , 150,195]
+      from: {},
+      to: {}
     };
   }
 
@@ -31,9 +32,9 @@ class BezierTransitionScope extends Component {
   }
 }
 
-BezierTransitionScope.contextTypes = {
+TransitionScope.contextTypes = {
   i18n: PropTypes.object
 };
-BezierTransitionScope.childContextTypes = {
+TransitionScope.childContextTypes = {
   i18n: PropTypes.object
 };

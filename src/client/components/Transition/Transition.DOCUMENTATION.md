@@ -12,32 +12,12 @@ Transition is
 ### Code Example
 
 ```
-<div style={{ widht: '640px', height: '480px', outline: '1px solid #333' }}>
-  <svg
-    version="1.1"
-    width="100%"
-    height="100%"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <BezierTransition
-      label="Transition_0"
-      isHighlighted={true}
-      isSnap={false}
-      bezier={_scope.state.bezier}
-      color="#6a9fe1"
-      isShowBezierHelpers={true}
-      lineWidth={4}
-      arrowPosition={2}
-      onBezierChange={_scope.handleBezierChange.bind(_scope)}
-      isSmoothMode={true}
-    />
-  </svg>
-</div>
+<Transition />
 ```
 
 ### Component Name
 
-BezierTransition
+Transition
 
 ### License
 
