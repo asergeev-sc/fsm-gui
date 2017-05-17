@@ -5,30 +5,35 @@
 
 import React, { Component, PropTypes } from 'react';
 import { showroomScopeDecorator } from 'opuscapita-showroom-client';
-import { Provider } from 'react-redux';
+
 
 @showroomScopeDecorator
 export default
-class StatusLineContainerScope extends Component {
+class BezierCurveScope extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      bezier: [100,25 , 10,90 , 110,100 , 150,195]
+    };
+  }
+
+  handleBezierChange(bezier) {
+    console.log(bezier);
+    this.setState({ bezier });
   }
 
   render() {
     return (
-      <Provider store={window.__FSM_REDUX_STORE__} key="provider">
-        <div>
-          {this._renderChildren()}
-        </div>
-      </Provider>
+      <div>
+        {this._renderChildren()}
+      </div>
     );
   }
 }
 
-StatusLineContainerScope.contextTypes = {
+BezierCurveScope.contextTypes = {
   i18n: PropTypes.object
 };
-StatusLineContainerScope.childContextTypes = {
+BezierCurveScope.childContextTypes = {
   i18n: PropTypes.object
 };

@@ -18,7 +18,6 @@ class BezierTransitionScope extends Component {
   }
 
   handleBezierChange(bezier) {
-    console.log(bezier);
     this.setState({ bezier });
   }
 

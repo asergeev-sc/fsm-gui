@@ -30,6 +30,7 @@ Transition is
       arrowPosition={2}
       onBezierChange={_scope.handleBezierChange.bind(_scope)}
       isSmoothMode={true}
+      cursorPosition={_scope.state.cursorPosition}
     />
   </svg>
 </div>

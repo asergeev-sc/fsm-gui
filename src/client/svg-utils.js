@@ -30,3 +30,25 @@ export function getDistance(x1, y1, x2, y2) {
 
   return Math.sqrt( a*a + b*b );
 }
+
+export function snapToPoints(bezier, points, xIndex, yIndex) {
+  // points - { x: nubmer, y: number }
+  const distances = points.map(
+    point => getDistance(bezier[xIndex], bezier[yIndex], point.x, point.y)
+  );
+  const minimalDistance = Math.min(...distances);
+
+  if(minimalDistance > this.props.stickyDistance) {
+    return bezier;
+  }
+
+  const snapPointIndex = distances.indexOf(minimalDistance);
+  const pointToSnap = snapPointIndex === -1 ? null : this.props.stickyPoints[snapPointIndex];
+
+  if(pointToSnap !== null) {
+    bezier[xIndex] = pointToSnap.x;
+    bezier[yIndex] = pointToSnap.y;
+  }
+
+  return bezier;
+}
