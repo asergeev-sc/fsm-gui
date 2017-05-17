@@ -11,14 +11,19 @@ const propTypes = {};
     cursorPosition: state.viewport.cursorPosition,
     viewportRect: state.viewport.viewportRect,
     viewportScale: state.viewport.viewportScale,
-    viewportPanOffset: state.viewport.viewportPanOffset
+    viewportPanOffset: state.viewport.viewportPanOffset,
+    appElementRef: state.layout.appElementRef
   }),
   dispatch => ({ actions: bindActionCreators(viewportActions, dispatch) })
 )
 export default class ToolbarContainer extends Component {
   render() {
+    const {
+      appElementRef
+    } = this.props;
+
     return (
-      <Toolbar />
+      <Toolbar restrictorNode={appElementRef} />
     );
   }
 }

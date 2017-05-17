@@ -1,4 +1,4 @@
-import React, { PureComponent, PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import './Toolbar.less';
 import TitledButton from 'opuscapita-react-ui-buttons/lib/TitledButton';
 
@@ -31,7 +31,8 @@ const propTypes = {
     title: PropTypes.string,
     selected: PropTypes.bool,
     disabled: PropTypes.bool
-  }))
+  })),
+  restrictorNode: PropTypes.node
 };
 
 const defaultProps = {
@@ -126,14 +127,6 @@ const defaultProps = {
       label: '',
       active: false,
       disabled: false
-    },
-    {
-      action: () => {},
-      iconSVG: helpSVG,
-      title: 'Help',
-      label: '',
-      active: false,
-      disabled: false
     }
   ],
   controlsRight: [
@@ -154,12 +147,21 @@ const defaultProps = {
       disabled: false,
       color: '#fff',
       bgColor: '#0277bd'
+    },
+    null,
+    {
+      action: () => {},
+      iconSVG: helpSVG,
+      title: 'Need help?',
+      label: '',
+      active: false,
+      disabled: false
     }
   ]
 };
 
 export default
-class Toolbar extends PureComponent {
+class Toolbar extends Component {
   renderControls(controls) {
     return controls.map((control, i) => control === null ? (<div key={i} className="fsm--toolbar__divider"></div>) :       (
         <TitledButton
@@ -174,6 +176,7 @@ class Toolbar extends PureComponent {
           isActive={control.active}
           onClick={control.action}
           className="fsm--toolbar__button"
+          restrictorNode={this.props.restrictorNode}
         />
       ));
   }
