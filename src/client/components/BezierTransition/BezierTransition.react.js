@@ -30,14 +30,14 @@ const defaultProps = {
   arrowPosition: 0,
   arrowSize: 30,
   bezier: [100,25 , 10,90 , 110,100 , 150,195],
-  color: '#000',
+  color: '#333',
   cursorPosition: { x: 0, y: 0 },
   isHighlighted: false,
   isShowBezierHelpers: false,
   isSmoothMode: true,
   isSnapGrid: false,
   isSnapStickyPoints: true,
-  lineWidth: 1,
+  lineWidth: 4,
   label: '',
   onBezierChange: () => {},
   pointSize: 8,
@@ -133,6 +133,8 @@ class BezierTransition extends PureComponent {
           onChange={this.handleBezierChange.bind(this)}
           markerStart={arrowPosition === 1 ? 'url(#fsm--bezier-transition__arrow)' : 'none'}
           markerEnd={arrowPosition === 2 ? 'url(#fsm--bezier-transition__arrow)' : 'none'}
+          stroke={color}
+          strokeWidth={lineWidth}
         />
         {debugDots}
       </g>

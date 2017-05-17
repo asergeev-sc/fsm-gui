@@ -4,8 +4,6 @@ import TitledButton from 'opuscapita-react-ui-buttons/lib/TitledButton';
 
 // TODO remove it
 import addSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/add.svg';
-import openSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/folder_open.svg';
-import saveSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/check.svg';
 import backSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/arrow_back.svg';
 import forwardSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/arrow_forward.svg';
 import cutSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/content_cut.svg';
@@ -15,9 +13,19 @@ import panSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/open_with.svg';
 import selectSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/touch_app.svg';
 import simulateSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/all_inclusive.svg';
 import helpSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/live_help.svg';
+import inspectorSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/chrome_reader_mode.svg';
 
 const propTypes = {
-  controls: PropTypes.arrayOf(PropTypes.shape({
+  controlsLeft: PropTypes.arrayOf(PropTypes.shape({
+    action: PropTypes.func,
+    iconSVG: PropTypes.string,
+    title: PropTypes.string,
+    selected: PropTypes.bool,
+    disabled: PropTypes.bool,
+    color: PropTypes.string,
+    bgColor: PropTypes.string
+  })),
+  controlsRight: PropTypes.arrayOf(PropTypes.shape({
     action: PropTypes.func,
     iconSVG: PropTypes.string,
     title: PropTypes.string,
@@ -25,33 +33,9 @@ const propTypes = {
     disabled: PropTypes.bool
   }))
 };
+
 const defaultProps = {
-  controls: [
-    {
-      action: () => {},
-      iconSVG: addSVG,
-      title: 'New',
-      label: '',
-      active: false,
-      disabled: false
-    },
-    {
-      action: () => {},
-      iconSVG: openSVG,
-      title: 'Open',
-      label: '',
-      active: false,
-      disabled: false
-    },
-    {
-      action: () => {},
-      iconSVG: saveSVG,
-      title: 'Save',
-      label: '',
-      active: false,
-      disabled: true
-    },
-    null,
+  controlsLeft: [
     {
       action: () => {},
       iconSVG: backSVG,
@@ -137,39 +121,76 @@ const defaultProps = {
     null,
     {
       action: () => {},
+      iconSVG: inspectorSVG,
+      title: 'Inspector',
+      label: '',
+      active: false,
+      disabled: false
+    },
+    {
+      action: () => {},
       iconSVG: helpSVG,
       title: 'Help',
       label: '',
       active: false,
       disabled: false
     }
+  ],
+  controlsRight: [
+    {
+      action: () => {},
+      iconSVG: null,
+      title: 'Cancel',
+      label: 'Cancel',
+      active: false,
+      disabled: false
+    },
+    {
+      action: () => {},
+      iconSVG: null,
+      title: 'Save',
+      label: 'Save',
+      active: false,
+      disabled: false,
+      color: '#fff',
+      bgColor: '#0277bd'
+    }
   ]
 };
 
 export default
 class Toolbar extends PureComponent {
+  renderControls(controls) {
+    return controls.map((control, i) => control === null ? (<div key={i} className="fsm--toolbar__divider"></div>) :       (
+        <TitledButton
+          key={i}
+          svg={control.iconSVG}
+          title={control.title}
+          disabled={control.disabled}
+          color={control.color || '#333'}
+          bgColor={control.bgColor || null}
+          label={control.label}
+          contentPosition="before"
+          isActive={control.active}
+          onClick={control.action}
+          className="fsm--toolbar__button"
+        />
+      ));
+  }
   render() {
     const {
-      controls
+      controlsLeft,
+      controlsRight
     } = this.props;
 
     return (
       <div className="fsm--toolbar">
-        {controls.map((control, i) => control === null ? (
-          <div key={i} className="fsm--toolbar__divider"></div>
-        ) : (
-          <TitledButton
-            key={i}
-            svg={control.iconSVG}
-            title={control.title}
-            disabled={control.disabled}
-            color="#333"
-            label={control.label}
-            contentPosition="before"
-            isActive={control.active}
-            onClick={control.action}
-          />
-        ))}
+        <div className="fsm--toolbar__controls-left">
+          {this.renderControls(controlsLeft)}
+        </div>
+        <div className="fsm--toolbar__controls-right">
+          {this.renderControls(controlsRight)}
+        </div>
       </div>
     );
   }

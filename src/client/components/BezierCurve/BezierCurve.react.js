@@ -22,11 +22,11 @@ const defaultProps = {
   onPoint2Drag: () => {},
   onPoint3Drag: () => {},
   onPoint4Drag: () => {},
-  pointColor1: '#0f0',
-  pointColor2: '#f00',
+  pointColor1: '#76FF03',
+  pointColor2: '#FF1744',
   pointSize: 8,
   showControls: true,
-  stroke: '#000',
+  stroke: '#0091EA',
   strokeWidth: 1
 };
 

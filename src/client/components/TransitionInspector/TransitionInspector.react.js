@@ -8,7 +8,7 @@ const defaultTransitionOptions = {
   'triggers': { label: 'Triggers', onClick: () => {}, count: 5 },
   'conditions': { label: 'Conditions', onClick: () => {}, count: 0 },
   'validators': { label: 'Validators', onClick: () => {}, count: 8 },
-  'postFunction': { label: 'Post Function', onClick: () => {}, count: 0 }
+  'postFunction': { label: 'Post Functions', onClick: () => {}, count: 0 }
 };
 
 const propTypes = {

@@ -3,7 +3,8 @@ import { DraggableCore } from 'react-draggable';
 import { getCirclePath, pathToPoints, pointsToPath } from '../../svg-utils';
 import './StateNode.less';
 
-const padding = 20;
+const paddingV = 20;
+const paddingH = 60;
 
 const propTypes = {
   name: PropTypes.string.isRequired,
@@ -33,7 +34,7 @@ const defaultProps = {
   exitActions: null,
   lineWidth: 1,
   color: '#000',
-  bgColor: '#e70',
+  bgColor: '#0277bd',
   textColor: '#fff',
   description: '',
   snapGridStep: 30,
@@ -137,12 +138,12 @@ class StateNode extends PureComponent {
       >
         <g>
           <rect
-            x={x - width / 2 - padding / 2}
-            y={y - height / 2 - padding / 2}
-            rx="4"
-            ry="4"
-            width={width + padding}
-            height={height + padding}
+            x={x - width / 2 - paddingH / 2}
+            y={y - height / 2 - paddingV / 2}
+            rx="2"
+            ry="2"
+            width={width + paddingH}
+            height={height + paddingV}
             fill={bgColor}
             strokeWidth={lineWidth}
             onClick={onClick}
