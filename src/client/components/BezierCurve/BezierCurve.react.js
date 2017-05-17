@@ -72,6 +72,10 @@ class BezierCurve extends PureComponent {
       pointSize,
       showControls,
       onChange,
+      onPoint1Drag,
+      onPoint2Drag,
+      onPoint3Drag,
+      onPoint4Drag,
       ...restProps
     } = this.props;
 

@@ -3,15 +3,17 @@ import { DraggableCore } from 'react-draggable';
 import { getCirclePath, pathToPoints, pointsToPath } from '../../svg-utils';
 import './StateNode.less';
 
+const padding = 20;
+
 const propTypes = {
   name: PropTypes.string.isRequired,
   code: PropTypes.string.isRequired, // Must be binary
   entryActions: PropTypes.arrayOf(PropTypes.string),
   exitActions: PropTypes.arrayOf(PropTypes.string),
-  radius: PropTypes.number,
   lineWidth: PropTypes.number,
   color: PropTypes.string,
-  highlightColor: PropTypes.string,
+  bgColor: PropTypes.string,
+  textColor: PropTypes.string,
   description: PropTypes.string,
   snapGridStep: PropTypes.number,
   x: PropTypes.number,
@@ -29,10 +31,10 @@ const propTypes = {
 const defaultProps = {
   entryActions: null,
   exitActions: null,
-  radius: 60,
   lineWidth: 1,
   color: '#000',
-  highlightColor: "#f00",
+  bgColor: '#e70',
+  textColor: '#fff',
   description: '',
   snapGridStep: 30,
   x: 0,
@@ -50,6 +52,13 @@ const defaultProps = {
 
 export default
 class StateNode extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      labelElement: null
+    };
+  }
+
   handleStart(e, data) {
     this.props.onDragStart(e, data);
   }
@@ -62,18 +71,22 @@ class StateNode extends PureComponent {
     this.props.onDrag(e, data);
   }
 
+  handleLabelElementRef(ref) {
+    this.setState({ labelElement: ref });
+  }
+
   render() {
     const {
       name,
       code,
       entryActions,
       exitActions,
-      radius,
       lineWidth,
       color,
-      highlightColor,
+      bgColor,
       description,
       snapGridStep,
+      textColor,
       x,
       y,
       isHighlighted,
@@ -87,39 +100,33 @@ class StateNode extends PureComponent {
       onDrag
     } = this.props;
 
-    const finalStateCircle = isFinalState ? (
-      <path
-        d={getCirclePath(x, y, radius - radius / 10)}
-        fill="none"
-        stroke={color}
-        strokeWidth={lineWidth}
-      />
-    ) : null;
+    // const finalStateCircle = isFinalState ? (
+    //   <path
+    //     d={getCirclePath(x, y, radius - radius / 10)}
+    //     fill="none"
+    //     stroke={color}
+    //     strokeWidth={lineWidth}
+    //   />
+    // ) : null;
 
-    const circlePath = (
-      <path
-        d={getCirclePath(x, y, radius)}
-        fill="#fff"
-        stroke={color}
-        strokeWidth={lineWidth}
-        ref={ref => (this.circlePathElement = ref)}
-      />
-    );
+    // const circlePoints = this.circlePathElement ? pathToPoints(this.circlePathElement, 32) : null;
+    // const segmentedCircle = circlePoints ? pointsToPath(circlePoints, true) : null;
 
-    const circlePoints = this.circlePathElement ? pathToPoints(this.circlePathElement, 32) : null;
-    const segmentedCircle = circlePoints ? pointsToPath(circlePoints, true) : null;
+    // const debugPath = isDebug ? (
+    //   <path
+    //     d={segmentedCircle}
+    //     fill="none"
+    //     stroke={'#0ff'}
+    //     strokeWidth={lineWidth}
+    //   />
+    // ) : null;
+    // if(isDebug) {
+    //   console.log(`StateNode ${name}`, this);
+    // }
 
-    const debugPath = isDebug ? (
-      <path
-        d={segmentedCircle}
-        fill="none"
-        stroke={'#0ff'}
-        strokeWidth={lineWidth}
-      />
-    ) : null;
-    if(isDebug) {
-      console.log(`StateNode ${name}`, this);
-    }
+    const labelElementBBox = this.state.labelElement && this.state.labelElement.getBBox();
+    const width = labelElementBBox && labelElementBBox.width;
+    const height = labelElementBBox && labelElementBBox.height;
 
     return (
       <DraggableCore
@@ -130,30 +137,29 @@ class StateNode extends PureComponent {
       >
         <g>
           <rect
-            x={x - radius}
-            y={y - radius}
-            width={radius * 2}
-            height={radius * 2}
-            fill="transparent"
-            stroke={isHighlighted ? highlightColor : 'none'}
+            x={x - width / 2 - padding / 2}
+            y={y - height / 2 - padding / 2}
+            rx="4"
+            ry="4"
+            width={width + padding}
+            height={height + padding}
+            fill={bgColor}
             strokeWidth={lineWidth}
             onClick={onClick}
             onDoubleClick={onDoubleClick}
             onDrag={() => console.log('drag')}
           />
-          {circlePath}
-          {debugPath}
           <text
             x={x}
             y={y}
-            fontFamily="monospace"
             fontSize="16"
             alignmentBaseline="middle"
             textAnchor="middle"
+            fill={textColor}
+            ref={this.handleLabelElementRef.bind(this)}
           >
             {name}
           </text>
-          {finalStateCircle}
         </g>
       </DraggableCore>
     );
