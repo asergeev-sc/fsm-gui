@@ -74,6 +74,7 @@
   "dependencies": {
     "bezier-js": "2.2.3",
     "d3": "^4.8.0",
+    "opuscapita-react-ui-autocompletes": "^1.0.4",
     "opuscapita-react-ui-buttons": "^1.0.12",
     "opuscapita-ui-svg-icons": "1.0.5",
     "radium": "^0.18.2",

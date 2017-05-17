@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import ToolbarContainer from '../ToolbarContainer';
 import ViewportContainer from '../ViewportContainer';
 import StatusLineContainer from '../StatusLineContainer';
+import InspectorContainer from '../InspectorContainer';
 import './App.less';
 
 const store = createStore();
@@ -23,9 +24,16 @@ class App extends Component {
     return (
       <Provider store={store} key="provider">
         <div className="fsm--app">
-          <ToolbarContainer />
-          <ViewportContainer />
-          <StatusLineContainer />
+          <div>
+            <ToolbarContainer />
+          </div>
+          <div className="fsm--app__middle-container">
+            <InspectorContainer />
+            <ViewportContainer />
+          </div>
+          <div>
+            <StatusLineContainer />
+          </div>
         </div>
       </Provider>
     );

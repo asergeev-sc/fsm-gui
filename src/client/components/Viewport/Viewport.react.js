@@ -134,7 +134,7 @@ class Viewport extends Component {
                 width={workareaWidth}
                 height={workareaHeight}
                 fill={isShowGrid ? 'url(#grid)' : 'none'}
-                stroke="#333"
+                stroke="#aaa"
               />
               {children}
             </g>

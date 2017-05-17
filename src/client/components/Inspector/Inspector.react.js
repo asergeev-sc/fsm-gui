@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import TransitionInspector from '../TransitionInspector';
 import './Inspector.less';
 
 export default
@@ -11,6 +12,7 @@ class Inspector extends Component {
   render() {
     return (
       <div className="inspector">
+        <TransitionInspector />
       </div>
     );
   }
