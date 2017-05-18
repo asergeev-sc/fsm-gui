@@ -1,6 +1,6 @@
 ### Synopsis
 
-App is 
+HelpContainer is 
 *Write here a short introduction and/or overview that explains **what** component is.*
 
 ### Props Reference
@@ -12,14 +12,12 @@ App is
 ### Code Example
 
 ```
-<div style={{ display:'flex', width: '100%', height: '80vh' }}>
-  <App />
-</div>
+<HelpContainer />
 ```
 
 ### Component Name
 
-App
+HelpContainer
 
 ### License
 

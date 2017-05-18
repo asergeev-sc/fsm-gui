@@ -121,7 +121,6 @@ class BezierTransition extends PureComponent {
         <text
           x={labelPosition.x}
           y={labelPosition.y}
-          fontFamily="monospace"
           fontSize="16"
           alignmentBaseline="middle"
           textAnchor="middle"

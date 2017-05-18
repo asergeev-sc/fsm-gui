@@ -17,10 +17,6 @@ import simulateSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/all_inclusive.
 import helpSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/live_help.svg';
 import inspectorSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/chrome_reader_mode.svg';
 
-const propTypes = {};
-
-;
-
 @connect(
   state => ({
     cursorPosition: state.viewport.cursorPosition,
@@ -35,6 +31,10 @@ const propTypes = {};
 export default class ToolbarContainer extends Component {
   handleShowInspector() {
     this.props.actions.updateShowInspector(!this.props.showInspector);
+  }
+
+  handleShowHelp() {
+    this.props.actions.updateShowHelp(true);
   }
 
   render() {
@@ -161,7 +161,7 @@ export default class ToolbarContainer extends Component {
           },
           null,
           {
-            action: () => {},
+            action: this.handleShowHelp.bind(this),
             iconSVG: helpSVG,
             title: 'Need help?',
             label: '',
@@ -173,5 +173,3 @@ export default class ToolbarContainer extends Component {
     );
   }
 }
-
-ToolbarContainer.propTypes = propTypes;

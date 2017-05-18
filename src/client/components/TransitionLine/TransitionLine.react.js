@@ -209,7 +209,6 @@ class TransitionLine extends PureComponent {
           <text
             x={inputTextPosition.x}
             y={inputTextPosition.y}
-            fontFamily="monospace"
             fontSize="16"
             alignmentBaseline="middle"
             textAnchor="middle"

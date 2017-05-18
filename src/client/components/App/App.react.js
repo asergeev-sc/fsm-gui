@@ -6,6 +6,7 @@ import ToolbarContainer from '../ToolbarContainer';
 import ViewportContainer from '../ViewportContainer';
 import StatusLineContainer from '../StatusLineContainer';
 import InspectorContainer from '../InspectorContainer';
+import HelpContainer from '../HelpContainer';
 import './App.less';
 
 import * as viewportActions from '../App/redux/reducer/viewport';
@@ -43,6 +44,9 @@ class AppLayout extends Component {
         </div>
         <div>
           <StatusLineContainer />
+        </div>
+        <div>
+          <HelpContainer />
         </div>
       </div>
     );
