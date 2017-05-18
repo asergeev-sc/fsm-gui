@@ -28,7 +28,7 @@ app.get('/workflows', function(req, res) {
 });
 
 app.get('/workflows/:id', function(req, res) {
-  getWorkflows(req, res, paths.workflows, req.params.id);
+  getWorkflow(req, res, paths.workflows, req.params.id);
 });
 
 // app.get('/domain-objects', function(req, res) {
@@ -62,6 +62,7 @@ function getWorkflows(req, res, itemsPath) {
 }
 
 function getWorkflow(req, res, itemsPath, itemId) {
+
   const itemPath = path.resolve(`${itemsPath}/${itemId}.json`);
   fs.readFile(itemPath, { encoding: 'utf-8' }, (err, data) => {
     if(err) {

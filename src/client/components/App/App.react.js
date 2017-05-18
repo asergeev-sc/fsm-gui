@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import createStore from './redux/create';
 import { bindActionCreators } from 'redux';
 import { Provider, connect } from 'react-redux';
+import ApiClient from './redux/ApiClient';
 import ToolbarContainer from '../ToolbarContainer';
 import ViewportContainer from '../ViewportContainer';
 import StatusLineContainer from '../StatusLineContainer';
@@ -11,8 +12,10 @@ import './App.less';
 
 import * as viewportActions from '../App/redux/reducer/viewport';
 import * as layoutActions from '../App/redux/reducer/layout';
+import * as fsmActions from '../App/redux/reducer/fsm';
 
-const store = createStore();
+const client = new ApiClient();
+const store = createStore(client);
 window.__FSM_REDUX_STORE__ = store;
 
 const propTypes = {
@@ -25,9 +28,18 @@ const defaultProps = {
 
 @connect(
   state => ({}),
-  dispatch => ({ actions: bindActionCreators({ ...viewportActions, ...layoutActions }, dispatch) })
+  dispatch => ({
+    actions: bindActionCreators({
+      ...viewportActions,
+      ...layoutActions,
+      ...fsmActions
+    }, dispatch) })
 )
 class AppLayout extends Component {
+  componentDidMount() {
+    this.props.actions.loadFsm('workflow1');
+  }
+
   handleAppRef(ref) {
     this.props.actions.updateAppElementRef(ref);
   }

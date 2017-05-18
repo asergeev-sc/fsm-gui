@@ -1,8 +1,8 @@
 :host = localhost
 :port = 3020
 
-GET http://:host::port/machines
+GET http://:host::port/workflows
 
 #
 
-GET http://:host::port/machines/machine1
+GET http://:host::port/workflows/workflow1
