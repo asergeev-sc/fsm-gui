@@ -28,7 +28,7 @@ class HelpContainer extends PureComponent {
         <Modal
           isShow={showHelp}
           onHide={this.handleHide.bind(this)}
-          title="User manual"
+          title="Help information"
         >
           <Help onHide={this.handleHide.bind(this)} />
         </Modal>

@@ -1,0 +1,126 @@
+{
+  "name": "Order workflow 1",
+  "description": "Simple order workflow",
+  "id": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e",
+  "parentId": null,
+  "changedOn": "1495118748919",
+  "changedBy": "admin",
+  "fsm": {
+    "initialState": "new",
+    "states": {
+      "new": {
+        "name": "New",
+        "description": "New order created",
+        "visualProps": {
+          "bgColor": "#0277bd",
+          "textColor": "#fff",
+          "x": 300,
+          "y": 300
+        }
+      },
+      "onHold": {
+        "name": "On hold",
+        "description": "Order is on hold",
+        "visualProps": {
+          "bgColor": "#0277bd",
+          "textColor": "#fff",
+          "x": 300,
+          "y": 600
+        }
+      },
+      "canceled": {
+        "name": "Canceled",
+        "description": "Order has been canceled",
+        "visualProps": {
+          "bgColor": "#0277bd",
+          "textColor": "#fff",
+          "x": 100,
+          "y": 600
+        }
+      },
+      "pendingPayment": {
+        "name": "Pending payment",
+        "description": "Pending payment",
+        "visualProps": {
+          "bgColor": "#0277bd",
+          "textColor": "#fff",
+          "x": 300,
+          "y": 900
+        }
+      },
+      "refunded": {
+        "name": "Refunded",
+        "description": "Refunded",
+        "visualProps": {
+          "bgColor": "#0277bd",
+          "textColor": "#fff",
+          "x": 600,
+          "y": 900
+        }
+      },
+      "complete": {
+        "name": "Complete",
+        "description": "Order complete",
+        "visualProps": {
+          "bgColor": "#0277bd",
+          "textColor": "#fff",
+          "x": 600,
+          "y": 1200
+        }
+      },
+      "closed": {
+        "name": "Closed",
+        "description": "Order closed",
+        "visualProps": {
+          "bgColor": "#0277bd",
+          "textColor": "#fff",
+          "x": 600,
+          "y": 1500
+        }
+      },
+      "archived": {
+        "name": "Archived",
+        "description": "Order archived",
+        "visualProps": {
+          "bgColor": "#0277bd",
+          "textColor": "#fff",
+          "x": 600,
+          "y": 1800
+        }
+      }
+    },
+    "transitions": {
+      "transition1": {
+        "name": "Transition 1",
+        "description": "Transition 1 description",
+        "from": "new",
+        "to": "onHold",
+        "options": {
+          "properties": {
+            
+          },
+          "triggers": {
+            
+          },
+          "conditions": {
+            
+          },
+          "validators": {
+            
+          },
+          "postFunctions": {
+      
+          }
+        },
+        "visualProps": {
+          "exitPoint": 5,
+          "entryPoint": 1,
+          "x2": 300,
+          "y2": 400,
+          "x3": 300,
+          "y3": 450
+        }
+      }
+    }
+  }
+}
