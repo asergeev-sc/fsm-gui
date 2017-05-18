@@ -62,12 +62,11 @@ function getWorkflows(req, res, itemsPath) {
 }
 
 function getWorkflow(req, res, itemsPath, itemId) {
-
   const itemPath = path.resolve(`${itemsPath}/${itemId}.json`);
   fs.readFile(itemPath, { encoding: 'utf-8' }, (err, data) => {
     if(err) {
       return res.status(500).send({ error: 'Internal server error' });
     }
-    return res.send(data);
+    return res.send(JSON.parse(data));
   });
 }

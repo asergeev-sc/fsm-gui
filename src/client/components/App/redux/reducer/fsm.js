@@ -19,7 +19,7 @@ export default function reducer(state = initialState, action = {}) {
     case LOAD_FSM:
       return { ...state, loading: true };
     case LOAD_FSM_SUCCESS:
-      return { ...state, loading: false, loaded: true, error: null };
+      return { ...action.result, loading: false, loaded: true, error: null };
     case LOAD_FSM_FAIL:
       return { ...state, loading: false, loaded: false, error: action.error };
     default:
@@ -33,5 +33,4 @@ export function loadFsm(id) {
     id: id,
     promise: client => client.get(`/workflows/${id}`)
   };
-  return { type: LOAD_FSM, id };
 }
