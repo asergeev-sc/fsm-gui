@@ -54,13 +54,13 @@ class Modal extends PureComponent {
       >
         <div className="fsm--modal">
           <div className="fsm--modal__header">
-          <h4>Workflow help</h4>
-          <Button
-            className="fsm--modal__header-close-button"
-            label="✕"
-            color="#aaa"
-            onClick={this.handleHideClick.bind(this)}
-          />
+            <h4>{title}</h4>
+            <Button
+              className="fsm--modal__header-close-button"
+              label="✕"
+              color="#aaa"
+              onClick={this.handleHideClick.bind(this)}
+            />
           </div>
           <div className="fsm--modal__content">
             {children}

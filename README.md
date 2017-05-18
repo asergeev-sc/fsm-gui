@@ -1,34 +1,40 @@
-## Synopsis
+## fsm-workflow
+FSM workflow (for Node.js)
 
-At the top of the file there should be a short introduction and/ or overview that explains **what** the project is.
-This description should match descriptions added for package managers (Gemspec, package.json, etc.)
+### Introduction
+Workflow is based on Finite State Machine
 
-## Code Example
+- state is stored in the business object related to workflow, not in an extra
+workflow object. Multiple workflows could be defined for one business object,
+it means that for each workflow owns state field should be use
+- one state per workflow execution (no parallelism)
+- action is executed in the transition, not in the node/state
+- no event sending inside the workflow itself (in action)
+- no variables in state workflow: all variables/data need to be stored in
+the business objects (e.g. invoice)
+- events: visible/available in UI as action buttons for the user
+- workflow definition stored as JSON
+- guard support (transition/event availability is defined via
+condition/expression/function = guard)
 
-Show what the library does as concisely as possible, developers should be able to figure out **how** your project solves their problem by looking at the code example.
- Make sure the API you are showing off is obvious, and that your code is short and concise.
+#### Notes
+- task list is based on domain object (could be done externally with the
+help of FSM by accessing available events)
 
-## Motivation
+### Later
 
-A short description of the motivation behind the creation and maintenance of the project. This should explain **why** the project exists.
+- graphical editor
+- logging
+- analysis
+- automatic (times) transitions
 
-## Installation
+#### https://github.com/vstirbu/fsm-as-promised
+Heavy influenced by https://github.com/jakesgordon/javascript-state-machine
 
-Provide code examples and explanations of how to get the project.
+Based on Promise-s.
 
-## API Reference
+Improvements/extensions:
+- function/callback argument is one object that has named properties 'name' (event), 'from', 'to', 'args' (passed when firing event)
+- more callbacks: onleave, onenter, onentered - specific states/event agnostic
 
-Depending on the size of the project, if it is small and simple enough the reference docs can be added to the README. 
-For medium size to larger projects it is important to at least provide a link to where the API reference docs live.
-
-## Tests
-
-Describe and show how to run the tests with code examples.
-
-## Contributors
-
-Let people know how they can dive into the project, include important links to things like issue trackers, irc, twitter accounts if applicable.
-
-## License
-
-A short snippet describing the license (MIT, Apache, etc.)
+looks good, a lot of tests

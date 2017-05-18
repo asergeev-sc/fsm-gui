@@ -5,7 +5,7 @@ const UPDATE_SHOW_HELP = 'fsm/layout/UPDATE_SHOW_HELP';
 const initialState = {
   appElementRef: null,
   showInspector: true,
-  showHelp: true
+  showHelp: false
 };
 
 export default function reducer(state = initialState, action = {}) {
