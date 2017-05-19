@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './StatusLine.less';
 import Button from 'opuscapita-react-ui-buttons/lib/Button';
 
@@ -10,7 +11,7 @@ const propTypes = {
   mousePositionY: PropTypes.number,
   viewportScale: PropTypes.number,
   onZoomClick: PropTypes.func,
-  isShowGrid: PropTypes.bool,
+  showGrid: PropTypes.bool,
   onGridButtonClick: PropTypes.func
 };
 
@@ -42,7 +43,7 @@ class StatusLine extends Component {
       mousePositionX,
       mousePositionY,
       viewportScale,
-      isShowGrid
+      showGrid
     } = this.props;
 
     return (
@@ -62,8 +63,8 @@ class StatusLine extends Component {
 
         <div className="fsm--status-line__controls-right">
           <Button
-            svg={isShowGrid ? gridOffSVG : gridOnSVG}
-            title={isShowGrid ? 'Hide grid' : 'Show grid'}
+            svg={showGrid ? gridOffSVG : gridOnSVG}
+            title={showGrid ? 'Hide grid' : 'Show grid'}
             color="#333"
             onClick={this.handleGridButtonClick}
           />

@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { DraggableCore } from 'react-draggable';
 import { getCirclePath, pathToPoints, pointsToPath } from '../../svg-utils';
 import './StateNode.less';
@@ -52,7 +53,7 @@ const defaultProps = {
 };
 
 export default
-class StateNode extends Component {
+class StateNode extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -78,10 +79,6 @@ class StateNode extends Component {
 
   handleLabelElementRef(ref) {
     this.setState({ labelElement: ref });
-  }
-
-  shouldComponentUpdate() {
-
   }
 
   render() {

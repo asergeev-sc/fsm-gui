@@ -1,4 +1,6 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+// import isEqual from 'lodash/isEqual';
 import Viewport from '../Viewport';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -46,7 +48,6 @@ const maxScale = 5;
 const gridSize = 10;
 
 const propTypes = {
-  cursorPosition: PropTypes.object,
   viewportRect: PropTypes.object,
   viewportScale: PropTypes.number,
   viewportPanOffset: PropTypes.object,
@@ -58,7 +59,6 @@ const propTypes = {
 
 @connect(
   state => ({
-    cursorPosition: state.viewport.cursorPosition,
     viewportRect: state.viewport.viewportRect,
     viewportScale: state.viewport.viewportScale,
     viewportPanOffset: state.viewport.viewportPanOffset,
@@ -161,7 +161,7 @@ export default class ViewportContainer extends Component {
       <Viewport
         scale={viewportScale}
         gridSize={gridSize}
-        isShowGrid={showGrid}
+        showGrid={showGrid}
         onWheel={this.handleWheel}
         onMouseMove={this.handleMouseMove}
         onMouseLeave={this.handleMouseLea}

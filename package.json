@@ -21,8 +21,8 @@
     "README.md"
   ],
   "peerDependencies": {
-    "react": "15.4.2",
-    "react-dom": "15.4.2"
+    "react": "15.5.4",
+    "react-dom": "15.5.4"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.6",
@@ -75,6 +75,7 @@
     "bezier-js": "2.2.3",
     "d3": "^4.8.0",
     "deep-diff": "0.3.8",
+    "lodash": "^4.17.4",
     "opuscapita-react-ui-autocompletes": "^1.0.4",
     "opuscapita-react-ui-buttons": "^1.0.12",
     "opuscapita-react-ui-overlays": "^1.0.11",

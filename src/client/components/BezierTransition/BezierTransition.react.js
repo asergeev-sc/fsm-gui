@@ -1,4 +1,5 @@
-import React, { PureComponent, PropTypes } from 'react';
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import BezierCurve from '../BezierCurve';
 import './BezierTransition.less';
 import { DraggableCore } from 'react-draggable';

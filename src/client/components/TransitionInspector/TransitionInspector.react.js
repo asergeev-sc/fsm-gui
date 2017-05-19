@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Button from 'opuscapita-react-ui-buttons/lib/Button';
 import VerticalList from 'opuscapita-react-ui-autocompletes/lib/VerticalList';
 import './TransitionInspector.less';

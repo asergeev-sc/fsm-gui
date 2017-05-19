@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import StatusLine from '../StatusLine';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -58,7 +59,7 @@ export default class StatusLineContainer extends Component {
         mousePositionX={isOutOfViewport ? null : cursorPosition.x}
         mousePositionY={isOutOfViewport ? null : cursorPosition.y}
         viewportScale={viewportScale}
-        isShowGrid={showGrid}
+        showGrid={showGrid}
         onZoomClick={this.handleZoomClick}
         onGridButtonClick={this.handleGridButtonClick}
       />

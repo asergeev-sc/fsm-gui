@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { DraggableCore } from 'react-draggable';
 import sizeMe from 'react-sizeme';
 import './Viewport.less';
@@ -7,9 +8,9 @@ const workareaWidth = 10000;
 const workareaHeight = 10000;
 
 const propTypes = {
-  isAllowPan: PropTypes.bool,
+  allowPan: PropTypes.bool,
   gridSize: PropTypes.number,
-  isShowGrid: PropTypes.bool,
+  showGrid: PropTypes.bool,
   scale: PropTypes.number,
   size: PropTypes.object,
   onWheel: PropTypes.func,
@@ -23,9 +24,9 @@ const propTypes = {
   panOffsetY: PropTypes.number
 };
 const defaultProps = {
-  isAllowPan: true,
+  allowPan: true,
   gridSize: 40,
-  isShowGrid: false,
+  showGrid: false,
   scale: 1,
   size: null,
   onWheel: () => {},
@@ -40,8 +41,8 @@ class Viewport extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isMouseInside: false,
-      isPanning: false
+      mouseInside: false,
+      panning: false
     };
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
@@ -53,19 +54,19 @@ class Viewport extends Component {
   }
 
   handleMouseDown(e) {
-    this.setState({ isPanning: true });
+    this.setState({ panning: true });
   }
 
   handleMouseUp(e) {
-    this.setState({ isPanning: false });
+    this.setState({ panning: false });
   }
 
   handleMouseEnter(e) {
-    this.setState({ isMouseInside: true });
+    this.setState({ mouseInside: true });
   }
 
   handleMouseLeave(e) {
-    this.setState({ isMouseInside: false });
+    this.setState({ mouseInside: false });
     this.props.onMouseLeave(e, { x: null, y: null });
   }
 
@@ -82,16 +83,16 @@ class Viewport extends Component {
   }
 
   handleDrag(e, data) {
-    if(this.props.isAllowPan) {
+    if(this.props.allowPan) {
       this.props.onPan(e, data);
     }
   }
 
   render() {
     const {
-      isAllowPan,
+      allowPan,
       gridSize,
-      isShowGrid,
+      showGrid,
       onWheel,
       onClick,
       onMouseDown,
@@ -103,7 +104,7 @@ class Viewport extends Component {
       panOffsetY
     } = this.props;
 
-    const { isPanning } = this.state;
+    const { panning } = this.state;
 
     const viewportWidth = size.width / scale;
     const viewportHeight = size.height / scale;
@@ -123,7 +124,7 @@ class Viewport extends Component {
 
     return (
       <div
-        className={`fsm--viewport ${(isPanning) ? 'fsm--viewport--panning' : ''}`}
+        className={`fsm--viewport ${(panning) ? 'fsm--viewport--panning' : ''}`}
         onWheel={this.handleWheel}
         onMouseDown={this.handleMouseDown}
         onMouseUp={this.handleMouseUp}
@@ -146,7 +147,7 @@ class Viewport extends Component {
               <rect
                 width={workareaWidth}
                 height={workareaHeight}
-                fill={isShowGrid ? 'url(#grid)' : 'none'}
+                fill={showGrid ? 'url(#grid)' : 'none'}
                 stroke="#aaa"
                 onMouseDown={onMouseDown}
                 onClick={onClick}
