@@ -1,6 +1,6 @@
-const UPDATE_SELECTED_ITEM = 'fsm/app/UPDATE_SELECTED_ITEM';
+const UPDATE_SELECTED_ITEM = 'fsm/slectedItem/UPDATE_SELECTED_ITEM';
 
-const ITEM_TYPES = {
+export const ITEM_TYPES = {
   STATE: 'fsm/types/STATE',
   TRANSITION: 'fsm/types/TRANSITION',
   VIEWPORT: 'fsm/types/VIEWPORT',
@@ -8,14 +8,14 @@ const ITEM_TYPES = {
 };
 
 const initialState = {
-  itemType: ITEM_TYPES.NON_INSPECTABLE,
-  itemId: null
+  type: ITEM_TYPES.NON_INSPECTABLE,
+  id: null
 };
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case UPDATE_SELECTED_ITEM:
-      return Object.assign({}, state, { 'itemType': action.itemType, itemId: action.itemId });
+      return Object.assign({}, state, { itemType: action.itemType, itemId: action.itemId });
     default:
       return state;
   }

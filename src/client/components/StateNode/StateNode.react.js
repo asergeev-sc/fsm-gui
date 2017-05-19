@@ -8,7 +8,6 @@ const paddingH = 60;
 
 const propTypes = {
   name: PropTypes.string.isRequired,
-  code: PropTypes.string.isRequired, // Must be binary
   entryActions: PropTypes.arrayOf(PropTypes.string),
   exitActions: PropTypes.arrayOf(PropTypes.string),
   lineWidth: PropTypes.number,
@@ -24,6 +23,8 @@ const propTypes = {
   isSnap: PropTypes.bool,
   isDebug: PropTypes.bool,
   onClick: PropTypes.func,
+  onMousedDown: PropTypes.func,
+  onMousedUp: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onDragStart: PropTypes.func,
   onDragStop: PropTypes.func,
@@ -45,6 +46,8 @@ const defaultProps = {
   isSnap: false,
   isDebug: true,
   onClick: () => {},
+  onMousedDown: () => {},
+  onMousedUp: () => {},
   onDoubleClick: () => {},
   onDragStart: () => {},
   onDragStop: () => {},
@@ -79,7 +82,6 @@ class StateNode extends PureComponent {
   render() {
     const {
       name,
-      code,
       entryActions,
       exitActions,
       lineWidth,
@@ -95,6 +97,8 @@ class StateNode extends PureComponent {
       isSnap,
       isDebug,
       onClick,
+      onMouseDown,
+      onMouseUp,
       onDoubleClick,
       onDragStart,
       onDragStop,
@@ -147,6 +151,8 @@ class StateNode extends PureComponent {
             fill={bgColor}
             strokeWidth={lineWidth}
             onClick={onClick}
+            onMouseDown={onMouseDown}
+            onMouseUp={onMouseUp}
             onDoubleClick={onDoubleClick}
             onDrag={() => console.log('drag')}
           />

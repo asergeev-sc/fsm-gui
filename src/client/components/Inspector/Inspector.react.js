@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import TransitionInspector from '../TransitionInspector';
 import './Inspector.less';
 
@@ -6,7 +6,7 @@ const propTypes = {};
 const defaultProps = {};
 
 export default
-class Inspector extends Component {
+class Inspector extends PureComponent {
   render() {
     return (
       <div className="fsm--inspector">

@@ -37,6 +37,11 @@ const defaultProps = {
     }, dispatch) })
 )
 class AppLayout extends Component {
+  constructor(props) {
+    super(props);
+    this.handleAppRef = this.handleAppRef.bind(this);
+  }
+
   componentDidMount() {
     this.props.actions.loadFsm('workflow1');
   }
@@ -47,7 +52,7 @@ class AppLayout extends Component {
 
   render() {
     return (
-      <div className="fsm--app" ref={this.handleAppRef.bind(this)}>
+      <div className="fsm--app" ref={this.handleAppRef}>
         <div>
           <ToolbarContainer />
         </div>

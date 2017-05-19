@@ -4,13 +4,7 @@ const DELETE_STATE_NODE = 'fsm/state-nodes/DELETE_STATE_NODE';
 const REPLACE_STATE_NODES = 'fsm/state-nodes/REPLACE_STATE_NODES';
 
 const initialState = {
-  'State_1': {
-    name: 'State_1',
-    code: 0,
-    x: 20,
-    y: 20,
-    radius: 60
-  }
+
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -29,6 +23,5 @@ export default function reducer(state = initialState, action = {}) {
 }
 
 export function replaceStateNodes(value) {
-  console.log('rb:::', value);
   return { type: REPLACE_STATE_NODES, value };
 }

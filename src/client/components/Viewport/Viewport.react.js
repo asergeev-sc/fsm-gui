@@ -15,6 +15,9 @@ const propTypes = {
   onWheel: PropTypes.func,
   onMouseMove: PropTypes.func,
   onMouseLeave: PropTypes.func,
+  onMouseDown: PropTypes.func,
+  onMouseUp: PropTypes.func,
+  onMouseClick: PropTypes.func,
   onPan: PropTypes.func,
   panOffsetX: PropTypes.number,
   panOffsetY: PropTypes.number
@@ -83,6 +86,9 @@ class Viewport extends Component {
       gridSize,
       isShowGrid,
       onWheel,
+      onClick,
+      onMouseDown,
+      onMouseUp,
       scale,
       size,
       children,
@@ -135,6 +141,8 @@ class Viewport extends Component {
                 height={workareaHeight}
                 fill={isShowGrid ? 'url(#grid)' : 'none'}
                 stroke="#aaa"
+                onMouseDown={onMouseDown}
+                onClick={onClick}
               />
               {children}
             </g>
