@@ -49,6 +49,14 @@ const debugRects = (
 
 export default
 class TransitionLine extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.handlePoint1Drag = this.handlePoint1Drag.bind(this);
+    this.handlePoint2Drag = this.handlePoint2Drag.bind(this);
+    this.handlePoint3Drag = this.handlePoint3Drag.bind(this);
+    this.handlePoint4Drag = this.handlePoint4Drag.bind(this);
+  }
+
   handleStart(e, data) {
     console.log('start');
   }
@@ -123,7 +131,7 @@ class TransitionLine extends PureComponent {
       <g>
         <DraggableCore
           grid={isSnapToGrid ? [snapGridStep, snapGridStep] : null}
-          onDrag={this.handlePoint1Drag.bind(this)}
+          onDrag={this.handlePoint1Drag}
         >
           <rect
             className="fsm--transition-line__point"
@@ -138,7 +146,7 @@ class TransitionLine extends PureComponent {
         </DraggableCore>
         <DraggableCore
           grid={isSnapToGrid ? [snapGridStep, snapGridStep] : null}
-          onDrag={this.handlePoint2Drag.bind(this)}
+          onDrag={this.handlePoint2Drag}
         >
           <rect
             className="fsm--transition-line__point"
@@ -153,7 +161,7 @@ class TransitionLine extends PureComponent {
         </DraggableCore>
         <DraggableCore
           grid={isSnapToGrid ? [snapGridStep, snapGridStep] : null}
-          onDrag={this.handlePoint3Drag.bind(this)}
+          onDrag={this.handlePoint3Drag}
         >
           <rect
             className="fsm--transition-line__point"
@@ -168,7 +176,7 @@ class TransitionLine extends PureComponent {
         </DraggableCore>
         <DraggableCore
           grid={isSnapToGrid ? [snapGridStep, snapGridStep] : null}
-          onDrag={this.handlePoint4Drag.bind(this)}
+          onDrag={this.handlePoint4Drag}
         >
           <rect
             className="fsm--transition-line__point"

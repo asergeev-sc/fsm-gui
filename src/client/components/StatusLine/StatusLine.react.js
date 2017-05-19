@@ -23,6 +23,12 @@ const maxValueLength = 6;
 
 export default
 class StatusLine extends Component {
+  constructor(props) {
+    super(props);
+    this.handleGridButtonClick = this.handleGridButtonClick.bind(this);
+    this.handleZoomClick = this.handleZoomClick.bind(this);
+  }
+
   handleZoomClick(e) {
     this.props.onZoomClick(e);
   }
@@ -44,7 +50,7 @@ class StatusLine extends Component {
         <div
           className="fsm--status-line__scale fsm--status-line__action"
           title="Reset"
-          onClick={this.handleZoomClick.bind(this)}
+          onClick={this.handleZoomClick}
         >
           <div className="fsm--status-line__label">
             Zoom:
@@ -59,7 +65,7 @@ class StatusLine extends Component {
             svg={isShowGrid ? gridOffSVG : gridOnSVG}
             title={isShowGrid ? 'Hide grid' : 'Show grid'}
             color="#333"
-            onClick={this.handleGridButtonClick.bind(this)}
+            onClick={this.handleGridButtonClick}
           />
         </div>
 

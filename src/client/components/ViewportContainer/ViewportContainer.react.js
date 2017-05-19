@@ -70,6 +70,18 @@ const propTypes = {
   dispatch => ({ actions: bindActionCreators({ ...viewportActions, updateSelectedItem }, dispatch) })
 )
 export default class ViewportContainer extends Component {
+  constructor(props) {
+    super(props);
+    this.handleWheel = this.handleWheel.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleMouseLeave = this.handleMouseLeave.bind(this);
+    this.handlePan = this.handlePan.bind(this);
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.handleStateNodeClick = this.handleStateNodeClick.bind(this);
+    this.handleStateNodeMouseDown = this.handleStateNodeMouseDown.bind(this);
+  }
+
   handleWheel(e) {
     let scale = e.deltaY > 0 ?
       this.props.viewportScale - scaleFactor :
@@ -129,14 +141,14 @@ export default class ViewportContainer extends Component {
       return (
         <StateNode
           key={stateNodeKey}
-          name={stateNode.name}
+          label={stateNode.name}
           x={stateNode.gui.points[0]}
           y={stateNode.gui.points[1]}
           isFinalState={false}
           isHighlighted={false}
           isSnap={false}
-          onMouseDown={(e) => this.handleStateNodeMouseDown.call(this, e, stateNodeKey)}
-          onClick={(e) => this.handleStateNodeClick.call(this, e, stateNodeKey)}
+          onMouseDown={(e) => this.handleStateNodeMouseDown(e, stateNodeKey)}
+          onClick={(e) => this.handleStateNodeClick(e, stateNodeKey)}
           onDoubleClick={() => console.log('onDoubleClick')}
           onDragStart={(e, data) => console.log('DragStart', e, data)}
           onDragStop={(e, data) => console.log('DragStop', e, data)}
@@ -150,12 +162,12 @@ export default class ViewportContainer extends Component {
         scale={viewportScale}
         gridSize={gridSize}
         isShowGrid={showGrid}
-        onWheel={this.handleWheel.bind(this)}
-        onMouseMove={this.handleMouseMove.bind(this)}
-        onMouseLeave={this.handleMouseLeave.bind(this)}
-        onPan={this.handlePan.bind(this)}
-        onMouseDown={this.handleMouseDown.bind(this)}
-        onClick={this.handleClick.bind(this)}
+        onWheel={this.handleWheel}
+        onMouseMove={this.handleMouseMove}
+        onMouseLeave={this.handleMouseLea}
+        onPan={this.handlePan}
+        onMouseDown={this.handleMouseDown}
+        onClick={this.handleClick}
         panOffsetX={viewportPanOffset.x}
         panOffsetY={viewportPanOffset.y}
       >

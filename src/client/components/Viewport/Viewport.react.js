@@ -43,6 +43,13 @@ class Viewport extends Component {
       isMouseInside: false,
       isPanning: false
     };
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleMouseUp = this.handleMouseUp.bind(this);
+    this.handleMouseEnter = this.handleMouseEnter.bind(this);
+    this.handleMouseLeave = this.handleMouseLeave.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleWheel = this.handleWheel.bind(this);
+    this.handleDrag = this.handleDrag.bind(this);
   }
 
   handleMouseDown(e) {
@@ -117,15 +124,15 @@ class Viewport extends Component {
     return (
       <div
         className={`fsm--viewport ${(isPanning) ? 'fsm--viewport--panning' : ''}`}
-        onWheel={this.handleWheel.bind(this)}
-        onMouseDown={this.handleMouseDown.bind(this)}
-        onMouseUp={this.handleMouseUp.bind(this)}
-        onMouseEnter={this.handleMouseEnter.bind(this)}
-        onMouseLeave={this.handleMouseLeave.bind(this)}
-        onMouseMove={this.handleMouseMove.bind(this)}
+        onWheel={this.handleWheel}
+        onMouseDown={this.handleMouseDown}
+        onMouseUp={this.handleMouseUp}
+        onMouseEnter={this.handleMouseEnter}
+        onMouseLeave={this.handleMouseLeave}
+        onMouseMove={this.handleMouseMove}
       >
         <DraggableCore
-          onDrag={this.handleDrag.bind(this)}
+          onDrag={this.handleDrag}
         >
           <svg
             version="1.1"

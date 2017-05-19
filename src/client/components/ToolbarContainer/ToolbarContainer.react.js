@@ -29,6 +29,12 @@ import inspectorSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/chrome_reader
   dispatch => ({ actions: bindActionCreators({ ...viewportActions, ...layoutActions } , dispatch) })
 )
 export default class ToolbarContainer extends Component {
+  constructor(props) {
+    super(props);
+    this.handleShowInspector = this.handleShowInspector.bind(this);
+    this.handleShowHelp = this.handleShowHelp.bind(this);
+  }
+
   handleShowInspector() {
     this.props.actions.updateShowInspector(!this.props.showInspector);
   }
@@ -131,7 +137,7 @@ export default class ToolbarContainer extends Component {
           },
           null,
           {
-            action: this.handleShowInspector.bind(this),
+            action: this.handleShowInspector,
             iconSVG: inspectorSVG,
             title: 'Inspector',
             label: '',
@@ -161,7 +167,7 @@ export default class ToolbarContainer extends Component {
           },
           null,
           {
-            action: this.handleShowHelp.bind(this),
+            action: this.handleShowHelp,
             iconSVG: helpSVG,
             title: 'Need help?',
             label: '',

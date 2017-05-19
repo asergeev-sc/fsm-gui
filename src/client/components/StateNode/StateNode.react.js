@@ -1,4 +1,4 @@
-import React, { PureComponent, PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { DraggableCore } from 'react-draggable';
 import { getCirclePath, pathToPoints, pointsToPath } from '../../svg-utils';
 import './StateNode.less';
@@ -7,9 +7,7 @@ const paddingV = 20;
 const paddingH = 60;
 
 const propTypes = {
-  name: PropTypes.string.isRequired,
-  entryActions: PropTypes.arrayOf(PropTypes.string),
-  exitActions: PropTypes.arrayOf(PropTypes.string),
+  label: PropTypes.string,
   lineWidth: PropTypes.number,
   color: PropTypes.string,
   bgColor: PropTypes.string,
@@ -18,10 +16,10 @@ const propTypes = {
   snapGridStep: PropTypes.number,
   x: PropTypes.number,
   y: PropTypes.number,
-  isHighlighted: PropTypes.bool,
-  isFinalState: PropTypes.bool,
-  isSnap: PropTypes.bool,
-  isDebug: PropTypes.bool,
+  highlighted: PropTypes.bool,
+  finalState: PropTypes.bool,
+  snap: PropTypes.bool,
+  debug: PropTypes.bool,
   onClick: PropTypes.func,
   onMousedDown: PropTypes.func,
   onMousedUp: PropTypes.func,
@@ -31,8 +29,7 @@ const propTypes = {
   onDrag: PropTypes.func
 };
 const defaultProps = {
-  entryActions: null,
-  exitActions: null,
+  label: '',
   lineWidth: 1,
   color: '#000',
   bgColor: '#0277bd',
@@ -41,10 +38,10 @@ const defaultProps = {
   snapGridStep: 30,
   x: 0,
   y: 0,
-  isHighlighted: false,
-  isFinalState: false,
-  isSnap: false,
-  isDebug: true,
+  highlighted: false,
+  finalState: false,
+  snap: false,
+  debug: true,
   onClick: () => {},
   onMousedDown: () => {},
   onMousedUp: () => {},
@@ -55,12 +52,16 @@ const defaultProps = {
 };
 
 export default
-class StateNode extends PureComponent {
+class StateNode extends Component {
   constructor(props) {
     super(props);
     this.state = {
       labelElement: null
     };
+    this.handleStart = this.handleStart.bind(this);
+    this.handleStop = this.handleStop.bind(this);
+    this.handleDrag = this.handleDrag.bind(this);
+    this.handleLabelElementRef = this.handleLabelElementRef.bind(this);
   }
 
   handleStart(e, data) {
@@ -79,11 +80,13 @@ class StateNode extends PureComponent {
     this.setState({ labelElement: ref });
   }
 
+  shouldComponentUpdate() {
+
+  }
+
   render() {
     const {
-      name,
-      entryActions,
-      exitActions,
+      label,
       lineWidth,
       color,
       bgColor,
@@ -92,10 +95,10 @@ class StateNode extends PureComponent {
       textColor,
       x,
       y,
-      isHighlighted,
-      isFinalState,
-      isSnap,
-      isDebug,
+      highlighted,
+      finalState,
+      snap,
+      debug,
       onClick,
       onMouseDown,
       onMouseUp,
@@ -105,7 +108,7 @@ class StateNode extends PureComponent {
       onDrag
     } = this.props;
 
-    // const finalStateCircle = isFinalState ? (
+    // const finalStateCircle = finalState ? (
     //   <path
     //     d={getCirclePath(x, y, radius - radius / 10)}
     //     fill="none"
@@ -117,7 +120,7 @@ class StateNode extends PureComponent {
     // const circlePoints = this.circlePathElement ? pathToPoints(this.circlePathElement, 32) : null;
     // const segmentedCircle = circlePoints ? pointsToPath(circlePoints, true) : null;
 
-    // const debugPath = isDebug ? (
+    // const debugPath = debug ? (
     //   <path
     //     d={segmentedCircle}
     //     fill="none"
@@ -125,20 +128,22 @@ class StateNode extends PureComponent {
     //     strokeWidth={lineWidth}
     //   />
     // ) : null;
-    // if(isDebug) {
-    //   console.log(`StateNode ${name}`, this);
+    // if(debug) {
+    //   console.log(`StateNode ${label}`, this);
     // }
 
     const labelElementBBox = this.state.labelElement && this.state.labelElement.getBBox();
     const width = labelElementBBox && labelElementBBox.width;
     const height = labelElementBBox && labelElementBBox.height;
 
+    console.log('node render');
+
     return (
       <DraggableCore
-        grid={isSnap ? [snapGridStep, snapGridStep] : null}
-        onStart={this.handleStart.bind(this)}
-        onStop={this.handleStop.bind(this)}
-        onDrag={this.handleDrag.bind(this)}
+        grid={snap ? [snapGridStep, snapGridStep] : null}
+        onStart={this.handleStart}
+        onStop={this.handleStop}
+        onDrag={this.handleDrag}
       >
         <g>
           <rect
@@ -163,9 +168,9 @@ class StateNode extends PureComponent {
             alignmentBaseline="middle"
             textAnchor="middle"
             fill={textColor}
-            ref={this.handleLabelElementRef.bind(this)}
+            ref={this.handleLabelElementRef}
           >
-            {name}
+            {label}
           </text>
         </g>
       </DraggableCore>

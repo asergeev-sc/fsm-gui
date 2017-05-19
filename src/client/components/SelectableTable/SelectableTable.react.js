@@ -18,7 +18,7 @@ export default
 class SelectableTable extends Component {
   constructor(props) {
     super(props);
-    this.state = { };
+    this.handleItemClick = this.handleItemClick.bind(this);
   }
 
   handleItemClick(itemKey) {
@@ -48,7 +48,7 @@ class SelectableTable extends Component {
           <tr
             key={itemKey}
             className="fsm--selectable-table__item-tr"
-            onClick={() => this.handleItemClick.call(this, itemKey)}
+            onClick={() => this.handleItemClick(itemKey)}
           >
             {items[itemKey].map((itemField, i) => (
               <td

@@ -23,6 +23,12 @@ const propTypes = {
   dispatch => ({ actions: bindActionCreators(viewportActions, dispatch) })
 )
 export default class StatusLineContainer extends Component {
+  constructor(props) {
+    super(props);
+    this.handleZoomClick = this.handleZoomClick.bind(this);
+    this.handleGridButtonClick = this.handleGridButtonClick.bind(this);
+  }
+
   handleZoomClick(e) {
     this.props.actions.updateViewportScale(1);
   }
@@ -53,8 +59,8 @@ export default class StatusLineContainer extends Component {
         mousePositionY={isOutOfViewport ? null : cursorPosition.y}
         viewportScale={viewportScale}
         isShowGrid={showGrid}
-        onZoomClick={this.handleZoomClick.bind(this)}
-        onGridButtonClick={this.handleGridButtonClick.bind(this)}
+        onZoomClick={this.handleZoomClick}
+        onGridButtonClick={this.handleGridButtonClick}
       />
     );
   }

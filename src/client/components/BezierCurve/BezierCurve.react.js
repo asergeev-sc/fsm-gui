@@ -32,6 +32,14 @@ const defaultProps = {
 
 export default
 class BezierCurve extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.handlePoint1Drag = this.handlePoint1Drag.bind(this);
+    this.handlePoint2Drag = this.handlePoint2Drag.bind(this);
+    this.handlePoint3Drag = this.handlePoint3Drag.bind(this);
+    this.handlePoint4Drag = this.handlePoint4Drag.bind(this);
+  }
+
   handleChange(bezier, d) {
     this.props.onChange(bezier, this.pathElement);
   }
@@ -91,7 +99,7 @@ class BezierCurve extends PureComponent {
           x2={bezier[2]}
           y2={bezier[3]}
         />
-        <DraggableCore onDrag={this.handlePoint1Drag.bind(this)}>
+        <DraggableCore onDrag={this.handlePoint1Drag}>
           <rect
             className="bezier-curve__control-point"
             x={bezier[0] - pointSize / 2 }
@@ -103,7 +111,7 @@ class BezierCurve extends PureComponent {
             strokeWidth={1}
           />
         </DraggableCore>
-        <DraggableCore onDrag={this.handlePoint2Drag.bind(this)}>
+        <DraggableCore onDrag={this.handlePoint2Drag}>
           <rect
             className="bezier-curve__control-point"
             x={bezier[2] - pointSize / 2 }
@@ -127,7 +135,7 @@ class BezierCurve extends PureComponent {
           x2={bezier[6]}
           y2={bezier[7]}
         />
-        <DraggableCore onDrag={this.handlePoint4Drag.bind(this)}>
+        <DraggableCore onDrag={this.handlePoint4Drag}>
           <rect
             className="bezier-curve__control-point"
             x={bezier[6] - pointSize / 2 }
@@ -139,7 +147,7 @@ class BezierCurve extends PureComponent {
             strokeWidth={1}
           />
         </DraggableCore>
-        <DraggableCore onDrag={this.handlePoint3Drag.bind(this)}>
+        <DraggableCore onDrag={this.handlePoint3Drag}>
           <rect
             className="bezier-curve__control-point"
             x={bezier[4] - pointSize / 2 }

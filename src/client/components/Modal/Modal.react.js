@@ -20,6 +20,7 @@ class Modal extends PureComponent {
   constructor(props) {
     super(props);
     this.handleEsc = this.handleEsc.bind(this);
+    this.handleHideClick = this.handleHideClick.bind(this);
   }
 
   componentDidMount() {
@@ -59,7 +60,7 @@ class Modal extends PureComponent {
               className="fsm--modal__header-close-button"
               label="✕"
               color="#aaa"
-              onClick={this.handleHideClick.bind(this)}
+              onClick={this.handleHideClick}
             />
           </div>
           <div className="fsm--modal__content">

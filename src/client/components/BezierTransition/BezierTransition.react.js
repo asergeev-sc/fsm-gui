@@ -61,6 +61,11 @@ const defaultProps = {
 
 export default
 class BezierTransition extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.handleBezierChange = this.handleBezierChange.bind(this);
+  }
+
   componentWillReceiveProps(nextProps) {
     this.prevBezier = nextProps.bezier;
   }
@@ -129,7 +134,7 @@ class BezierTransition extends PureComponent {
         </text>
         <BezierCurve
           bezier={bezier}
-          onChange={this.handleBezierChange.bind(this)}
+          onChange={this.handleBezierChange}
           markerStart={arrowPosition === 1 ? 'url(#fsm--bezier-transition__arrow)' : 'none'}
           markerEnd={arrowPosition === 2 ? 'url(#fsm--bezier-transition__arrow)' : 'none'}
           stroke={color}

@@ -14,6 +14,11 @@ import './HelpContainer.less';
 )
 export default
 class HelpContainer extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.handleHide = this.handleHide.bind(this);
+  }
+
   handleHide() {
     this.props.actions.updateShowHelp(false);
   }
@@ -27,10 +32,10 @@ class HelpContainer extends PureComponent {
       <div className="fsm--help-container">
         <Modal
           isShow={showHelp}
-          onHide={this.handleHide.bind(this)}
+          onHide={this.handleHide}
           title="Help information"
         >
-          <Help onHide={this.handleHide.bind(this)} />
+          <Help onHide={this.handleHide} />
         </Modal>
       </div>
     );
