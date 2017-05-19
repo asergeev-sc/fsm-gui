@@ -7,7 +7,7 @@ const fs = require('fs');
 const app = express();
 
 const host = process.env.HOST || 'localhost';
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3020;
 const paths = {
   workflows: path.resolve(__dirname, './db/workflows'),
   domainObjects: path.resolve(__dirname, './db/domain-objects')

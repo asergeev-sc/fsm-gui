@@ -1,14 +1,15 @@
 import React, { Component, PropTypes } from 'react';
+import './App.less';
 import createStore from './redux/create';
 import { bindActionCreators } from 'redux';
 import { Provider, connect } from 'react-redux';
 import ApiClient from './redux/ApiClient';
+
 import ToolbarContainer from '../ToolbarContainer';
 import ViewportContainer from '../ViewportContainer';
 import StatusLineContainer from '../StatusLineContainer';
 import InspectorContainer from '../InspectorContainer';
 import HelpContainer from '../HelpContainer';
-import './App.less';
 
 import * as viewportActions from '../App/redux/reducer/viewport';
 import * as layoutActions from '../App/redux/reducer/layout';

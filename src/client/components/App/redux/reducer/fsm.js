@@ -1,14 +1,19 @@
+import request from 'superagent';
+import { replaceStateNodes } from './state-nodes';
+
 const LOAD_FSM = 'fsm/fsm/LOAD_FSM';
 const LOAD_FSM_SUCCESS = 'fsm/fsm/LOAD_FSM_SUCCESS';
 const LOAD_FSM_FAIL = 'fsm/fsm/LOAD_FSM_FAIL';
 
 const initialState = {
-  "name": "Sample name",
-  "description": "Sample desc",
-  "id": "Sample id",
-  "parentId": null,
-  "changedOn": "1495118748919",
-  "changedBy": "admin",
+  "meta": {
+    "name": "Sample name",
+    "description": "Sample desc",
+    "id": "Sample id",
+    "parentId": null,
+    "changedOn": "1495118748919",
+    "changedBy": "admin"
+  },
   "loading": false,
   "loaded": false,
   "error": false
@@ -19,7 +24,7 @@ export default function reducer(state = initialState, action = {}) {
     case LOAD_FSM:
       return { ...state, loading: true };
     case LOAD_FSM_SUCCESS:
-      return { ...action.result, loading: false, loaded: true, error: null };
+      return { meta: action.value, loading: false, loaded: true, error: null };
     case LOAD_FSM_FAIL:
       return { ...state, loading: false, loaded: false, error: action.error };
     default:
@@ -27,10 +32,22 @@ export default function reducer(state = initialState, action = {}) {
   }
 }
 
+export function loadFsmSuccess(value) {
+  return { type: LOAD_FSM_SUCCESS, value };
+}
+
+export function loadFsmFail(error) {
+  return { type: LOAD_FSM_FAIL, error };
+}
+
 export function loadFsm(id) {
-  return {
-    types: [LOAD_FSM, LOAD_FSM_SUCCESS, LOAD_FSM_FAIL],
-    id: id,
-    promise: client => client.get(`/workflows/${id}`)
-  };
+  return dispatch =>
+    request.get(`http://localhost:3020/workflows/${id}`)
+      .then((result) => {
+        dispatch(loadFsmSuccess(result.body.meta));
+        dispatch(replaceStateNodes(result.body.data.states));
+      })
+      .catch(() => {
+        dispatch(loadFsmFail());
+      });
 }
