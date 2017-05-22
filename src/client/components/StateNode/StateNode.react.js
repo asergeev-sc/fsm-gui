@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { DraggableCore } from 'react-draggable';
 import { getCirclePath, pathToPoints, pointsToPath } from '../../svg-utils';
+import tinycolor from 'tinycolor2';
 import './StateNode.less';
 
 const paddingV = 20;
@@ -29,6 +30,10 @@ const propTypes = {
   onMousedUp: PropTypes.func,
   onMouseEnter: PropTypes.func,
   onMouseLeave: PropTypes.func,
+  onPointMouseDown: PropTypes.func,
+  onPointMouseUp: PropTypes.func,
+  onPointMouseEnter: PropTypes.func,
+  onPointMouseLeave: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onDragStart: PropTypes.func,
   onDragStop: PropTypes.func,
@@ -54,6 +59,10 @@ const defaultProps = {
   onMousedUp: () => {},
   onMouseEnter: () => {},
   onMouseLeave: () => {},
+  onPointMouseDown: () => {},
+  onPointMouseUp: () => {},
+  onPointMouseEnter: () => {},
+  onPointMouseLeave: () => {},
   onDoubleClick: () => {},
   onDragStart: () => {},
   onDragStop: () => {},
@@ -66,7 +75,8 @@ class StateNode extends PureComponent {
     super(props);
     this.state = {
       labelElement: null,
-      rectElement: null
+      rectElement: null,
+      selectedPoint: null
     };
     this.handleStart = this.handleStart.bind(this);
     this.handleStop = this.handleStop.bind(this);
@@ -75,6 +85,10 @@ class StateNode extends PureComponent {
     this.handleRectElementRef = this.handleRectElementRef.bind(this);
     this.handleMouseEnter = this.handleMouseEnter.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
+    this.handlePointMouseDown = this.handlePointMouseDown.bind(this);
+    this.handlePointMouseUp = this.handlePointMouseUp.bind(this);
+    this.handlePointMouseEnter = this.handlePointMouseEnter.bind(this);
+    this.handlePointMouseLeave = this.handlePointMouseLeave.bind(this);
   }
 
   handleStart(e, data) {
@@ -105,6 +119,28 @@ class StateNode extends PureComponent {
     this.props.onMouseLeave(e);
   }
 
+  handlePointMouseEnter(e, index) {
+    this.setState({ selectedPoint: index });
+    this.props.onPointMouseEnter(e, index);
+  }
+
+  handlePointMouseLeave(e, index) {
+    this.setState({ selectedPoint: null });
+    this.props.onPointMouseLeave(e, index);
+  }
+
+  handlePointMouseDown(e, index) {
+    this.setState({ selectedPoint: index });
+    this.props.onMouseDown(e);
+    this.props.onPointMouseDown(e, index);
+  }
+
+  handlePointMouseUp(e, index) {
+    this.setState({ selectedPoint: null });
+    this.props.onMouseDown(e);
+    this.props.onPointMouseUp(e, index);
+  }
+
   renderPoints(xPointsCount = 3) {
     const box = this.state.rectElement.getBBox();
     const xStep = box.width / (xPointsCount + 1);
@@ -132,9 +168,14 @@ class StateNode extends PureComponent {
         cx={pointPosition.x}
         cy={pointPosition.y}
         r={6}
-        stroke={this.props.bgColor}
         strokeWidth="2"
-        fill="#fff"
+        stroke={tinycolor(this.props.bgColor).darken(14)}
+        fill={this.state.selectedPoint === index ? tinycolor(this.props.bgColor).lighten(14) : '#fff'}
+        onMouseDown={(e) => this.handlePointMouseDown(e, index)}
+        onMouseUp={(e) => this.handlePointMouseUp(e, index)}
+        onMouseEnter={(e) => this.handlePointMouseEnter(e, index)}
+        onMouseLeave={(e) => this.handlePointMouseLeave(e, index)}
+        className="fsm--state-node__point"
       />
     ));
   }
@@ -163,7 +204,7 @@ class StateNode extends PureComponent {
       onDragStop,
       onDrag
     } = this.props;
-
+    console.log(this.state);
     // const finalStateCircle = finalState ? (
     //   <path
     //     d={getCirclePath(x, y, radius - radius / 10)}
@@ -192,7 +233,7 @@ class StateNode extends PureComponent {
     const width = labelElementBBox && labelElementBBox.width;
     const height = labelElementBBox && labelElementBBox.height;
     const points = showPoints && this.state.rectElement ? this.renderPoints() : null;
-    const outline = selected ? (
+    const outline = (
       <rect
         x={x - width / 2 - paddingH / 2 - outlinePadding }
         y={y - height / 2 - paddingV / 2 - outlinePadding }
@@ -200,11 +241,11 @@ class StateNode extends PureComponent {
         ry="2"
         width={width + paddingH + outlinePadding * 2}
         height={height + paddingV + outlinePadding * 2}
-        fill="#fff"
+        fill={selected ? '#fff' : 'transparent'}
         strokeWidth={2}
-        stroke={bgColor}
+        stroke={selected ? bgColor : 'transparent'}
       />
-    ) : null;
+    );
 
     return (
       <DraggableCore
@@ -216,8 +257,9 @@ class StateNode extends PureComponent {
         <g
           className="fsm--state-node"
           onClick={onClick}
-
           onDoubleClick={onDoubleClick}
+          onMouseEnter={this.handleMouseEnter}
+          onMouseLeave={this.handleMouseLeave}
         >
           {outline}
           <rect
@@ -232,8 +274,7 @@ class StateNode extends PureComponent {
             strokeWidth={lineWidth}
             onMouseDown={onMouseDown}
             onMouseUp={onMouseUp}
-            onMouseEnter={this.handleMouseEnter}
-            onMouseLeave={this.handleMouseLeave}
+
           />
           <text
             ref={this.handleLabelElementRef}
@@ -243,11 +284,10 @@ class StateNode extends PureComponent {
             alignmentBaseline="middle"
             dominantBaseline="middle"
             textAnchor="middle"
+            style={{ userSelect: "none" }}
             fill={textColor}
             onMouseDown={onMouseDown}
             onMouseUp={onMouseUp}
-            onMouseEnter={this.handleMouseEnter}
-            onMouseLeave={this.handleMouseLeave}
           >
             {label}
           </text>

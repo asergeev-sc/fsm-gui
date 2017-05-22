@@ -16,7 +16,7 @@
       "new": {
         "name": "New",
         "description": "New order created",
-        "gui": {
+        "visual": {
           "bgColor": "#0277bd",
           "textColor": "#fff",
           "points": [300, 300]
@@ -25,7 +25,7 @@
       "onHold": {
         "name": "On hold",
         "description": "Order is on hold",
-        "gui": {
+        "visual": {
           "bgColor": "#0277bd",
           "textColor": "#fff",
           "points": [300, 600]
@@ -34,7 +34,7 @@
       "canceled": {
         "name": "Canceled",
         "description": "Order has been canceled",
-        "gui": {
+        "visual": {
           "bgColor": "#0277bd",
           "textColor": "#fff",
           "points": [100, 600]
@@ -43,7 +43,7 @@
       "pendingPayment": {
         "name": "Pending payment",
         "description": "Pending payment",
-        "gui": {
+        "visual": {
           "bgColor": "#0277bd",
           "textColor": "#fff",
           "points": [300, 900]
@@ -52,8 +52,8 @@
       "refunded": {
         "name": "Refunded",
         "description": "Refunded",
-        "gui": {
-          "bgColor": "#0277bd",
+        "visual": {
+          "bgColor": "#b71c1c",
           "textColor": "#fff",
           "points": [600, 900]
         }
@@ -61,7 +61,7 @@
       "complete": {
         "name": "Complete",
         "description": "Order complete",
-        "gui": {
+        "visual": {
           "bgColor": "#0277bd",
           "textColor": "#fff",
           "points": [600, 1200]
@@ -70,7 +70,7 @@
       "closed": {
         "name": "Closed",
         "description": "Order closed",
-        "gui": {
+        "visual": {
           "bgColor": "#0277bd",
           "textColor": "#fff",
           "points": [600, 1500]
@@ -79,7 +79,7 @@
       "archived": {
         "name": "Archived",
         "description": "Order archived",
-        "gui": {
+        "visual": {
           "bgColor": "#0277bd",
           "textColor": "#fff",
           "points": [600, 1800]
@@ -109,7 +109,7 @@
 
           }
         },
-        "gui": {
+        "visual": {
           "points": [20,20, 20,100, 40,100, 100,40]
         }
       }

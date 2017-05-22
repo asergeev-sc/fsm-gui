@@ -180,8 +180,10 @@ export default class ViewportContainer extends Component {
         <StateNode
           key={stateNodeKey}
           label={stateNode.name}
-          x={stateNode.gui.points[0]}
-          y={stateNode.gui.points[1]}
+          x={stateNode.visual.points[0]}
+          y={stateNode.visual.points[1]}
+          bgColor={stateNode.visual.bgColor}
+          textColor={stateNode.visual.textColor}
           finalState={false}
           selected={selected}
           showPoints={showPoints}
