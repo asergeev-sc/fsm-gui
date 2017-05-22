@@ -44,7 +44,7 @@ class AppLayout extends Component {
   }
 
   componentDidMount() {
-    this.props.actions.loadFsm('workflow1');
+    this.props.actions.loadFsm('machine1');
   }
 
   handleAppRef(ref) {

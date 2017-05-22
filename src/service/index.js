@@ -9,7 +9,7 @@ const app = express();
 const host = process.env.HOST || 'localhost';
 const port = process.env.PORT || 3020;
 const paths = {
-  workflows: path.resolve(__dirname, './db/workflows'),
+  machines: path.resolve(__dirname, './db/machines'),
   domainObjects: path.resolve(__dirname, './db/domain-objects')
 };
 
@@ -23,12 +23,12 @@ app.use(function(req, res, next) {
 
 // Routes
 
-app.get('/workflows', function(req, res) {
-  getWorkflows(req, res, paths.workflows);
+app.get('/machines', function(req, res) {
+  getMachines(req, res, paths.machines);
 });
 
-app.get('/workflows/:id', function(req, res) {
-  getWorkflow(req, res, paths.workflows, req.params.id);
+app.get('/machines/:id', function(req, res) {
+  getMachine(req, res, paths.machines, req.params.id);
 });
 
 // app.get('/domain-objects', function(req, res) {
@@ -48,7 +48,7 @@ app.listen(port, (err) => {
 
 // Handlers
 
-function getWorkflows(req, res, itemsPath) {
+function getMachines(req, res, itemsPath) {
   fs.readdir(itemsPath, (err, files) => {
     if(err) {
       return res.status(500).send({ error: 'Internal server error' });
@@ -61,7 +61,7 @@ function getWorkflows(req, res, itemsPath) {
   });
 }
 
-function getWorkflow(req, res, itemsPath, itemId) {
+function getMachine(req, res, itemsPath, itemId) {
   const itemPath = path.resolve(`${itemsPath}/${itemId}.json`);
   fs.readFile(itemPath, { encoding: 'utf-8' }, (err, data) => {
     if(err) {

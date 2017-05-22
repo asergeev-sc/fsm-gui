@@ -20,10 +20,13 @@ const propTypes = {
   selected: PropTypes.bool,
   finalState: PropTypes.bool,
   snap: PropTypes.bool,
+  showPoints: PropTypes.bool,
   debug: PropTypes.bool,
   onClick: PropTypes.func,
   onMousedDown: PropTypes.func,
   onMousedUp: PropTypes.func,
+  onMouseEnter: PropTypes.func,
+  onMouseLeave: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onDragStart: PropTypes.func,
   onDragStop: PropTypes.func,
@@ -42,10 +45,13 @@ const defaultProps = {
   selected: false,
   finalState: false,
   snap: true,
+  showPoints: false,
   debug: true,
   onClick: () => {},
   onMousedDown: () => {},
   onMousedUp: () => {},
+  onMouseEnter: () => {},
+  onMouseLeave: () => {},
   onDoubleClick: () => {},
   onDragStart: () => {},
   onDragStop: () => {},
@@ -57,12 +63,16 @@ class StateNode extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      labelElement: null
+      labelElement: null,
+      rectElement: null
     };
     this.handleStart = this.handleStart.bind(this);
     this.handleStop = this.handleStop.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
     this.handleLabelElementRef = this.handleLabelElementRef.bind(this);
+    this.handleRectElementRef = this.handleRectElementRef.bind(this);
+    this.handleMouseEnter = this.handleMouseEnter.bind(this);
+    this.handleMouseLeave = this.handleMouseLeave.bind(this);
   }
 
   handleStart(e, data) {
@@ -81,6 +91,52 @@ class StateNode extends PureComponent {
     this.setState({ labelElement: ref });
   }
 
+  handleRectElementRef(ref) {
+    this.setState({ rectElement: ref });
+  }
+
+  handleMouseEnter(e) {
+    this.props.onMouseEnter(e);
+  }
+
+  handleMouseLeave(e) {
+    this.props.onMouseLeave(e);
+  }
+
+  renderPoints(xPointsCount = 3) {
+    const box = this.state.rectElement.getBBox();
+    const xStep = box.width / (xPointsCount + 1);
+    const pointPositions = [
+      // Top pints
+      { x: box.x + xStep, y: box.y },
+      { x: box.x + xStep * 2, y: box.y },
+      { x: box.x + xStep * 3, y: box.y },
+
+      // Right points
+      { x: box.x + box.width, y: box.y + box.height / 2 },
+
+      // Bottom point
+      { x: box.x + xStep, y: box.y + box.height },
+      { x: box.x + xStep * 2, y: box.y + box.height },
+      { x: box.x + xStep * 3, y: box.y + box.height },
+
+      // Left points
+      { x: box.x, y: box.y + box.height / 2 }
+    ];
+
+    return pointPositions.map((pointPosition, index) => (
+      <circle
+        key={index}
+        cx={pointPosition.x}
+        cy={pointPosition.y}
+        r={6}
+        stroke={this.props.bgColor}
+        strokeWidth="3"
+        fill="#fff"
+      />
+    ));
+  }
+
   render() {
     const {
       label,
@@ -95,6 +151,7 @@ class StateNode extends PureComponent {
       selected,
       finalState,
       snap,
+      showPoints,
       debug,
       onClick,
       onMouseDown,
@@ -132,8 +189,7 @@ class StateNode extends PureComponent {
     const labelElementBBox = this.state.labelElement && this.state.labelElement.getBBox();
     const width = labelElementBBox && labelElementBBox.width;
     const height = labelElementBBox && labelElementBBox.height;
-
-    console.log('node render');
+    const points = showPoints && this.state.rectElement ? this.renderPoints() : null;
 
     return (
       <DraggableCore
@@ -147,6 +203,8 @@ class StateNode extends PureComponent {
           onClick={onClick}
           onMouseDown={onMouseDown}
           onMouseUp={onMouseUp}
+          onMouseEnter={this.handleMouseEnter}
+          onMouseLeave={this.handleMouseLeave}
           onDoubleClick={onDoubleClick}
         >
           <rect
@@ -158,6 +216,7 @@ class StateNode extends PureComponent {
             height={height + paddingV}
             fill={bgColor}
             strokeWidth={lineWidth}
+            ref={this.handleRectElementRef}
           />
           <text
             x={x}
@@ -171,6 +230,7 @@ class StateNode extends PureComponent {
           >
             {label}
           </text>
+          {points}
         </g>
       </DraggableCore>
     );

@@ -5,7 +5,8 @@ import Viewport from '../Viewport';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as viewportActions from '../App/redux/reducer/viewport';
-import { ITEM_TYPES, updateSelectedItem } from '../App/redux/reducer/selected-item';
+import * as selectedItemActions from '../App/redux/reducer/selected-item';
+import { ITEM_TYPES } from '../App/redux/reducer/selected-item';
 
 // TODO remove debug helpers
 import BezierTransition from '../BezierTransition';
@@ -15,7 +16,7 @@ import StateNode from '../StateNode';
 //     <g key="group">
 //       <BezierTransition
 //         input="Transition_0"
-//         isHighlighted={true}
+//         highlighted={true}
 //         isSnap={false}
 //         bezier={[100,25 , 10,90 , 110,100 , 150,195]}
 //         isShowBezierHelpers={true}
@@ -28,8 +29,8 @@ import StateNode from '../StateNode';
 //         code="0"
 //         x={300}
 //         y={300}
-//         isFinalState={true}
-//         isHighlighted={true}
+//         finalState={true}
+//         highlighted={true}
 //         isSnap={false}
 //         onClick={() => console.log('onClick')}
 //         onDoubleClick={() => console.log('onDoubleClick')}
@@ -54,7 +55,8 @@ const propTypes = {
   showGrid: PropTypes.bool,
   stateNodes: PropTypes.object,
   selectedItemType: PropTypes.string,
-  selectedItemId: PropTypes.string
+  selectedItemId: PropTypes.string,
+  hoveredStateNode: PropTypes.string
 };
 
 @connect(
@@ -65,9 +67,10 @@ const propTypes = {
     showGrid: state.viewport.showGrid,
     stateNodes: state.stateNodes,
     selectedItemType: state.selectedItem.itemType,
-    selectedItemId: state.selectedItem.itemId
+    selectedItemId: state.selectedItem.itemId,
+    hoveredStateNode: state.selectedItem.hoveredStateNode
   }),
-  dispatch => ({ actions: bindActionCreators({ ...viewportActions, updateSelectedItem }, dispatch) })
+  dispatch => ({ actions: bindActionCreators({ ...viewportActions, ...selectedItemActions }, dispatch) })
 )
 export default class ViewportContainer extends Component {
   constructor(props) {
@@ -80,6 +83,8 @@ export default class ViewportContainer extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.handleStateNodeClick = this.handleStateNodeClick.bind(this);
     this.handleStateNodeMouseDown = this.handleStateNodeMouseDown.bind(this);
+    this.handleStateNodeMouseEneter = this.handleStateNodeMouseEnter.bind(this);
+    this.handleStateNodeMouseLeave = this.handleStateNodeMouseLeave.bind(this);
   }
 
   handleWheel(e) {
@@ -120,6 +125,15 @@ export default class ViewportContainer extends Component {
     this.props.actions.updateSelectedItem(ITEM_TYPES.STATE, key);
   }
 
+  handleStateNodeMouseEnter(e, key) {
+    this.props.actions.updateHoveredStateNode(key);
+  }
+
+  handleStateNodeMouseLeave(e, key) {
+    this.props.actions.updateHoveredStateNode(null);
+  }
+
+
   handleMouseDown(e) {
     this.props.actions.updateSelectedItem(ITEM_TYPES.VIEWPORT);
   }
@@ -133,20 +147,30 @@ export default class ViewportContainer extends Component {
       viewportScale,
       viewportPanOffset,
       showGrid,
-      stateNodes
+      stateNodes,
+      hoveredStateNode,
+      selectedItemType,
+      selectedItemId
     } = this.props;
 
     const stateNodesElements = Object.keys(stateNodes).map(stateNodeKey => {
       const stateNode = stateNodes[stateNodeKey];
+      const showPoints = (
+        (hoveredStateNode === stateNodeKey) ||
+        (selectedItemType === ITEM_TYPES.STATE && selectedItemId === stateNodeKey)
+      );
+
       return (
         <StateNode
           key={stateNodeKey}
           label={stateNode.name}
           x={stateNode.gui.points[0]}
           y={stateNode.gui.points[1]}
-          isFinalState={false}
-          isHighlighted={false}
-          isSnap={false}
+          finalState={false}
+          selected={false}
+          showPoints={showPoints}
+          onMouseEnter={(e) => this.handleStateNodeMouseEnter(e, stateNodeKey)}
+          onMouseLeave={(e) => this.handleStateNodeMouseLeave(e, stateNodeKey)}
           onMouseDown={(e) => this.handleStateNodeMouseDown(e, stateNodeKey)}
           onClick={(e) => this.handleStateNodeClick(e, stateNodeKey)}
           onDoubleClick={() => console.log('onDoubleClick')}
