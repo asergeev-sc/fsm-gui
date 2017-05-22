@@ -147,19 +147,20 @@ class StateNode extends PureComponent {
   renderPoints(xPointsCount = 3) {
     const box = this.state.rectElement.getBBox();
     const xStep = box.width / (xPointsCount + 1);
+    const edgePointsOffset = xStep / 4;
     const pointPositions = [
       // Top points
-      { x: box.x + xStep, y: box.y - pointOffset },
+      { x: box.x + xStep - edgePointsOffset, y: box.y - pointOffset },
       { x: box.x + xStep * 2, y: box.y - pointOffset },
-      { x: box.x + xStep * 3, y: box.y - pointOffset },
+      { x: box.x + xStep * 3 + edgePointsOffset, y: box.y - pointOffset },
 
       // Right points
       { x: box.x + box.width + pointOffset, y: box.y + box.height / 2 },
 
       // Bottom point
-      { x: box.x + xStep, y: box.y + box.height + pointOffset },
+      { x: box.x + xStep - edgePointsOffset, y: box.y + box.height + pointOffset },
       { x: box.x + xStep * 2, y: box.y + box.height + pointOffset },
-      { x: box.x + xStep * 3, y: box.y + box.height + pointOffset },
+      { x: box.x + xStep * 3 + edgePointsOffset, y: box.y + box.height + pointOffset },
 
       // Left points
       { x: box.x - pointOffset, y: box.y + box.height / 2 }
