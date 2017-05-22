@@ -9,6 +9,9 @@ const paddingV = 20;
 const paddingH = 60;
 const pointOffset = 1;
 const outlinePadding = 3;
+const getContrastColor = (color, amount = 10) => tinycolor(color).getBrightness() > 70 ?
+  tinycolor(color).darken(amount) :
+  tinycolor(color).lighten(amount) ;
 
 const propTypes = {
   label: PropTypes.string,
@@ -162,6 +165,8 @@ class StateNode extends PureComponent {
       { x: box.x - pointOffset, y: box.y + box.height / 2 }
     ];
 
+    const contrastBg = getContrastColor(this.props.bgColor);
+
     return pointPositions.map((pointPosition, index) => (
       <circle
         key={index}
@@ -169,8 +174,8 @@ class StateNode extends PureComponent {
         cy={pointPosition.y}
         r={6}
         strokeWidth="2"
-        stroke={tinycolor(this.props.bgColor).darken(14)}
-        fill={this.state.selectedPoint === index ? tinycolor(this.props.bgColor).lighten(14) : '#fff'}
+        stroke={contrastBg}
+        fill={this.state.selectedPoint === index ? contrastBg : '#fff'}
         onMouseDown={(e) => this.handlePointMouseDown(e, index)}
         onMouseUp={(e) => this.handlePointMouseUp(e, index)}
         onMouseEnter={(e) => this.handlePointMouseEnter(e, index)}
@@ -243,7 +248,7 @@ class StateNode extends PureComponent {
         height={height + paddingV + outlinePadding * 2}
         fill={selected ? '#fff' : 'transparent'}
         strokeWidth={2}
-        stroke={selected ? bgColor : 'transparent'}
+        stroke={selected ? getContrastColor(this.props.bgColor) : 'transparent'}
       />
     );
 
