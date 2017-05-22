@@ -25,11 +25,10 @@ Transition is
       isSnap={false}
       bezier={_scope.state.bezier}
       color="#6a9fe1"
-      isShowBezierHelpers={true}
+      showPoints={true}
       lineWidth={4}
       arrowPosition={2}
       onBezierChange={_scope.handleBezierChange.bind(_scope)}
-      isSmoothMode={true}
       cursorPosition={_scope.state.cursorPosition}
     />
   </svg>

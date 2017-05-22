@@ -8,15 +8,16 @@ const propTypes = {
   arrowSize: PropTypes.number,
   color: PropTypes.string,
   isSelected: PropTypes.bool,
-  isSnapToGrid: PropTypes.bool,
-  isShowPoints: PropTypes.bool,
+  snap: PropTypes.bool,
+  snapStep: PropTypes.number,
+  showPoints: PropTypes.bool,
   label: PropTypes.string,
   lineWidth: PropTypes.number,
   coords: PropTypes.array,
   pointFromColor: PropTypes.string,
   pointSize: PropTypes.number,
   pointToColor: PropTypes.string,
-  snapGridStep: PropTypes.number,
+  snapStep: PropTypes.number,
   turnLength: PropTypes.number
 };
 const defaultProps = {
@@ -24,15 +25,16 @@ const defaultProps = {
   arrowSize: 20,
   color: '#000',
   isSelected: false,
-  isSnapToGrid: false,
-  isShowPoints: true,
+  snap: true,
+  snapStep: 20,
+  showPoints: true,
   label: 'Transition Label',
   lineWidth: 1,
   coords: [40, 20, 60, 20, 60, 220, 80, 220],
   pointFromColor: "#0f0",
   pointSize: 8,
   pointToColor: "#f00",
-  snapGridStep: 10,
+  snapStep: 10,
   turnLength: 10
 };
 
@@ -109,14 +111,14 @@ class TransitionLine extends PureComponent {
       arrowSize,
       color,
       isSelected,
-      isSnapToGrid,
+      snap,
       label,
       lineWidth,
       coords,
       pointFromColor,
       pointSize,
       pointToColor,
-      snapGridStep,
+      snapStep,
       turnLength
     } = this.props;
 
@@ -131,7 +133,7 @@ class TransitionLine extends PureComponent {
     let points = (
       <g>
         <DraggableCore
-          grid={isSnapToGrid ? [snapGridStep, snapGridStep] : null}
+          grid={snap ? [snapStep, snapStep] : null}
           onDrag={this.handlePoint1Drag}
         >
           <rect
@@ -146,7 +148,7 @@ class TransitionLine extends PureComponent {
           />
         </DraggableCore>
         <DraggableCore
-          grid={isSnapToGrid ? [snapGridStep, snapGridStep] : null}
+          grid={snap ? [snapStep, snapStep] : null}
           onDrag={this.handlePoint2Drag}
         >
           <rect
@@ -161,7 +163,7 @@ class TransitionLine extends PureComponent {
           />
         </DraggableCore>
         <DraggableCore
-          grid={isSnapToGrid ? [snapGridStep, snapGridStep] : null}
+          grid={snap ? [snapStep, snapStep] : null}
           onDrag={this.handlePoint3Drag}
         >
           <rect
@@ -176,7 +178,7 @@ class TransitionLine extends PureComponent {
           />
         </DraggableCore>
         <DraggableCore
-          grid={isSnapToGrid ? [snapGridStep, snapGridStep] : null}
+          grid={snap ? [snapStep, snapStep] : null}
           onDrag={this.handlePoint4Drag}
         >
           <rect

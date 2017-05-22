@@ -134,6 +134,7 @@ class Viewport extends Component {
       >
         <DraggableCore
           onDrag={this.handleDrag}
+          grid={[10, 10]}
         >
           <svg
             version="1.1"

@@ -56,8 +56,8 @@ export default class StatusLineContainer extends Component {
 
     return (
       <StatusLine
-        mousePositionX={isOutOfViewport ? null : cursorPosition.x}
-        mousePositionY={isOutOfViewport ? null : cursorPosition.y}
+      mousePositionX={isOutOfViewport ? null : Math.floor(cursorPosition.x / 10) + 1}
+      mousePositionY={isOutOfViewport ? null : Math.floor(cursorPosition.y / 10) + 1}
         viewportScale={viewportScale}
         showGrid={showGrid}
         onZoomClick={this.handleZoomClick}

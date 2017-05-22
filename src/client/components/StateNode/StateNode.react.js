@@ -14,10 +14,10 @@ const propTypes = {
   bgColor: PropTypes.string,
   textColor: PropTypes.string,
   description: PropTypes.string,
-  snapGridStep: PropTypes.number,
+  snapStep: PropTypes.number,
   x: PropTypes.number,
   y: PropTypes.number,
-  highlighted: PropTypes.bool,
+  selected: PropTypes.bool,
   finalState: PropTypes.bool,
   snap: PropTypes.bool,
   debug: PropTypes.bool,
@@ -36,12 +36,12 @@ const defaultProps = {
   bgColor: '#0277bd',
   textColor: '#fff',
   description: '',
-  snapGridStep: 30,
+  snapStep: 20,
   x: 0,
   y: 0,
-  highlighted: false,
+  selected: false,
   finalState: false,
-  snap: false,
+  snap: true,
   debug: true,
   onClick: () => {},
   onMousedDown: () => {},
@@ -88,11 +88,11 @@ class StateNode extends PureComponent {
       color,
       bgColor,
       description,
-      snapGridStep,
+      snapStep,
       textColor,
       x,
       y,
-      highlighted,
+      selected,
       finalState,
       snap,
       debug,
@@ -137,12 +137,18 @@ class StateNode extends PureComponent {
 
     return (
       <DraggableCore
-        grid={snap ? [snapGridStep, snapGridStep] : null}
+        grid={snap ? [snapStep, snapStep] : null}
         onStart={this.handleStart}
         onStop={this.handleStop}
         onDrag={this.handleDrag}
       >
-        <g>
+        <g
+          className="fsm--state-node"
+          onClick={onClick}
+          onMouseDown={onMouseDown}
+          onMouseUp={onMouseUp}
+          onDoubleClick={onDoubleClick}
+        >
           <rect
             x={x - width / 2 - paddingH / 2}
             y={y - height / 2 - paddingV / 2}
@@ -152,17 +158,13 @@ class StateNode extends PureComponent {
             height={height + paddingV}
             fill={bgColor}
             strokeWidth={lineWidth}
-            onClick={onClick}
-            onMouseDown={onMouseDown}
-            onMouseUp={onMouseUp}
-            onDoubleClick={onDoubleClick}
-            onDrag={() => console.log('drag')}
           />
           <text
             x={x}
             y={y}
             fontSize="16"
             alignmentBaseline="middle"
+            dominantBaseline="middle"
             textAnchor="middle"
             fill={textColor}
             ref={this.handleLabelElementRef}

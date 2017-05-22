@@ -6,7 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const app = express();
 
-const host = process.env.HOST || '192.168.7.94';
+const host = process.env.HOST || 'localhost';
 const port = process.env.PORT || 3020;
 const paths = {
   workflows: path.resolve(__dirname, './db/workflows'),

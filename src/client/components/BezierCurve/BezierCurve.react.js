@@ -14,6 +14,8 @@ const propTypes = {
   pointColor1: PropTypes.string,
   pointColor2: PropTypes.string,
   pointSize: PropTypes.number,
+  snap: PropTypes.bool,
+  snapStep: PropTypes.number,
   showControls: PropTypes.bool
 };
 const defaultProps = {
@@ -25,9 +27,11 @@ const defaultProps = {
   onPoint4Drag: () => {},
   pointColor1: '#76FF03',
   pointColor2: '#FF1744',
-  pointSize: 8,
+  pointSize: 16,
   showControls: true,
   stroke: '#0091EA',
+  snap: true,
+  snapStep: 20,
   strokeWidth: 1
 };
 
@@ -80,6 +84,8 @@ class BezierCurve extends PureComponent {
       pointColor2,
       pointSize,
       showControls,
+      snap,
+      snapStep,
       onChange,
       onPoint1Drag,
       onPoint2Drag,
@@ -100,7 +106,10 @@ class BezierCurve extends PureComponent {
           x2={bezier[2]}
           y2={bezier[3]}
         />
-        <DraggableCore onDrag={this.handlePoint1Drag}>
+        <DraggableCore
+          onDrag={this.handlePoint1Drag}
+          grid={snap ? [snapStep, snapStep] : null}
+        >
           <rect
             className="bezier-curve__control-point"
             x={bezier[0] - pointSize / 2 }
@@ -112,7 +121,10 @@ class BezierCurve extends PureComponent {
             strokeWidth={1}
           />
         </DraggableCore>
-        <DraggableCore onDrag={this.handlePoint2Drag}>
+        <DraggableCore
+          onDrag={this.handlePoint2Drag}
+          grid={snap ? [snapStep, snapStep] : null}
+        >
           <rect
             className="bezier-curve__control-point"
             x={bezier[2] - pointSize / 2 }
@@ -136,7 +148,10 @@ class BezierCurve extends PureComponent {
           x2={bezier[6]}
           y2={bezier[7]}
         />
-        <DraggableCore onDrag={this.handlePoint4Drag}>
+        <DraggableCore
+          onDrag={this.handlePoint4Drag}
+          grid={snap ? [snapStep, snapStep] : null}
+        >
           <rect
             className="bezier-curve__control-point"
             x={bezier[6] - pointSize / 2 }
@@ -148,7 +163,10 @@ class BezierCurve extends PureComponent {
             strokeWidth={1}
           />
         </DraggableCore>
-        <DraggableCore onDrag={this.handlePoint3Drag}>
+        <DraggableCore
+          onDrag={this.handlePoint3Drag}
+          grid={snap ? [snapStep, snapStep] : null}
+        >
           <rect
             className="bezier-curve__control-point"
             x={bezier[4] - pointSize / 2 }

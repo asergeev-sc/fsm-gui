@@ -19,13 +19,12 @@ StateNode is
   xmlns="http://www.w3.org/2000/svg"
 >
   <StateNode
-    name="State_0"
+    label="State_0"
     code="0"
     x={_scope.state.x}
     y={_scope.state.y}
     isFinalState={true}
-    isHighlighted={true}
-    isSnap={false}
+    selected={true}
     onClick={() => console.log('onClick')}
     onDoubleClick={() => console.log('onDoubleClick')}
     onDragStart={(e, data) => console.log('DragStart', e, data)} 

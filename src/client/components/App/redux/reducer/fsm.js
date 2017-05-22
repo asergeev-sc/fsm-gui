@@ -42,7 +42,7 @@ export function loadFsmFail(error) {
 
 export function loadFsm(id) {
   return dispatch =>
-    request.get(`http://192.168.7.94:3020/workflows/${id}`)
+    request.get(`http://localhost:3020/workflows/${id}`)
       .then((result) => {
         dispatch(loadFsmSuccess(result.body.meta));
         dispatch(replaceStateNodes(result.body.data.states));

@@ -11,11 +11,10 @@ const propTypes = {
   arrowSize: PropTypes.number,
   bezier: PropTypes.arrayOf(PropTypes.number),
   color: PropTypes.string,
-  isHighlighted: PropTypes.bool,
-  isShowBezierHelpers: PropTypes.bool,
-  isSmoothMode: PropTypes.bool,
-  isSnapGrid: PropTypes.bool,
-  isSnapStickyPoints: PropTypes.bool,
+  selected: PropTypes.bool,
+  showPoints: PropTypes.bool,
+  snap: PropTypes.bool,
+  snapStep: PropTypes.number,
   label: PropTypes.string,
   lineWidth: PropTypes.number,
   cursorPosition: PropTypes.shape({ x: PropTypes.number, y: PropTypes.number }),
@@ -23,7 +22,7 @@ const propTypes = {
   pointSize: PropTypes.number,
   pointsColor1: PropTypes.string,
   pointsColor2: PropTypes.string,
-  snapGridStep: PropTypes.number,
+  snapStep: PropTypes.number,
   stickyDistance: PropTypes.number,
   stickyPoints: PropTypes.arrayOf(PropTypes.shape({ x: PropTypes.number, y: PropTypes.number }))
 };
@@ -33,18 +32,17 @@ const defaultProps = {
   bezier: [100,25 , 10,90 , 110,100 , 150,195],
   color: '#333',
   cursorPosition: { x: 0, y: 0 },
-  isHighlighted: false,
-  isShowBezierHelpers: false,
-  isSmoothMode: true,
-  isSnapGrid: false,
-  isSnapStickyPoints: true,
+  selected: false,
+  showPoints: false,
+  snap: true,
+  snapStep: 20,
   lineWidth: 4,
   label: '',
   onBezierChange: () => {},
   pointSize: 8,
   pointsColor1: "#0f0",
   pointsColor2: "#f00",
-  snapGridStep: 30,
+  snapStep: 30,
   stickyDistance: 20,
   stickyPoints: [{ x: 20, y: 20 }, { x: 160, y: 160 }, { x: 220, y: 220 }]
 };
@@ -72,7 +70,7 @@ class BezierTransition extends PureComponent {
   }
 
   handleBezierChange(bezier) {
-    this.props.onBezierChange(snapToPoints, this.props.stickyPoints);
+    this.props.onBezierChange(bezier);
   }
 
   render() {
@@ -86,11 +84,11 @@ class BezierTransition extends PureComponent {
       pointsColor1,
       pointsColor2,
       pointSize,
-      snapGridStep,
+      snap,
+      snapStep,
       bezier,
-      isHighlighted,
-      isSnapGrid,
-      isShowBezierHelpers,
+      selected,
+      showPoints,
       onBezierChange,
       stickyPoints
     } = this.props;
@@ -135,6 +133,8 @@ class BezierTransition extends PureComponent {
         </text>
         <BezierCurve
           bezier={bezier}
+          snap={snap}
+          snapStep={snapStep}
           onChange={this.handleBezierChange}
           markerStart={arrowPosition === 1 ? 'url(#fsm--bezier-transition__arrow)' : 'none'}
           markerEnd={arrowPosition === 2 ? 'url(#fsm--bezier-transition__arrow)' : 'none'}
