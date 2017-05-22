@@ -58,8 +58,8 @@ const defaultProps = {
   showPoints: false,
   debug: true,
   onClick: () => {},
-  onMousedDown: () => {},
-  onMousedUp: () => {},
+  onMouseDown: () => {},
+  onMouseUp: () => {},
   onMouseEnter: () => {},
   onMouseLeave: () => {},
   onPointMouseDown: () => {},
@@ -78,14 +78,12 @@ class StateNode extends PureComponent {
     super(props);
     this.state = {
       labelElement: null,
-      rectElement: null,
       selectedPoint: null
     };
     this.handleStart = this.handleStart.bind(this);
     this.handleStop = this.handleStop.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
     this.handleLabelElementRef = this.handleLabelElementRef.bind(this);
-    this.handleRectElementRef = this.handleRectElementRef.bind(this);
     this.handleMouseEnter = this.handleMouseEnter.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
     this.handlePointMouseDown = this.handlePointMouseDown.bind(this);
@@ -103,15 +101,12 @@ class StateNode extends PureComponent {
   }
 
   handleDrag(e, data) {
+    console.log('handleDrag', data);
     this.props.onDrag(e, data);
   }
 
   handleLabelElementRef(ref) {
     this.setState({ labelElement: ref });
-  }
-
-  handleRectElementRef(ref) {
-    this.setState({ rectElement: ref });
   }
 
   handleMouseEnter(e) {
@@ -144,26 +139,25 @@ class StateNode extends PureComponent {
     this.props.onPointMouseUp(e, index);
   }
 
-  renderPoints(xPointsCount = 3) {
-    const box = this.state.rectElement.getBBox();
-    const xStep = box.width / (xPointsCount + 1);
+  renderPoints(x, y, width, height, xPointsCount = 3) {
+    const xStep = width / (xPointsCount + 1);
     const edgePointsOffset = xStep / 4;
     const pointPositions = [
       // Top points
-      { x: box.x + xStep - edgePointsOffset, y: box.y - pointOffset },
-      { x: box.x + xStep * 2, y: box.y - pointOffset },
-      { x: box.x + xStep * 3 + edgePointsOffset, y: box.y - pointOffset },
+      { x: x + xStep - edgePointsOffset, y: y - pointOffset },
+      { x: x + xStep * 2, y: y - pointOffset },
+      { x: x + xStep * 3 + edgePointsOffset, y: y - pointOffset },
 
       // Right points
-      { x: box.x + box.width + pointOffset, y: box.y + box.height / 2 },
+      { x: x + width + pointOffset, y: y + height / 2 },
 
       // Bottom point
-      { x: box.x + xStep - edgePointsOffset, y: box.y + box.height + pointOffset },
-      { x: box.x + xStep * 2, y: box.y + box.height + pointOffset },
-      { x: box.x + xStep * 3 + edgePointsOffset, y: box.y + box.height + pointOffset },
+      { x: x + xStep - edgePointsOffset, y: y + height + pointOffset },
+      { x: x + xStep * 2, y: y + height + pointOffset },
+      { x: x + xStep * 3 + edgePointsOffset, y: y + height + pointOffset },
 
       // Left points
-      { x: box.x - pointOffset, y: box.y + box.height / 2 }
+      { x: x - pointOffset, y: y + height / 2 }
     ];
 
     const contrastBg = getContrastColor(this.props.bgColor);
@@ -210,7 +204,7 @@ class StateNode extends PureComponent {
       onDragStop,
       onDrag
     } = this.props;
-    console.log(this.state);
+
     // const finalStateCircle = finalState ? (
     //   <path
     //     d={getCirclePath(x, y, radius - radius / 10)}
@@ -236,22 +230,31 @@ class StateNode extends PureComponent {
     // }
 
     const labelElementBBox = this.state.labelElement && this.state.labelElement.getBBox();
-    const width = labelElementBBox && labelElementBBox.width;
-    const height = labelElementBBox && labelElementBBox.height;
-    const points = showPoints && this.state.rectElement ? this.renderPoints() : null;
+    const labelWidth = labelElementBBox && labelElementBBox.width;
+    const labelHeight = labelElementBBox && labelElementBBox.height;
+    const labelX = x - labelWidth / 2 - paddingH / 2 - outlinePadding;
+    const labelY = y - labelHeight / 2 - paddingV / 2 - outlinePadding;
+
+    const rectWidth = labelWidth + paddingH;
+    const rectHeight = labelHeight + paddingV;
+    const rectX = x - labelWidth / 2 - paddingH / 2;
+    const rectY = y - labelHeight / 2 - paddingV / 2;
+
     const outline = (
       <rect
-        x={x - width / 2 - paddingH / 2 - outlinePadding }
-        y={y - height / 2 - paddingV / 2 - outlinePadding }
+        x={labelX}
+        y={labelY}
         rx="2"
         ry="2"
-        width={width + paddingH + outlinePadding * 2}
-        height={height + paddingV + outlinePadding * 2}
+        width={labelWidth + paddingH + outlinePadding * 2}
+        height={labelHeight + paddingV + outlinePadding * 2}
         fill={selected ? '#fff' : 'transparent'}
         strokeWidth={2}
         stroke={selected ? getContrastColor(this.props.bgColor) : 'transparent'}
       />
     );
+
+    const points = showPoints ? this.renderPoints(rectX, rectY, rectWidth, rectHeight) : null;
 
     return (
       <DraggableCore
@@ -269,13 +272,12 @@ class StateNode extends PureComponent {
         >
           {outline}
           <rect
-            ref={this.handleRectElementRef}
-            x={x - width / 2 - paddingH / 2}
-            y={y - height / 2 - paddingV / 2}
+            x={rectX}
+            y={rectY}
             rx="2"
             ry="2"
-            width={width + paddingH}
-            height={height + paddingV}
+            width={rectWidth}
+            height={rectHeight}
             fill={bgColor}
             strokeWidth={lineWidth}
             onMouseDown={onMouseDown}
@@ -290,12 +292,12 @@ class StateNode extends PureComponent {
             alignmentBaseline="middle"
             dominantBaseline="middle"
             textAnchor="middle"
-            style={{ userSelect: "none" }}
             fill={textColor}
             onMouseDown={onMouseDown}
             onMouseUp={onMouseUp}
+            className="fsm--state-node__label"
           >
-            {label}
+            {label.toUpperCase()}
           </text>
           {points}
         </g>
