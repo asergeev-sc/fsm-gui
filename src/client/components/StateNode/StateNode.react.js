@@ -6,6 +6,8 @@ import './StateNode.less';
 
 const paddingV = 20;
 const paddingH = 60;
+const pointOffset = 1;
+const outlinePadding = 3;
 
 const propTypes = {
   label: PropTypes.string,
@@ -107,21 +109,21 @@ class StateNode extends PureComponent {
     const box = this.state.rectElement.getBBox();
     const xStep = box.width / (xPointsCount + 1);
     const pointPositions = [
-      // Top pints
-      { x: box.x + xStep, y: box.y },
-      { x: box.x + xStep * 2, y: box.y },
-      { x: box.x + xStep * 3, y: box.y },
+      // Top points
+      { x: box.x + xStep, y: box.y - pointOffset },
+      { x: box.x + xStep * 2, y: box.y - pointOffset },
+      { x: box.x + xStep * 3, y: box.y - pointOffset },
 
       // Right points
-      { x: box.x + box.width, y: box.y + box.height / 2 },
+      { x: box.x + box.width + pointOffset, y: box.y + box.height / 2 },
 
       // Bottom point
-      { x: box.x + xStep, y: box.y + box.height },
-      { x: box.x + xStep * 2, y: box.y + box.height },
-      { x: box.x + xStep * 3, y: box.y + box.height },
+      { x: box.x + xStep, y: box.y + box.height + pointOffset },
+      { x: box.x + xStep * 2, y: box.y + box.height + pointOffset },
+      { x: box.x + xStep * 3, y: box.y + box.height + pointOffset },
 
       // Left points
-      { x: box.x, y: box.y + box.height / 2 }
+      { x: box.x - pointOffset, y: box.y + box.height / 2 }
     ];
 
     return pointPositions.map((pointPosition, index) => (
@@ -131,7 +133,7 @@ class StateNode extends PureComponent {
         cy={pointPosition.y}
         r={6}
         stroke={this.props.bgColor}
-        strokeWidth="3"
+        strokeWidth="2"
         fill="#fff"
       />
     ));
@@ -190,6 +192,19 @@ class StateNode extends PureComponent {
     const width = labelElementBBox && labelElementBBox.width;
     const height = labelElementBBox && labelElementBBox.height;
     const points = showPoints && this.state.rectElement ? this.renderPoints() : null;
+    const outline = selected ? (
+      <rect
+        x={x - width / 2 - paddingH / 2 - outlinePadding }
+        y={y - height / 2 - paddingV / 2 - outlinePadding }
+        rx="2"
+        ry="2"
+        width={width + paddingH + outlinePadding * 2}
+        height={height + paddingV + outlinePadding * 2}
+        fill="#fff"
+        strokeWidth={2}
+        stroke={bgColor}
+      />
+    ) : null;
 
     return (
       <DraggableCore
@@ -201,13 +216,12 @@ class StateNode extends PureComponent {
         <g
           className="fsm--state-node"
           onClick={onClick}
-          onMouseDown={onMouseDown}
-          onMouseUp={onMouseUp}
-          onMouseEnter={this.handleMouseEnter}
-          onMouseLeave={this.handleMouseLeave}
+
           onDoubleClick={onDoubleClick}
         >
+          {outline}
           <rect
+            ref={this.handleRectElementRef}
             x={x - width / 2 - paddingH / 2}
             y={y - height / 2 - paddingV / 2}
             rx="2"
@@ -216,9 +230,13 @@ class StateNode extends PureComponent {
             height={height + paddingV}
             fill={bgColor}
             strokeWidth={lineWidth}
-            ref={this.handleRectElementRef}
+            onMouseDown={onMouseDown}
+            onMouseUp={onMouseUp}
+            onMouseEnter={this.handleMouseEnter}
+            onMouseLeave={this.handleMouseLeave}
           />
           <text
+            ref={this.handleLabelElementRef}
             x={x}
             y={y}
             fontSize="16"
@@ -226,7 +244,10 @@ class StateNode extends PureComponent {
             dominantBaseline="middle"
             textAnchor="middle"
             fill={textColor}
-            ref={this.handleLabelElementRef}
+            onMouseDown={onMouseDown}
+            onMouseUp={onMouseUp}
+            onMouseEnter={this.handleMouseEnter}
+            onMouseLeave={this.handleMouseLeave}
           >
             {label}
           </text>

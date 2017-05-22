@@ -1,4 +1,5 @@
 import request from 'superagent';
+import { normalize, schema } from 'normalizr';
 import { replaceStateNodes } from './state-nodes';
 
 const LOAD_FSM = 'fsm/fsm/LOAD_FSM';

@@ -20,10 +20,9 @@ StateNode is
 >
   <StateNode
     label="State_0"
-    code="0"
     x={_scope.state.x}
     y={_scope.state.y}
-    isFinalState={true}
+    finalState={false}
     selected={true}
     onClick={() => console.log('onClick')}
     onDoubleClick={() => console.log('onDoubleClick')}

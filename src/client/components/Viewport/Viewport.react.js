@@ -55,10 +55,12 @@ class Viewport extends Component {
 
   handleMouseDown(e) {
     this.setState({ panning: true });
+    this.props.onMouseDown(e);
   }
 
   handleMouseUp(e) {
     this.setState({ panning: false });
+    this.props.onMouseUp(e);
   }
 
   handleMouseEnter(e) {

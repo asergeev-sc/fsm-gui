@@ -76,6 +76,7 @@
     "d3": "^4.8.0",
     "deep-diff": "0.3.8",
     "lodash": "^4.17.4",
+    "normalizr": "^3.2.3",
     "opuscapita-react-ui-autocompletes": "^1.0.4",
     "opuscapita-react-ui-buttons": "^1.0.12",
     "opuscapita-react-ui-overlays": "^1.0.11",

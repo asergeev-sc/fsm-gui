@@ -75,11 +75,16 @@ const propTypes = {
 export default class ViewportContainer extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      panning: false
+    };
+
     this.handleWheel = this.handleWheel.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
     this.handlePan = this.handlePan.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleStateNodeClick = this.handleStateNodeClick.bind(this);
     this.handleStateNodeMouseDown = this.handleStateNodeMouseDown.bind(this);
@@ -110,7 +115,7 @@ export default class ViewportContainer extends Component {
   }
 
   handlePan(e, draggableData) {
-    if(this.props.selectedItemType === ITEM_TYPES.VIEWPORT) {
+    if(this.state.panning) {
       let x = this.props.viewportPanOffset.x + draggableData.deltaX / this.props.viewportScale;
       let y = this.props.viewportPanOffset.y + draggableData.deltaY / this.props.viewportScale;
       this.props.actions.updateViewportPanOffset({ x, y });
@@ -118,6 +123,7 @@ export default class ViewportContainer extends Component {
   }
 
   handleStateNodeMouseDown(e, key) {
+    e.stopPropagation();
     this.props.actions.updateSelectedItem(ITEM_TYPES.STATE, key);
   }
 
@@ -133,13 +139,25 @@ export default class ViewportContainer extends Component {
     this.props.actions.updateHoveredStateNode(null);
   }
 
-
   handleMouseDown(e) {
-    this.props.actions.updateSelectedItem(ITEM_TYPES.VIEWPORT);
+    this.mouseDownX = e.clientX;
+    this.mouseDownY = e.clientY;
+
+    this.setState({ panning: true });
+  }
+
+  handleMouseUp(e) {
+    const cursorHasMoved = Math.abs(this.mouseDownX - e.clientX) > 0 || Math.abs(this.mouseDownY - e.clientY) > 0;
+
+    if(!cursorHasMoved) {
+      this.props.actions.updateSelectedItem(ITEM_TYPES.VIEWPORT);
+    }
+
+    this.setState({ panning: false });
   }
 
   handleClick(e) {
-    this.props.actions.updateSelectedItem(ITEM_TYPES.VIEWPORT);
+    return e;
   }
 
   render() {
@@ -155,10 +173,8 @@ export default class ViewportContainer extends Component {
 
     const stateNodesElements = Object.keys(stateNodes).map(stateNodeKey => {
       const stateNode = stateNodes[stateNodeKey];
-      const showPoints = (
-        (hoveredStateNode === stateNodeKey) ||
-        (selectedItemType === ITEM_TYPES.STATE && selectedItemId === stateNodeKey)
-      );
+      const selected = selectedItemType === ITEM_TYPES.STATE && selectedItemId === stateNodeKey;
+      const showPoints = hoveredStateNode === stateNodeKey || selected;
 
       return (
         <StateNode
@@ -167,7 +183,7 @@ export default class ViewportContainer extends Component {
           x={stateNode.gui.points[0]}
           y={stateNode.gui.points[1]}
           finalState={false}
-          selected={false}
+          selected={selected}
           showPoints={showPoints}
           onMouseEnter={(e) => this.handleStateNodeMouseEnter(e, stateNodeKey)}
           onMouseLeave={(e) => this.handleStateNodeMouseLeave(e, stateNodeKey)}
@@ -188,9 +204,10 @@ export default class ViewportContainer extends Component {
         showGrid={showGrid}
         onWheel={this.handleWheel}
         onMouseMove={this.handleMouseMove}
-        onMouseLeave={this.handleMouseLea}
+        onMouseLeave={this.handleMouseLeave}
         onPan={this.handlePan}
         onMouseDown={this.handleMouseDown}
+        onMouseUp={this.handleMouseUp}
         onClick={this.handleClick}
         panOffsetX={viewportPanOffset.x}
         panOffsetY={viewportPanOffset.y}
