@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import * as viewportActions from '../App/redux/reducer/viewport';
 import * as selectedItemActions from '../App/redux/reducer/selected-item';
 import * as stateNodesActions from '../App/redux/reducer/state-nodes';
+import * as transitionsActions from '../App/redux/reducer/transitions';
 import { ITEM_TYPES } from '../App/redux/reducer/selected-item';
 
 // TODO remove debug helpers
@@ -55,6 +56,7 @@ const propTypes = {
   viewportPanOffset: PropTypes.object,
   showGrid: PropTypes.bool,
   stateNodes: PropTypes.object,
+  transitions: PropTypes.object,
   selectedItemType: PropTypes.string,
   selectedItemId: PropTypes.string,
   hoveredStateNode: PropTypes.string
@@ -67,12 +69,13 @@ const propTypes = {
     viewportPanOffset: state.viewport.viewportPanOffset,
     showGrid: state.viewport.showGrid,
     stateNodes: state.stateNodes,
+    transitions: state.transitions,
     selectedItemType: state.selectedItem.itemType,
     selectedItemId: state.selectedItem.itemId,
     hoveredStateNode: state.selectedItem.hoveredStateNode
   }),
   dispatch => ({ actions: bindActionCreators({
-    ...viewportActions, ...selectedItemActions, ...stateNodesActions
+    ...viewportActions, ...selectedItemActions, ...stateNodesActions, ...transitionsActions
   }, dispatch) })
 )
 export default class ViewportContainer extends Component {
@@ -94,6 +97,8 @@ export default class ViewportContainer extends Component {
     this.handleStateNodeMouseEneter = this.handleStateNodeMouseEnter.bind(this);
     this.handleStateNodeMouseLeave = this.handleStateNodeMouseLeave.bind(this);
     this.handleStateNodeDrag = this.handleStateNodeDrag.bind(this);
+    this.handleTransitionChange = this.handleTransitionChange.bind(this);
+    this.handleTransitionMouseDown = this.handleTransitionMouseDown.bind(this);
   }
 
   handleWheel(e) {
@@ -160,6 +165,17 @@ export default class ViewportContainer extends Component {
     this.props.actions.updateStateNode(stateNodeKey, updatedStateNode);
   }
 
+  handleTransitionChange(transitionKey, points, d) {
+    const transition = this.props.transitions[transitionKey];
+    const updatedTransition = Object.assign({}, transition, { points });
+    this.props.actions.updateTransition(transitionKey, updatedTransition);
+  }
+
+  handleTransitionMouseDown(e, key) {
+    e.stopPropagation();
+    this.props.actions.updateSelectedItem(ITEM_TYPES.TRANSITION, key);
+  }
+
   handleMouseUp(e) {
     const cursorHasMoved = Math.abs(this.mouseDownX - e.clientX) > 0 || Math.abs(this.mouseDownY - e.clientY) > 0;
 
@@ -180,6 +196,7 @@ export default class ViewportContainer extends Component {
       viewportPanOffset,
       showGrid,
       stateNodes,
+      transitions,
       hoveredStateNode,
       selectedItemType,
       selectedItemId
@@ -213,6 +230,24 @@ export default class ViewportContainer extends Component {
       );
     });
 
+    const transitionsElements = Object.keys(transitions).map(transitionKey => {
+      const transition = transitions[transitionKey];
+      const selected = selectedItemType === ITEM_TYPES.TRANSITION && selectedItemId === transitionKey;
+      return (
+        <BezierTransition
+          key={transitionKey}
+          label={transition.name}
+          bezier={transition.points}
+          lineWidth={4}
+          color="#0277bd"
+          pointSize={12}
+          onChange={(bezierPoints, d) => this.handleTransitionChange(transitionKey, bezierPoints, d)}
+          onMouseDown={(e) => this.handleTransitionMouseDown(e, transitionKey)}
+          selected={selected}
+        />
+      );
+    });
+
     return (
       <Viewport
         scale={viewportScale}
@@ -228,6 +263,7 @@ export default class ViewportContainer extends Component {
         panOffsetX={viewportPanOffset.x}
         panOffsetY={viewportPanOffset.y}
       >
+        {transitionsElements}
         {stateNodesElements}
       </Viewport>
     );

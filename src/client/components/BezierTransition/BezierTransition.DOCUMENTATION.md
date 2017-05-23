@@ -21,14 +21,14 @@ Transition is
   >
     <BezierTransition
       label="Transition_0"
-      isHighlighted={true}
-      isSnap={false}
+      selected={true}
+      snap={false}
       bezier={_scope.state.bezier}
       color="#6a9fe1"
       showPoints={true}
       lineWidth={4}
       arrowPosition={2}
-      onBezierChange={_scope.handleBezierChange.bind(_scope)}
+      onChange={_scope.handleBezierChange.bind(_scope)}
       cursorPosition={_scope.state.cursorPosition}
     />
   </svg>

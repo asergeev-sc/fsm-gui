@@ -4,6 +4,9 @@ import { DraggableCore } from 'react-draggable';
 import Bezier from 'bezier-js';
 import './BezierCurve.less';
 
+const paddingV = 10;
+const paddingH = 30;
+
 const propTypes = {
   bezier: PropTypes.arrayOf(PropTypes.number),
   onChange: PropTypes.func,
@@ -11,6 +14,7 @@ const propTypes = {
   onPoint2Drag: PropTypes.func,
   onPoint3Drag: PropTypes.func,
   onPoint4Drag: PropTypes.func,
+  label: PropTypes.string,
   pointColor1: PropTypes.string,
   pointColor2: PropTypes.string,
   pointSize: PropTypes.number,
@@ -21,6 +25,7 @@ const propTypes = {
 const defaultProps = {
   bezier: [0,0 , 0,0 , 0,0 , 0,0],
   onChange: () => {},
+  label: '',
   onPoint1Drag: () => {},
   onPoint2Drag: () => {},
   onPoint3Drag: () => {},
@@ -39,10 +44,15 @@ export default
 class BezierCurve extends PureComponent {
   constructor(props) {
     super(props);
+    this.state = {
+      labelElement: null
+    };
     this.handlePoint1Drag = this.handlePoint1Drag.bind(this);
     this.handlePoint2Drag = this.handlePoint2Drag.bind(this);
     this.handlePoint3Drag = this.handlePoint3Drag.bind(this);
     this.handlePoint4Drag = this.handlePoint4Drag.bind(this);
+    this.handleLabelDrag = this.handleLabelDrag.bind(this);
+    this.handleLabelElementRef = this.handleLabelElementRef.bind(this);
   }
 
   handleChange(bezier, d) {
@@ -77,12 +87,26 @@ class BezierCurve extends PureComponent {
     this.handleChange(bezier);
   }
 
+  handleLabelDrag(e, data) {
+    let bezier = [...this.props.bezier];
+    bezier[2] = bezier[2] + data.deltaX;
+    bezier[3] = bezier[3] + data.deltaY;
+    bezier[4] = bezier[4] + data.deltaX;
+    bezier[5] = bezier[5] + data.deltaY;
+    this.handleChange(bezier);
+  }
+
+  handleLabelElementRef(ref) {
+    this.setState({ labelElement: ref });
+  }
+
   render() {
     const {
       bezier,
       pointColor1,
       pointColor2,
       pointSize,
+      label,
       showControls,
       snap,
       snapStep,
@@ -96,6 +120,18 @@ class BezierCurve extends PureComponent {
 
     let curve = new Bezier(...bezier);
     let d = curve.toSVG();
+    let labelPosition = curve.get(0.5);
+
+    const labelElementBBox = this.state.labelElement && this.state.labelElement.getBBox();
+    const labelWidth = labelElementBBox && labelElementBBox.width;
+    const labelHeight = labelElementBBox && labelElementBBox.height;
+    const labelX = labelPosition.x - labelWidth / 2 - paddingH / 2;
+    const labelY = labelPosition.y - labelHeight / 2 - paddingV / 2;
+
+    const rectWidth = labelWidth + paddingH;
+    const rectHeight = labelHeight + paddingV;
+    const rectX = labelPosition.x - labelWidth / 2 - paddingH / 2;
+    const rectY = labelPosition.y - labelHeight / 2 - paddingV / 2;
 
     let controls1 = showControls ? (
       <g>
@@ -189,6 +225,35 @@ class BezierCurve extends PureComponent {
           ref={ref => (this.pathElement = ref)}
           {...restProps}
         />
+        <DraggableCore
+          onDrag={this.handleLabelDrag}
+          grid={snap ? [snapStep, snapStep] : null}
+        >
+          <g>
+            <rect
+              x={rectX}
+              y={rectY}
+              rx="2"
+              ry="2"
+              width={rectWidth}
+              height={rectHeight}
+              fill="#fff"
+              stroke="#333"
+              className="bezier-curve__label-box"
+            />
+            <text
+              ref={this.handleLabelElementRef}
+              x={labelPosition.x}
+              y={labelPosition.y}
+              fontSize="12"
+              alignmentBaseline="middle"
+              textAnchor="middle"
+              className="bezier-curve__label-text"
+            >
+              {label}
+            </text>
+          </g>
+        </DraggableCore>
         {controls1}
         {controls2}
       </g>

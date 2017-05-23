@@ -18,7 +18,10 @@ const propTypes = {
   label: PropTypes.string,
   lineWidth: PropTypes.number,
   cursorPosition: PropTypes.shape({ x: PropTypes.number, y: PropTypes.number }),
-  onBezierChange: PropTypes.func,
+  onChange: PropTypes.func,
+  onMouseDown: PropTypes.func,
+  onMouseUp: PropTypes.func,
+  onClick: PropTypes.func,
   pointSize: PropTypes.number,
   pointsColor1: PropTypes.string,
   pointsColor2: PropTypes.string,
@@ -38,8 +41,11 @@ const defaultProps = {
   snapStep: 20,
   lineWidth: 4,
   label: '',
-  onBezierChange: () => {},
-  pointSize: 8,
+  onChange: () => {},
+  onMouseDown: () => {},
+  onMouseUp: () => {},
+  onClick: () => {},
+  pointSize: 12,
   pointsColor1: "#0f0",
   pointsColor2: "#f00",
   snapStep: 30,
@@ -63,6 +69,9 @@ class BezierTransition extends PureComponent {
   constructor(props) {
     super(props);
     this.handleBezierChange = this.handleBezierChange.bind(this);
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleMouseUp = this.handleMouseUp.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -70,7 +79,19 @@ class BezierTransition extends PureComponent {
   }
 
   handleBezierChange(bezier) {
-    this.props.onBezierChange(bezier);
+    this.props.onChange(bezier);
+  }
+
+  handleMouseDown(e) {
+    this.props.onMouseDown(e);
+  }
+
+  handleMouseUp(e) {
+    this.props.onMouseUp(e);
+  }
+
+  handleClick(e) {
+    this.props.onClick(e);
   }
 
   render() {
@@ -89,11 +110,9 @@ class BezierTransition extends PureComponent {
       bezier,
       selected,
       showPoints,
-      onBezierChange,
+      onChange,
       stickyPoints
     } = this.props;
-
-    let labelPosition = [0, 0]; // curve.get(0.5);
 
     // TODO Remove debug
     let debugDots = (
@@ -108,7 +127,11 @@ class BezierTransition extends PureComponent {
       `M0,0 L0,${arrowSize / 2} L${arrowSize},${arrowSize / 4}`;
 
     return (
-      <g>
+      <g
+        onMouseDown={this.handleMouseDown}
+        onMouseUp={this.handleMouseUp}
+        onClick={this.handleClick}
+      >
         <defs>
           <marker
             id="fsm--bezier-transition__arrow"
@@ -122,26 +145,19 @@ class BezierTransition extends PureComponent {
             <path d={markerPath} fill={color} />
           </marker>
         </defs>
-        <text
-          x={labelPosition.x}
-          y={labelPosition.y}
-          fontSize="16"
-          alignmentBaseline="middle"
-          textAnchor="middle"
-        >
-          {label}
-        </text>
         <BezierCurve
           bezier={bezier}
           snap={snap}
           snapStep={snapStep}
           onChange={this.handleBezierChange}
+          label={label}
           markerStart={arrowPosition === 1 ? 'url(#fsm--bezier-transition__arrow)' : 'none'}
           markerEnd={arrowPosition === 2 ? 'url(#fsm--bezier-transition__arrow)' : 'none'}
+          pointSize={pointSize}
           stroke={color}
           strokeWidth={lineWidth}
+          showControls={selected}
         />
-        {debugDots}
       </g>
     );
   }

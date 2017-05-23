@@ -304,10 +304,9 @@ class StateNode extends PureComponent {
               dominantBaseline="middle"
               textAnchor="middle"
               fill={getLabelColor(bgColor)}
-
               className="fsm--state-node__label"
             >
-              {label.toUpperCase()}
+              {label}
             </text>
           </g>
         </DraggableCore>
