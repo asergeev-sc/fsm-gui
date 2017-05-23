@@ -115,11 +115,11 @@ class Viewport extends Component {
     const defs = (
       <defs key={Math.random()}>
         <pattern id="smallGrid" width={gridSize} height={gridSize} patternUnits="userSpaceOnUse">
-          <path d={`M ${gridSize} 0 L 0 0 0 ${gridSize}`} fill="none" stroke="gray" strokeWidth="0.5"/>
+          <path d={`M ${gridSize} 0 L 0 0 0 ${gridSize}`} fill="none" stroke="#eee" strokeWidth="0.5"/>
         </pattern>
         <pattern id="grid" width={bigGridSize} height={bigGridSize} patternUnits="userSpaceOnUse">
           <rect width={bigGridSize} height={bigGridSize} fill="url(#smallGrid)"/>
-          <path d={`M ${bigGridSize} 0 L 0 0 0 ${bigGridSize}`} fill="none" stroke="gray" strokeWidth="1"/>
+          <path d={`M ${bigGridSize} 0 L 0 0 0 ${bigGridSize}`} fill="none" stroke="#aaa" strokeWidth="1"/>
         </pattern>
       </defs>
     );

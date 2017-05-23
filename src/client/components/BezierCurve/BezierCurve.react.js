@@ -247,6 +247,8 @@ class BezierCurve extends PureComponent {
               y={labelPosition.y}
               fontSize="12"
               alignmentBaseline="middle"
+              dominantBaseline="middle"
+              textAnchor="middle"
               textAnchor="middle"
               className="bezier-curve__label-text"
             >
