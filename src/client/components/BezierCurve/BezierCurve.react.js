@@ -15,6 +15,7 @@ const propTypes = {
   onPoint3Drag: PropTypes.func,
   onPoint4Drag: PropTypes.func,
   label: PropTypes.string,
+  scale: PropTypes.number,
   pointColor1: PropTypes.string,
   pointColor2: PropTypes.string,
   pointSize: PropTypes.number,
@@ -35,6 +36,7 @@ const defaultProps = {
   pointSize: 16,
   showControls: true,
   stroke: '#0091EA',
+  scale: 1,
   snap: true,
   snapStep: 20,
   strokeWidth: 1
@@ -61,38 +63,38 @@ class BezierCurve extends PureComponent {
 
   handlePoint1Drag(e, data) {
     let bezier = [...this.props.bezier];
-    bezier[0] = bezier[0] + data.deltaX;
-    bezier[1] = bezier[1] + data.deltaY;
+    bezier[0] = bezier[0] + data.deltaX / this.props.scale;
+    bezier[1] = bezier[1] + data.deltaY / this.props.scale;
     this.handleChange(bezier);
   }
 
   handlePoint2Drag(e, data) {
     let bezier = [...this.props.bezier];
-    bezier[2] = bezier[2] + data.deltaX;
-    bezier[3] = bezier[3] + data.deltaY;
+    bezier[2] = bezier[2] + data.deltaX / this.props.scale;
+    bezier[3] = bezier[3] + data.deltaY / this.props.scale;
     this.handleChange(bezier);
   }
 
   handlePoint3Drag(e, data) {
     let bezier = [...this.props.bezier];
-    bezier[4] = bezier[4] + data.deltaX;
-    bezier[5] = bezier[5] + data.deltaY;
+    bezier[4] = bezier[4] + data.deltaX / this.props.scale;
+    bezier[5] = bezier[5] + data.deltaY / this.props.scale;
     this.handleChange(bezier);
   }
 
   handlePoint4Drag(e, data) {
     let bezier = [...this.props.bezier];
-    bezier[6] = bezier[6] + data.deltaX;
-    bezier[7] = bezier[7] + data.deltaY;
+    bezier[6] = bezier[6] + data.deltaX / this.props.scale;
+    bezier[7] = bezier[7] + data.deltaY / this.props.scale;
     this.handleChange(bezier);
   }
 
   handleLabelDrag(e, data) {
     let bezier = [...this.props.bezier];
-    bezier[2] = bezier[2] + data.deltaX;
-    bezier[3] = bezier[3] + data.deltaY;
-    bezier[4] = bezier[4] + data.deltaX;
-    bezier[5] = bezier[5] + data.deltaY;
+    bezier[2] = bezier[2] + data.deltaX / this.props.scale;
+    bezier[3] = bezier[3] + data.deltaY / this.props.scale;
+    bezier[4] = bezier[4] + data.deltaX / this.props.scale;
+    bezier[5] = bezier[5] + data.deltaY / this.props.scale;
     this.handleChange(bezier);
   }
 

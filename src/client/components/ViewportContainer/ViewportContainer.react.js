@@ -8,7 +8,9 @@ import * as viewportActions from '../App/redux/reducer/viewport';
 import * as selectedItemActions from '../App/redux/reducer/selected-item';
 import * as stateNodesActions from '../App/redux/reducer/state-nodes';
 import * as transitionsActions from '../App/redux/reducer/transitions';
+import * as newTransitionActions from '../App/redux/reducer/new-transition';
 import { ITEM_TYPES } from '../App/redux/reducer/selected-item';
+import { straightensBezier } from '../../svg-utils';
 
 // TODO remove debug helpers
 import BezierTransition from '../BezierTransition';
@@ -51,6 +53,7 @@ const maxScale = 5;
 const gridSize = 10;
 
 const propTypes = {
+  cursorPosition: PropTypes.object,
   viewportRect: PropTypes.object,
   viewportScale: PropTypes.number,
   viewportPanOffset: PropTypes.object,
@@ -59,11 +62,17 @@ const propTypes = {
   transitions: PropTypes.object,
   selectedItemType: PropTypes.string,
   selectedItemId: PropTypes.string,
-  hoveredStateNode: PropTypes.string
+  hoveredStateNode: PropTypes.string,
+  transitionCreationStarted: PropTypes.bool,
+  lastCreatedTransition: PropTypes.string
+};
+
+const defaultProps = {
 };
 
 @connect(
   state => ({
+    cursorPosition: state.viewport.cursorPosition,
     viewportRect: state.viewport.viewportRect,
     viewportScale: state.viewport.viewportScale,
     viewportPanOffset: state.viewport.viewportPanOffset,
@@ -72,10 +81,16 @@ const propTypes = {
     transitions: state.transitions,
     selectedItemType: state.selectedItem.itemType,
     selectedItemId: state.selectedItem.itemId,
+    transitionCreationStarted: state.newTransition.creationStarted,
+    lastCreatedTransition: state.newTransition.lastCreated,
     hoveredStateNode: state.selectedItem.hoveredStateNode
   }),
   dispatch => ({ actions: bindActionCreators({
-    ...viewportActions, ...selectedItemActions, ...stateNodesActions, ...transitionsActions
+    ...viewportActions,
+    ...selectedItemActions,
+    ...stateNodesActions,
+    ...transitionsActions,
+    ...newTransitionActions
   }, dispatch) })
 )
 export default class ViewportContainer extends Component {
@@ -99,12 +114,36 @@ export default class ViewportContainer extends Component {
     this.handleStateNodeDrag = this.handleStateNodeDrag.bind(this);
     this.handleTransitionChange = this.handleTransitionChange.bind(this);
     this.handleTransitionMouseDown = this.handleTransitionMouseDown.bind(this);
+    this.handleTransitionClick = this.handleTransitionClick.bind(this);
+    this.handleStateNodePointMouseDown = this.handleStateNodePointMouseDown.bind(this);
+    this.handleStateNodePointMouseUp = this.handleStateNodePointMouseUp.bind(this);
+    this.handleTransitionCreationMouseMove = this.handleTransitionCreationMouseMove.bind(this);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    /* Perf optimization. Avoid frequent rerenders
+     If you remove it you loose about 10 frames per second */
+    const cursorPositionChanged = this.props.cursorPosition && (
+      this.props.cursorPosition.x !== nextProps.cursorPosition.x ||
+        this.props.cursorPosition.y !== nextProps.cursorPosition.y
+    );
+
+    if(this.props.viewportScale !== nextProps.viewportScale) {
+      return true;
+    }
+
+    if(cursorPositionChanged) {
+      return false;
+    }
+
+    return true;
   }
 
   handleWheel(e) {
     let scale = e.deltaY > 0 ?
       this.props.viewportScale - scaleFactor :
-      this.props.viewportScale + scaleFactor;
+        this.props.viewportScale + scaleFactor;
+
     if(scale < minScale) {
       scale = minScale;
     }
@@ -148,6 +187,40 @@ export default class ViewportContainer extends Component {
     this.props.actions.updateHoveredStateNode(null);
   }
 
+  handleStateNodePointMouseDown(e, pointIndex, key) {
+    this.props.actions.startCreateNewTransition(this.props.cursorPosition);
+    document.body.addEventListener('mouseup', this.handleStateNodePointMouseUp);
+    document.body.addEventListener('mousemove', this.handleTransitionCreationMouseMove);
+  }
+
+  handleStateNodePointMouseUp(e, pointIndex) {
+    this.props.actions.finishCreateNewTransition();
+    document.body.removeEventListener('mouseup', this.handleStateNodePointMouseUp);
+    document.body.removeEventListener('mousemove', this.handleTransitionCreationMouseMove);
+  }
+
+  handleTransitionCreationMouseMove(e) {
+    const { lastCreatedTransition, transitions, cursorPosition } = this.props;
+    const newTransition = lastCreatedTransition && transitions[lastCreatedTransition];
+
+    if(!newTransition) {
+      return false;
+    }
+
+    const deltaX = (this.lastCursorPosition && this.lastCursorPosition.x || 0) - cursorPosition.x;
+    const deltaY = (this.lastCursorPosition && this.lastCursorPosition.y || 0) - cursorPosition.y;
+    const points = newTransition.points
+      .slice(0, 6)
+      .concat([
+        this.props.cursorPosition.x + deltaX,
+        this.props.cursorPosition.y + deltaY
+      ]);
+
+    this.lastCursorPosition = { ...this.props.cursorPosition };
+    const straightensBezierPoints = straightensBezier(points);
+    this.props.actions.updateTransition(lastCreatedTransition, { points: straightensBezierPoints });
+  }
+
   handleMouseDown(e) {
     this.mouseDownX = e.clientX;
     this.mouseDownY = e.clientY;
@@ -176,6 +249,11 @@ export default class ViewportContainer extends Component {
     this.props.actions.updateSelectedItem(ITEM_TYPES.TRANSITION, key);
   }
 
+  handleTransitionClick(e, key) {
+    e.stopPropagation();
+    this.props.actions.updateSelectedItem(ITEM_TYPES.TRANSITION, key);
+  }
+
   handleMouseUp(e) {
     const cursorHasMoved = Math.abs(this.mouseDownX - e.clientX) > 0 || Math.abs(this.mouseDownY - e.clientY) > 0;
 
@@ -199,13 +277,14 @@ export default class ViewportContainer extends Component {
       transitions,
       hoveredStateNode,
       selectedItemType,
-      selectedItemId
+      selectedItemId,
+      transitionCreationStarted
     } = this.props;
 
     const stateNodesElements = Object.keys(stateNodes).map(stateNodeKey => {
       const stateNode = stateNodes[stateNodeKey];
       const selected = selectedItemType === ITEM_TYPES.STATE && selectedItemId === stateNodeKey;
-      const showPoints = hoveredStateNode === stateNodeKey || selected;
+      const showPoints = hoveredStateNode === stateNodeKey || selected || transitionCreationStarted;
 
       return (
         <StateNode
@@ -221,6 +300,7 @@ export default class ViewportContainer extends Component {
           onMouseEnter={(e) => this.handleStateNodeMouseEnter(e, stateNodeKey)}
           onMouseLeave={(e) => this.handleStateNodeMouseLeave(e, stateNodeKey)}
           onMouseDown={(e) => this.handleStateNodeMouseDown(e, stateNodeKey)}
+          onPointMouseDown={(e, pointIndex) => this.handleStateNodePointMouseDown(e, pointIndex, stateNodeKey)}
           onClick={(e) => this.handleStateNodeClick(e, stateNodeKey)}
           onDoubleClick={() => console.log('onDoubleClick')}
           onDragStart={(e, data) => console.log('DragStart', e, data)}
@@ -241,8 +321,11 @@ export default class ViewportContainer extends Component {
           lineWidth={4}
           color="#0277bd"
           pointSize={12}
+          scale={viewportScale}
           onChange={(bezierPoints, d) => this.handleTransitionChange(transitionKey, bezierPoints, d)}
+          onClick={(e) => this.handleTransitionClick(e, transitionKey)}
           onMouseDown={(e) => this.handleTransitionMouseDown(e, transitionKey)}
+          arrowPosition={2}
           selected={selected}
         />
       );
@@ -271,3 +354,4 @@ export default class ViewportContainer extends Component {
 }
 
 ViewportContainer.propTypes = propTypes;
+ViewportContainer.defaultProps = defaultProps;

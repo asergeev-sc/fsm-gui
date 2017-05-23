@@ -3,18 +3,17 @@ const UPDATE_TRANSITION = 'fsm/transitions/UPDATE_TRANSITION';
 const DELETE_TRANSITION = 'fsm/transitions/DELETE_TRANSITION';
 const REPLACE_TRANSITIONS = 'fsm/state-nodes/REPLACE_TRANSITIONS';
 
-const initialState = {
-
-};
+const initialState = {};
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case CREATE_TRANSITION:
-      return state;
-    case UPDATE_TRANSITION:
       return Object.assign({}, state, { [action.key]: action.value });
+    case UPDATE_TRANSITION:
+      const transition = Object.assign({}, state[action.key], action.value);
+      return Object.assign({}, state, { [action.key]: transition });
     case DELETE_TRANSITION:
-      return state;
+      return Object.assign({}, state, { [action.key]: undefined });;
     case REPLACE_TRANSITIONS:
       return action.value;
     default:
@@ -22,8 +21,16 @@ export default function reducer(state = initialState, action = {}) {
   }
 }
 
+export function createTransition(key, value) {
+  return { type: CREATE_TRANSITION, key, value };
+}
+
 export function updateTransition(key, value) {
   return { type: UPDATE_TRANSITION, key, value };
+}
+
+export function deleteTransition(key) {
+  return { type: DELETE_TRANSITION, key };
 }
 
 export function replaceTransitions(value) {

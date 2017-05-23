@@ -52,3 +52,25 @@ export function snapToPoints(bezier, points, xIndex, yIndex) {
 
   return bezier;
 }
+
+export function getPointAtLine(x1, y1, x2, y2, ratio) {
+  const length = getDistance(x1, y1, x2, y2);
+  const xT = (1 - ratio) * x1 + ratio * x2;
+  const yT = (1 - ratio) * y1 + ratio * y2;
+
+  return [xT, yT];
+}
+
+export function straightensBezier(points, ratio = 0.25) {
+  const xDiff = points[0] - points[6];
+  const yDiff = points[1] - points[7];
+  const segment1 = getPointAtLine(points[0], points[1], points[6], points[7], ratio);
+  const segment2 = getPointAtLine(points[6], points[7], points[0], points[1], ratio);
+
+  return [
+    points[0], points[1],
+    segment1[0], segment1[1],
+    segment2[0], segment2[1],
+    points[6], points[7],
+  ];
+}

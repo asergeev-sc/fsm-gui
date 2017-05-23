@@ -37,11 +37,11 @@ export default class ToolbarContainer extends Component {
   }
 
   handleShowInspector() {
-    this.props.actions.updateShowInspector(!this.props.showInspector);
+    this.props.actions.updateLayoutProperty('showInspector', !this.props.showInspector);
   }
 
   handleShowHelp() {
-    this.props.actions.updateShowHelp(true);
+    this.props.actions.updateLayoutProperty('showHelp', true);
   }
 
   render() {

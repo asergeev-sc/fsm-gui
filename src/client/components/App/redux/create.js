@@ -5,6 +5,16 @@ import createMiddleware from './clientMiddleware';
 import reducer from './reducer';
 
 const logger = createLogger({
+  predicate: (a, action) => {
+    const pass = (
+      action.type === 'fsm/viewport/UPDATE_CURSOR_POSITION' ||
+        action.type === 'fsm/viewport/UPDATE_VIEWPORT_PAN_OFFSET'
+    );
+    if(pass) {
+      return false;
+    }
+    return true;
+  },
   duration: true,
   level: 'warn',
   // diff: true

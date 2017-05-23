@@ -48,7 +48,7 @@ class AppLayout extends Component {
   }
 
   handleAppRef(ref) {
-    this.props.actions.updateAppElementRef(ref);
+    this.props.actions.updateLayoutProperty('appElementRef', ref);
   }
 
   render() {

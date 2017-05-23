@@ -15,6 +15,7 @@ const propTypes = {
   showPoints: PropTypes.bool,
   snap: PropTypes.bool,
   snapStep: PropTypes.number,
+  scale: PropTypes.number,
   label: PropTypes.string,
   lineWidth: PropTypes.number,
   cursorPosition: PropTypes.shape({ x: PropTypes.number, y: PropTypes.number }),
@@ -39,6 +40,7 @@ const defaultProps = {
   showPoints: false,
   snap: true,
   snapStep: 20,
+  scale: 1,
   lineWidth: 4,
   label: '',
   onChange: () => {},
@@ -110,6 +112,7 @@ class BezierTransition extends PureComponent {
       bezier,
       selected,
       showPoints,
+      scale,
       onChange,
       stickyPoints
     } = this.props;
@@ -151,6 +154,7 @@ class BezierTransition extends PureComponent {
           snapStep={snapStep}
           onChange={this.handleBezierChange}
           label={label}
+          scale={scale}
           markerStart={arrowPosition === 1 ? 'url(#fsm--bezier-transition__arrow)' : 'none'}
           markerEnd={arrowPosition === 2 ? 'url(#fsm--bezier-transition__arrow)' : 'none'}
           pointSize={pointSize}

@@ -21,7 +21,7 @@ class HelpContainer extends PureComponent {
   }
 
   handleHide() {
-    this.props.actions.updateShowHelp(false);
+    this.props.actions.updateLayoutProperty('showHelp', false);
   }
 
   render() {
