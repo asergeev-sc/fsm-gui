@@ -13,6 +13,7 @@ const propTypes = {
   showGrid: PropTypes.bool,
   scale: PropTypes.number,
   size: PropTypes.object,
+  snap: PropTypes.bool,
   onWheel: PropTypes.func,
   onMouseMove: PropTypes.func,
   onMouseLeave: PropTypes.func,
@@ -20,6 +21,8 @@ const propTypes = {
   onMouseUp: PropTypes.func,
   onMouseClick: PropTypes.func,
   onPan: PropTypes.func,
+  onKeyDown: PropTypes.func,
+  onClickOutside: PropTypes.func,
   panOffsetX: PropTypes.number,
   panOffsetY: PropTypes.number
 };
@@ -29,10 +32,14 @@ const defaultProps = {
   showGrid: false,
   scale: 1,
   size: null,
+  snap: true,
+  snapSize: 10,
   onWheel: () => {},
   onMouseMove: () => {},
   onMouseLeave: () => {},
   onPan: () => {},
+  onKeyDown: () => {},
+  onClickOutside: () => {},
   panOffsetX: 0,
   panOffsetY: 0
 };
@@ -51,6 +58,28 @@ class Viewport extends Component {
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleWheel = this.handleWheel.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
+    this.handleBodyClick = this.handleBodyClick.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+  }
+
+  componentDidMount () {
+    document.body.addEventListener('click', this.handleBodyClick);
+    document.body.addEventListener('keydown', this.handleKeyDown);
+  }
+
+  componentWillUnmount () {
+    document.body.removeEventListener('click', this.handleBodyClick);
+    document.body.removeEventListener('keydown', this.handleKeyDown);
+  }
+
+  handleBodyClick(e) {
+    if (!this.viewportRef.contains(e.target)) {
+      this.props.onClickOutside(e);
+    }
+  }
+
+  handleKeyDown(e) {
+    this.props.onKeyDown(e);
   }
 
   handleMouseDown(e) {
@@ -100,6 +129,7 @@ class Viewport extends Component {
       onMouseDown,
       onMouseUp,
       scale,
+      snap,
       size,
       children,
       panOffsetX,
@@ -126,6 +156,7 @@ class Viewport extends Component {
 
     return (
       <div
+        ref={ref => (this.viewportRef = ref)}
         className={`fsm--viewport ${(panning) ? 'fsm--viewport--panning' : ''}`}
         onWheel={this.handleWheel}
         onMouseDown={this.handleMouseDown}
@@ -136,7 +167,7 @@ class Viewport extends Component {
       >
         <DraggableCore
           onDrag={this.handleDrag}
-          grid={[10, 10]}
+          grid={snap && [gridSize, gridSize]}
         >
           <svg
             version="1.1"

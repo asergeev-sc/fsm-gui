@@ -65,6 +65,9 @@ class BezierCurve extends PureComponent {
     let bezier = [...this.props.bezier];
     bezier[0] = bezier[0] + data.deltaX / this.props.scale;
     bezier[1] = bezier[1] + data.deltaY / this.props.scale;
+
+    bezier[2] = bezier[2] + data.deltaX / this.props.scale;
+    bezier[3] = bezier[3] + data.deltaY / this.props.scale;
     this.handleChange(bezier);
   }
 
@@ -86,6 +89,9 @@ class BezierCurve extends PureComponent {
     let bezier = [...this.props.bezier];
     bezier[6] = bezier[6] + data.deltaX / this.props.scale;
     bezier[7] = bezier[7] + data.deltaY / this.props.scale;
+
+    bezier[4] = bezier[4] + data.deltaX / this.props.scale;
+    bezier[5] = bezier[5] + data.deltaY / this.props.scale;
     this.handleChange(bezier);
   }
 

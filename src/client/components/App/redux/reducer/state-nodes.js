@@ -14,7 +14,9 @@ export default function reducer(state = initialState, action = {}) {
     case UPDATE_STATE_NODE:
       return Object.assign({}, state, { [action.key]: action.value });
     case DELETE_STATE_NODE:
-      return state;
+      const newState = Object.assign({}, state, { [action.key]: undefined });
+      delete newState[action.key];
+      return newState;
     case REPLACE_STATE_NODES:
       return action.value;
     default:
@@ -24,6 +26,10 @@ export default function reducer(state = initialState, action = {}) {
 
 export function updateStateNode(key, value) {
   return { type: UPDATE_STATE_NODE, key, value };
+}
+
+export function deleteStateNode(key) {
+  return { type: DELETE_STATE_NODE, key };
 }
 
 export function replaceStateNodes(value) {

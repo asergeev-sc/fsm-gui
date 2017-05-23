@@ -13,7 +13,9 @@ export default function reducer(state = initialState, action = {}) {
       const transition = Object.assign({}, state[action.key], action.value);
       return Object.assign({}, state, { [action.key]: transition });
     case DELETE_TRANSITION:
-      return Object.assign({}, state, { [action.key]: undefined });;
+      const newState = Object.assign({}, state, { [action.key]: undefined });;
+      delete newState[action.key];
+      return newState;
     case REPLACE_TRANSITIONS:
       return action.value;
     default:

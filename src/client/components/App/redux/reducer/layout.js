@@ -4,7 +4,8 @@ const initialState = {
   appElementRef: null,
   showInspector: true,
   showHelp: false,
-  showStateNodesPoints: false
+  showStateNodesPoints: false,
+  viewportFocused: false
 };
 
 export default function reducer(state = initialState, action = {}) {

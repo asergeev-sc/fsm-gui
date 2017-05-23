@@ -5,7 +5,7 @@ const FINISH_CREATE_NEW_TRANSITION = 'fsm/new-transition/FINISH_CREATE_NEW_TRANS
 
 const initialState = {
   creationStarted: false,
-  lastCreated: ''
+  lastCreated: null
 };
 
 function capitalize(string) {
@@ -35,7 +35,7 @@ const transitionTemplate = {
 
     }
   },
-  "points": [20,20, 20,100, 40,100, 100,40]
+  "points": [0,0, 0,0, 0,0, 0,0]
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -43,21 +43,22 @@ export default function reducer(state = initialState, action = {}) {
     case START_CREATE_NEW_TRANSITION:
       return Object.assign({}, state, { creationStarted: true, lastCreated: action.lastCreated });
     case FINISH_CREATE_NEW_TRANSITION:
-      return Object.assign({}, state, { creationStarted: false });
+      return Object.assign({}, state, { creationStarted: false, lastCreated: null });
     default:
       return state;
   }
 }
 
 export function startCreateNewTransition(fromPoint) {
-  const key = 'transition_' + Math.random();
-  const name = capitalize(key).replace('_', '');
+  const key = 'transition_' + Math.floor(Math.random() * 100);
+  const name = capitalize(key).replace('_', ' ');
   const points = [
     fromPoint.x, fromPoint.y,
     fromPoint.x, fromPoint.y,
     fromPoint.x, fromPoint.y,
     fromPoint.x, fromPoint.y
   ];
+  console.log('P:', points);
   const value = Object.assign({}, transitionTemplate, { name, points });
 
   return dispatch => {

@@ -22,7 +22,7 @@ const logger = createLogger({
 });
 
 export default function createStore(client, data) {
-  const middleware = [createMiddleware(client), thunk];
+  const middleware = [createMiddleware(client), thunk, logger];
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   const store = _createStore(
     reducer,

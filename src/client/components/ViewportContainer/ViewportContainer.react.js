@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import isEqual from 'lodash/isEqual';
 import Viewport from '../Viewport';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -9,6 +8,7 @@ import * as selectedItemActions from '../App/redux/reducer/selected-item';
 import * as stateNodesActions from '../App/redux/reducer/state-nodes';
 import * as transitionsActions from '../App/redux/reducer/transitions';
 import * as newTransitionActions from '../App/redux/reducer/new-transition';
+import * as layoutActions from '../App/redux/reducer/layout';
 import { ITEM_TYPES } from '../App/redux/reducer/selected-item';
 import { straightensBezier } from '../../svg-utils';
 
@@ -64,7 +64,8 @@ const propTypes = {
   selectedItemId: PropTypes.string,
   hoveredStateNode: PropTypes.string,
   transitionCreationStarted: PropTypes.bool,
-  lastCreatedTransition: PropTypes.string
+  lastCreatedTransition: PropTypes.string,
+  viewportFocused: PropTypes.bool
 };
 
 const defaultProps = {
@@ -83,14 +84,16 @@ const defaultProps = {
     selectedItemId: state.selectedItem.itemId,
     transitionCreationStarted: state.newTransition.creationStarted,
     lastCreatedTransition: state.newTransition.lastCreated,
-    hoveredStateNode: state.selectedItem.hoveredStateNode
+    hoveredStateNode: state.selectedItem.hoveredStateNode,
+    viewportFocused: state.layout.viewportFocused
   }),
   dispatch => ({ actions: bindActionCreators({
     ...viewportActions,
     ...selectedItemActions,
     ...stateNodesActions,
     ...transitionsActions,
-    ...newTransitionActions
+    ...newTransitionActions,
+    ...layoutActions
   }, dispatch) })
 )
 export default class ViewportContainer extends Component {
@@ -100,6 +103,7 @@ export default class ViewportContainer extends Component {
       panning: false
     };
 
+    this.handleDelete = this.handleDelete.bind(this);
     this.handleWheel = this.handleWheel.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
@@ -107,6 +111,8 @@ export default class ViewportContainer extends Component {
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleClickOutside = this.handleClickOutside.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleStateNodeClick = this.handleStateNodeClick.bind(this);
     this.handleStateNodeMouseDown = this.handleStateNodeMouseDown.bind(this);
     this.handleStateNodeMouseEneter = this.handleStateNodeMouseEnter.bind(this);
@@ -265,7 +271,36 @@ export default class ViewportContainer extends Component {
   }
 
   handleClick(e) {
-    return e;
+    this.props.actions.updateLayoutProperty('viewportFocused', true);
+  }
+
+  handleClickOutside(e) {
+    this.props.actions.updateLayoutProperty('viewportFocused', false);
+  }
+
+  handleDelete(e) {
+    if(this.props.selectedItemType === ITEM_TYPES.VIEWPORT) {
+      return false;
+    }
+
+    if(this.props.selectedItemType === ITEM_TYPES.STATE) {
+      this.props.actions.deleteStateNode(this.props.selectedItemId);
+      this.props.actions.updateSelectedItem(ITEM_TYPES.VIEWPORT);
+    }
+
+    if(this.props.selectedItemType === ITEM_TYPES.TRANSITION) {
+      this.props.actions.deleteTransition(this.props.selectedItemId);
+      this.props.actions.updateSelectedItem(ITEM_TYPES.VIEWPORT);
+    }
+  }
+
+  handleKeyDown(e) {
+    switch(e.which) {
+      case 8: this.handleDelete(e); // Backspace key
+      case 9: e.preventDefault(); // TAB key
+      case 46: this.handleDelete(e); // Del key
+      default: return false;
+    }
   }
 
   render() {
@@ -278,7 +313,8 @@ export default class ViewportContainer extends Component {
       hoveredStateNode,
       selectedItemType,
       selectedItemId,
-      transitionCreationStarted
+      transitionCreationStarted,
+      viewportFocused
     } = this.props;
 
     const stateNodesElements = Object.keys(stateNodes).map(stateNodeKey => {
@@ -306,6 +342,7 @@ export default class ViewportContainer extends Component {
           onDragStart={(e, data) => console.log('DragStart', e, data)}
           onDragStop={(e, data) => console.log('DragStop', e, data)}
           onDrag={(e, data) => this.handleStateNodeDrag(e, data, stateNodeKey)}
+          snap={false}
         />
       );
     });
@@ -326,7 +363,9 @@ export default class ViewportContainer extends Component {
           onClick={(e) => this.handleTransitionClick(e, transitionKey)}
           onMouseDown={(e) => this.handleTransitionMouseDown(e, transitionKey)}
           arrowPosition={2}
+          arrowSize={30}
           selected={selected}
+          snap={false}
         />
       );
     });
@@ -343,8 +382,11 @@ export default class ViewportContainer extends Component {
         onMouseDown={this.handleMouseDown}
         onMouseUp={this.handleMouseUp}
         onClick={this.handleClick}
+        onClickOutside={this.handleClickOutside}
+        onKeyDown={this.handleKeyDown}
         panOffsetX={viewportPanOffset.x}
         panOffsetY={viewportPanOffset.y}
+        focused={viewportFocused}
       >
         {transitionsElements}
         {stateNodesElements}
