@@ -23,10 +23,20 @@ const initialState = {
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case LOAD_FSM:
-      return { ...state, loading: true };
+      return Object.assign({}, state, { 'loading': true});
     case LOAD_FSM_SUCCESS:
-      return { meta: action.value, loading: false, loaded: true, error: null };
+      return Object.assign({}, state, {
+        'meta': Object.assign({}, action.value),
+        'loading': false,
+        'loaded': true,
+        'error': null
+      });
     case LOAD_FSM_FAIL:
+      return Object.assign({}, state, {
+        'loading': false,
+        'loaded': false,
+        'error': action.error
+      });
       return { ...state, loading: false, loaded: false, error: action.error };
     default:
       return state;

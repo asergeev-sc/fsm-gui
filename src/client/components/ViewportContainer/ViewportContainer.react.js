@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as viewportActions from '../App/redux/reducer/viewport';
 import * as selectedItemActions from '../App/redux/reducer/selected-item';
+import * as stateNodesActions from '../App/redux/reducer/state-nodes';
 import { ITEM_TYPES } from '../App/redux/reducer/selected-item';
 
 // TODO remove debug helpers
@@ -70,7 +71,9 @@ const propTypes = {
     selectedItemId: state.selectedItem.itemId,
     hoveredStateNode: state.selectedItem.hoveredStateNode
   }),
-  dispatch => ({ actions: bindActionCreators({ ...viewportActions, ...selectedItemActions }, dispatch) })
+  dispatch => ({ actions: bindActionCreators({
+    ...viewportActions, ...selectedItemActions, ...stateNodesActions
+  }, dispatch) })
 )
 export default class ViewportContainer extends Component {
   constructor(props) {
@@ -90,6 +93,7 @@ export default class ViewportContainer extends Component {
     this.handleStateNodeMouseDown = this.handleStateNodeMouseDown.bind(this);
     this.handleStateNodeMouseEneter = this.handleStateNodeMouseEnter.bind(this);
     this.handleStateNodeMouseLeave = this.handleStateNodeMouseLeave.bind(this);
+    this.handleStateNodeDrag = this.handleStateNodeDrag.bind(this);
   }
 
   handleWheel(e) {
@@ -146,6 +150,16 @@ export default class ViewportContainer extends Component {
     this.setState({ panning: true });
   }
 
+  handleStateNodeDrag(e, data, stateNodeKey) {
+    const stateNode = this.props.stateNodes[stateNodeKey];
+    const points = [
+      stateNode.points[0] + data.deltaX / this.props.viewportScale,
+      stateNode.points[1] + data.deltaY / this.props.viewportScale
+    ];
+    const updatedStateNode = Object.assign({}, stateNode, { points });
+    this.props.actions.updateStateNode(stateNodeKey, updatedStateNode);
+  }
+
   handleMouseUp(e) {
     const cursorHasMoved = Math.abs(this.mouseDownX - e.clientX) > 0 || Math.abs(this.mouseDownY - e.clientY) > 0;
 
@@ -180,10 +194,10 @@ export default class ViewportContainer extends Component {
         <StateNode
           key={stateNodeKey}
           label={stateNode.name}
-          x={stateNode.visual.points[0]}
-          y={stateNode.visual.points[1]}
-          bgColor={stateNode.visual.bgColor}
-          textColor={stateNode.visual.textColor}
+          x={stateNode.points[0]}
+          y={stateNode.points[1]}
+          bgColor={stateNode.bgColor}
+          textColor={stateNode.textColor}
           finalState={false}
           selected={selected}
           showPoints={showPoints}
@@ -194,7 +208,7 @@ export default class ViewportContainer extends Component {
           onDoubleClick={() => console.log('onDoubleClick')}
           onDragStart={(e, data) => console.log('DragStart', e, data)}
           onDragStop={(e, data) => console.log('DragStop', e, data)}
-          onDrag={() => {}}
+          onDrag={(e, data) => this.handleStateNodeDrag(e, data, stateNodeKey)}
         />
       );
     });

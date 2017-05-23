@@ -11,7 +11,9 @@ const pointOffset = 1;
 const outlinePadding = 3;
 const getContrastColor = (color, amount = 10) => tinycolor(color).getBrightness() > 70 ?
   tinycolor(color).darken(amount) :
-  tinycolor(color).lighten(amount) ;
+      tinycolor(color).lighten(amount) ;
+
+const getLabelColor = (bgColor) => tinycolor(bgColor).getBrightness() > 127 ? '#000' : '#fff';
 
 const propTypes = {
   label: PropTypes.string,
@@ -19,7 +21,6 @@ const propTypes = {
   color: PropTypes.string,
   bgColor: PropTypes.string,
   textColor: PropTypes.string,
-  description: PropTypes.string,
   snapStep: PropTypes.number,
   x: PropTypes.number,
   y: PropTypes.number,
@@ -48,7 +49,6 @@ const defaultProps = {
   color: '#000',
   bgColor: '#0277bd',
   textColor: '#fff',
-  description: '',
   snapStep: 20,
   x: 0,
   y: 0,
@@ -86,6 +86,8 @@ class StateNode extends PureComponent {
     this.handleLabelElementRef = this.handleLabelElementRef.bind(this);
     this.handleMouseEnter = this.handleMouseEnter.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handlePointMouseDown = this.handlePointMouseDown.bind(this);
     this.handlePointMouseUp = this.handlePointMouseUp.bind(this);
     this.handlePointMouseEnter = this.handlePointMouseEnter.bind(this);
@@ -101,12 +103,19 @@ class StateNode extends PureComponent {
   }
 
   handleDrag(e, data) {
-    console.log('handleDrag', data);
     this.props.onDrag(e, data);
   }
 
   handleLabelElementRef(ref) {
     this.setState({ labelElement: ref });
+  }
+
+  handleMouseDown(e) {
+    this.props.onMouseDown(e);
+  }
+
+  handleMouseUp(e) {
+    this.props.onMouseUp(e);
   }
 
   handleMouseEnter(e) {
@@ -175,7 +184,7 @@ class StateNode extends PureComponent {
         onMouseUp={(e) => this.handlePointMouseUp(e, index)}
         onMouseEnter={(e) => this.handlePointMouseEnter(e, index)}
         onMouseLeave={(e) => this.handlePointMouseLeave(e, index)}
-        className="fsm--state-node__point"
+        className={`fsm--state-node__point ${this.props.drag ? 'fsm--state-node__point--drag' : ''}`}
       />
     ));
   }
@@ -186,7 +195,6 @@ class StateNode extends PureComponent {
       lineWidth,
       color,
       bgColor,
-      description,
       snapStep,
       textColor,
       x,
@@ -257,51 +265,54 @@ class StateNode extends PureComponent {
     const points = showPoints ? this.renderPoints(rectX, rectY, rectWidth, rectHeight) : null;
 
     return (
-      <DraggableCore
-        grid={snap ? [snapStep, snapStep] : null}
-        onStart={this.handleStart}
-        onStop={this.handleStop}
-        onDrag={this.handleDrag}
+      <g
+        onMouseEnter={this.handleMouseEnter}
+        onMouseLeave={this.handleMouseLeave}
+        onMouseDown={this.handleMouseDown}
+        onMouseUp={this.handleMouseUp}
       >
-        <g
-          className="fsm--state-node"
-          onClick={onClick}
-          onDoubleClick={onDoubleClick}
-          onMouseEnter={this.handleMouseEnter}
-          onMouseLeave={this.handleMouseLeave}
+        <DraggableCore
+          grid={snap ? [snapStep, snapStep] : null}
+          onStart={this.handleStart}
+          onStop={this.handleStop}
+          onDrag={this.handleDrag}
         >
-          {outline}
-          <rect
-            x={rectX}
-            y={rectY}
-            rx="2"
-            ry="2"
-            width={rectWidth}
-            height={rectHeight}
-            fill={bgColor}
-            strokeWidth={lineWidth}
-            onMouseDown={onMouseDown}
-            onMouseUp={onMouseUp}
-
-          />
-          <text
-            ref={this.handleLabelElementRef}
-            x={x}
-            y={y}
-            fontSize="16"
-            alignmentBaseline="middle"
-            dominantBaseline="middle"
-            textAnchor="middle"
-            fill={textColor}
-            onMouseDown={onMouseDown}
-            onMouseUp={onMouseUp}
-            className="fsm--state-node__label"
+          <g
+            className="fsm--state-node"
+            onClick={onClick}
+            onDoubleClick={onDoubleClick}
+            onMouseDown={this.handleMouseDown}
+            onMouseUp={this.handleMouseUp}
           >
-            {label.toUpperCase()}
-          </text>
-          {points}
-        </g>
-      </DraggableCore>
+            {outline}
+            <rect
+              x={rectX}
+              y={rectY}
+              rx="2"
+              ry="2"
+              width={rectWidth}
+              height={rectHeight}
+              fill={bgColor}
+              strokeWidth={lineWidth}
+            />
+            <text
+              ref={this.handleLabelElementRef}
+              x={x}
+              y={y}
+              fontSize="16"
+              alignmentBaseline="middle"
+              dominantBaseline="middle"
+              textAnchor="middle"
+              fill={getLabelColor(bgColor)}
+
+              className="fsm--state-node__label"
+            >
+              {label.toUpperCase()}
+            </text>
+          </g>
+        </DraggableCore>
+        {points}
+      </g>
     );
   }
 }

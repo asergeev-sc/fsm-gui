@@ -1,5 +1,5 @@
-const UPDATE_SELECTED_ITEM = 'fsm/slectedItem/UPDATE_SELECTED_ITEM';
-const UPDATE_HOVERED_STATE_NODE = 'fsm/slectedItem/UPDATE_HOVERED_STATE_NODE';
+const UPDATE_SELECTED_ITEM = 'fsm/selected-item/UPDATE_SELECTED_ITEM';
+const UPDATE_HOVERED_STATE_NODE = 'fsm/selected-item/UPDATE_HOVERED_STATE_NODE';
 
 export const ITEM_TYPES = {
   STATE: 'fsm/types/STATE',
@@ -10,8 +10,8 @@ export const ITEM_TYPES = {
 
 const initialState = {
   type: ITEM_TYPES.NON_INSPECTABLE,
-  id: null,
-  hoveredStateNode: null
+  id: '',
+  hoveredStateNode: ''
 };
 
 export default function reducer(state = initialState, action = {}) {

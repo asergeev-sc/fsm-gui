@@ -12,7 +12,7 @@ export default function reducer(state = initialState, action = {}) {
     case CREATE_STATE_NODE:
       return state;
     case UPDATE_STATE_NODE:
-      return state;
+      return Object.assign({}, state, { [action.key]: action.value });
     case DELETE_STATE_NODE:
       return state;
     case REPLACE_STATE_NODES:
@@ -20,6 +20,10 @@ export default function reducer(state = initialState, action = {}) {
     default:
       return state;
   }
+}
+
+export function updateStateNode(key, value) {
+  return { type: UPDATE_STATE_NODE, key, value };
 }
 
 export function replaceStateNodes(value) {

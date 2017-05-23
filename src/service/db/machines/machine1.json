@@ -16,74 +16,50 @@
       "new": {
         "name": "New",
         "description": "New order created",
-        "visual": {
-          "bgColor": "#0277bd",
-          "textColor": "#fff",
-          "points": [300, 300]
-        }
+        "bgColor": "#0277bd",
+        "points": [300, 300]
       },
       "onHold": {
         "name": "On hold",
         "description": "Order is on hold",
-        "visual": {
-          "bgColor": "#0277bd",
-          "textColor": "#fff",
-          "points": [300, 600]
-        }
+        "bgColor": "#ffd351",
+        "points": [300, 600]
       },
       "canceled": {
         "name": "Canceled",
         "description": "Order has been canceled",
-        "visual": {
-          "bgColor": "#0277bd",
-          "textColor": "#fff",
-          "points": [100, 600]
-        }
+        "bgColor": "#0277bd",
+        "points": [100, 600]
       },
       "pendingPayment": {
         "name": "Pending payment",
         "description": "Pending payment",
-        "visual": {
-          "bgColor": "#0277bd",
-          "textColor": "#fff",
-          "points": [300, 900]
-        }
+        "bgColor": "#0277bd",
+        "points": [300, 900]
       },
       "refunded": {
         "name": "Refunded",
         "description": "Refunded",
-        "visual": {
-          "bgColor": "#b71c1c",
-          "textColor": "#fff",
-          "points": [600, 900]
-        }
+        "bgColor": "#b71c1c",
+        "points": [600, 900]
       },
       "complete": {
         "name": "Complete",
         "description": "Order complete",
-        "visual": {
-          "bgColor": "#0277bd",
-          "textColor": "#fff",
-          "points": [600, 1200]
-        }
+        "bgColor": "#14892c",
+        "points": [600, 1200]
       },
       "closed": {
         "name": "Closed",
         "description": "Order closed",
-        "visual": {
-          "bgColor": "#0277bd",
-          "textColor": "#fff",
-          "points": [600, 1500]
-        }
+        "bgColor": "#0277bd",
+        "points": [600, 1500]
       },
       "archived": {
         "name": "Archived",
         "description": "Order archived",
-        "visual": {
-          "bgColor": "#0277bd",
-          "textColor": "#fff",
-          "points": [600, 1800]
-        }
+        "bgColor": "#0277bd",
+        "points": [600, 1800]
       }
     },
     "transitions": {

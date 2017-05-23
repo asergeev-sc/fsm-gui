@@ -15,13 +15,13 @@ const initialState = {
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case UPDATE_CURSOR_POSITION:
-      return Object.assign({}, state, { 'cursorPosition': action.value });
+      return Object.assign({}, state, { 'cursorPosition': { ...action.value } });
     case UPDATE_VIEWPORT_RECT:
-      return Object.assign({}, state, { 'viewportRect': action.value });
+      return Object.assign({}, state, { 'viewportRect': { ...action.value } });
     case UPDATE_VIEWPORT_SCALE:
       return Object.assign({}, state, { 'viewportScale': action.value });
     case UPDATE_VIEWPORT_PAN_OFFSET:
-      return Object.assign({}, state, { 'viewportPanOffset': action.value });
+      return Object.assign({}, state, { 'viewportPanOffset': { ...action.value } });
     case UPDATE_VIEWPORT_SHOW_GRID:
       return Object.assign({}, state, { 'showGrid': action.value });
     default:

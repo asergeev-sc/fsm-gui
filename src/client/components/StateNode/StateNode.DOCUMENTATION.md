@@ -24,6 +24,7 @@ StateNode is
     y={_scope.state.y}
     finalState={false}
     selected={true}
+    showPoints={true}
     onClick={() => console.log('onClick')}
     onDoubleClick={() => console.log('onDoubleClick')}
     onDragStart={(e, data) => console.log('DragStart', e, data)} 
