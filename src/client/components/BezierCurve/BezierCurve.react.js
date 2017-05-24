@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { DraggableCore } from 'react-draggable';
 import Bezier from 'bezier-js';
 import './BezierCurve.less';
+import isEqual from 'lodash/isEqual';
 
 const paddingV = 10;
 const paddingH = 30;
@@ -59,7 +60,7 @@ class BezierCurve extends PureComponent {
 
   shouldComponentUpdate(nextProps, nextState) {
     return (
-      this.props.bezier !== nextProps.bezier ||
+      !isEqual(this.props.bezier, nextProps.bezier) ||
       this.props.label !== nextProps.label ||
       this.props.scale !== nextProps.scale ||
       this.props.pointColor1 !== nextProps.pointColor1 ||
