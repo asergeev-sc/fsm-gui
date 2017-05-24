@@ -25,11 +25,13 @@ StateNode is
     finalState={false}
     selected={true}
     showPoints={true}
+    snap={false}
     onClick={() => console.log('onClick')}
     onDoubleClick={() => console.log('onDoubleClick')}
     onDragStart={(e, data) => console.log('DragStart', e, data)} 
     onDragStop={(e, data) => console.log('DragStop', e, data)} 
-    onDrag={_scope.handleDrag.bind(_scope)} 
+    onDrag={_scope.handleDrag.bind(_scope)}
+    selectedPoints={[1]}
   />
 </svg>
 

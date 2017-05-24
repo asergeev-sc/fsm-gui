@@ -57,6 +57,21 @@ class BezierCurve extends PureComponent {
     this.handleLabelElementRef = this.handleLabelElementRef.bind(this);
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      this.props.bezier !== nextProps.bezier ||
+      this.props.label !== nextProps.label ||
+      this.props.scale !== nextProps.scale ||
+      this.props.pointColor1 !== nextProps.pointColor1 ||
+      this.props.pointColor2 !== nextProps.pointColor2 ||
+      this.props.pointSize !== nextProps.pointSize ||
+      this.props.snap !== nextProps.snap ||
+      this.props.snapStep !== nextProps.snapStep ||
+      this.props.showControls !== nextProps.showControls ||
+      this.state.labelElement !== nextState.labelElement
+    );
+  }
+
   handleChange(bezier, d) {
     this.props.onChange(bezier, this.pathElement);
   }

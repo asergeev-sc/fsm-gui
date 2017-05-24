@@ -1,4 +1,4 @@
-import { snapTransitions } from './transitions';
+import { snapTransitions, snapStateNodePoints } from './transitions';
 
 const CREATE_STATE_NODE = 'fsm/state-nodes/CREATE_STATE_NODE';
 const UPDATE_STATE_NODE = 'fsm/state-nodes/UPDATE_STATE_NODE';
@@ -29,7 +29,7 @@ export default function reducer(state = initialState, action = {}) {
 export function updateStateNode(key, value) {
   return (dispatch, getState) => {
     dispatch({ type: UPDATE_STATE_NODE, key, value });
-    dispatch(snapTransitions(getState));
+    dispatch(snapStateNodePoints(getState));
   };
 }
 

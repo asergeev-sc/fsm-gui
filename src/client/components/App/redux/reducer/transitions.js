@@ -1,4 +1,5 @@
 import { snapPoint } from '../../../../svg-utils';
+import { ITEM_TYPES } from './selected-item';
 
 const CREATE_TRANSITION = 'fsm/transitions/CREATE_TRANSITION';
 const UPDATE_TRANSITION = 'fsm/transitions/UPDATE_TRANSITION';
@@ -51,6 +52,7 @@ export function snapTransitions(getState) {
   const snapDistance = state.viewport.snapDistance;
   const newTransitions = Object.keys(transitions).reduce((accum, transitionKey) => {
     const transition = transitions[transitionKey];
+
     let points = [...transition.points];
     const bezierPoint1 = snapPoint(points[0], points[1], stickyPoints, snapDistance);
     const bezierPoint4 = snapPoint(points[6], points[7], stickyPoints, snapDistance);
@@ -59,6 +61,35 @@ export function snapTransitions(getState) {
     points[6] = bezierPoint4[0];
     points[7] = bezierPoint4[1];
     const newTransition = Object.assign({}, transition, { points });
+
+    return Object.assign({}, accum, { [transitionKey]: newTransition });
+  }, {});
+
+  return { type: REPLACE_TRANSITIONS, value: newTransitions };
+}
+
+export function snapStateNodePoints(getState) {
+  const state = getState();
+  const transitions = state.transitions;
+  const stickyPoints = state.viewport.stickyPoints;
+  const newTransitions = Object.keys(transitions).reduce((accum, transitionKey) => {
+    const transition = transitions[transitionKey];
+
+    if(!(transition.from || transition.to)) {
+      return accum;
+    }
+
+    let points = [...transition.points];
+    const snapPoint1Key = `${ITEM_TYPES.STATE}.${transition.from}.${transition.fromPoint}`;
+    const snapPoint2Key = `${ITEM_TYPES.STATE}.${transition.to}.${transition.toPoint}`;
+    const snapPoint1 = stickyPoints[snapPoint1Key];
+    const snapPoint2 = stickyPoints[snapPoint2Key];
+    points[0] = snapPoint1.x;
+    points[1] = snapPoint1.y;
+    points[6] = snapPoint2.x;
+    points[7] = snapPoint2.y;
+    const newTransition = Object.assign({}, transition, { points });
+
     return Object.assign({}, accum, { [transitionKey]: newTransition });
   }, {});
 

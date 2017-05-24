@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { DraggableCore } from 'react-draggable';
 import { getCirclePath, pathToPoints, pointsToPath } from '../../svg-utils';
 import tinycolor from 'tinycolor2';
+import isEqual from 'lodash/isEqual';
 import './StateNode.less';
 
 const paddingV = 20;
@@ -26,6 +27,7 @@ const propTypes = {
   x: PropTypes.number,
   y: PropTypes.number,
   selected: PropTypes.bool,
+  selectedPoints: PropTypes.arrayOf(PropTypes.number),
   finalState: PropTypes.bool,
   snap: PropTypes.bool,
   showPoints: PropTypes.bool,
@@ -54,6 +56,7 @@ const defaultProps = {
   x: 0,
   y: 0,
   selected: false,
+  selectedPoints: [],
   finalState: false,
   snap: true,
   showPoints: false,
@@ -107,6 +110,7 @@ class StateNode extends PureComponent {
       this.props.x !== nextProps.x ||
       this.props.y !== nextProps.y ||
       this.props.selected !== nextProps.selected ||
+      !isEqual(this.props.selectedPoints, nextProps.selectedPoints) ||
       this.props.finalState !== nextProps.finalState ||
       this.props.snap !== nextProps.snap ||
       this.props.showPoints !== nextProps.showPoints ||
@@ -177,6 +181,8 @@ class StateNode extends PureComponent {
     const xStep = width / (xPointsCount + 1);
     const edgePointsOffset = xStep / 4;
     const pointPositions = [
+      // To remove corners on 'lines <-> points' joints: 'x,y' - are real; 'xG,yG' - where point renders visually.
+
       // Top points
       {
         x: x + xStep - edgePointsOffset, y: y + pointOffset * pointOffsetMultiper,
@@ -199,18 +205,17 @@ class StateNode extends PureComponent {
 
       // Bottom point
       {
-        x: x + xStep - edgePointsOffset, y: y + height - pointOffset * pointOffsetMultiper,
-        xG: x + xStep - edgePointsOffset, yG: y + height + pointOffset
+        x: x + xStep * 3 + edgePointsOffset, y: y + height - pointOffset * pointOffsetMultiper,
+        xG: x + xStep * 3 + edgePointsOffset, yG: y + height + pointOffset
       },
       {
         x: x + xStep * 2, y: y + height - pointOffset * pointOffsetMultiper,
         xG: x + xStep * 2, yG: y + height + pointOffset
       },
       {
-        x: x + xStep * 3 + edgePointsOffset, y: y + height - pointOffset * pointOffsetMultiper,
-        xG: x + xStep * 3 + edgePointsOffset, yG: y + height + pointOffset
+        x: x + xStep - edgePointsOffset, y: y + height - pointOffset * pointOffsetMultiper,
+        xG: x + xStep - edgePointsOffset, yG: y + height + pointOffset
       },
-
       // Left points
       {
         x: x + pointOffset * pointOffsetMultiper, y: y + height / 2,
@@ -219,25 +224,30 @@ class StateNode extends PureComponent {
     ];
 
     const contrastBg = getContrastColor(this.props.bgColor);
-
-    return pointPositions.map((pointPosition, index) => (
-      <circle
-        key={index}
-        cx={pointPosition.xG}
-        cy={pointPosition.yG}
-        r={6}
-        strokeWidth="2"
-        stroke={contrastBg}
-        fill={this.state.selectedPoint === index ? contrastBg : '#fff'}
-        opacity={this.props.showPoints ? 1 : 0}
-        onMouseDown={(e) => this.handlePointMouseDown(e, index, pointPosition)}
-        onMouseUp={(e) => this.handlePointMouseUp(e, index, pointPosition)}
-        onMouseEnter={(e) => this.handlePointMouseEnter(e, index, pointPosition)}
-        onMouseLeave={(e) => this.handlePointMouseLeave(e, index, pointPosition)}
-        className={`fsm--state-node__point ${this.props.drag ? 'fsm--state-node__point--drag' : ''}`}
-        ref={(ref) => this.handlePointRef(ref, index, pointPosition)}
-      />
-    ));
+      return pointPositions.map((pointPosition, index) => {
+        const selected = this.state.selectedPoint === index ||
+              this.props.selectedPoints.some(selectedPoint => selectedPoint === index);
+        return (
+          <g>
+            <circle
+              key={index}
+              className={`fsm--state-node__point ${this.props.drag ? 'fsm--state-node__point--drag' : ''}`}
+              ref={(ref) => this.handlePointRef(ref, index, pointPosition)}
+              cx={pointPosition.xG}
+              cy={pointPosition.yG}
+              r={6}
+              strokeWidth="2"
+              stroke={contrastBg}
+              fill={selected ? contrastBg : '#fff'}
+              opacity={this.props.showPoints || selected ? 1 : 0}
+              onMouseDown={(e) => this.handlePointMouseDown(e, index, pointPosition)}
+              onMouseUp={(e) => this.handlePointMouseUp(e, index, pointPosition)}
+              onMouseEnter={(e) => this.handlePointMouseEnter(e, index, pointPosition)}
+              onMouseLeave={(e) => this.handlePointMouseLeave(e, index, pointPosition)}
+            />
+          </g>
+        );
+      });
   }
 
   render() {
@@ -251,6 +261,7 @@ class StateNode extends PureComponent {
       x,
       y,
       selected,
+      selectedPoints,
       finalState,
       snap,
       showPoints,

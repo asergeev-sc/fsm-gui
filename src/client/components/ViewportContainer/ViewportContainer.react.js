@@ -166,13 +166,28 @@ export default class ViewportContainer extends Component {
   }
 
   handleStateNodePointMouseDown(e, stateNodeKey, pointIndex, pointPosition) {
-    this.props.actions.startCreateNewTransition(this.props.cursorPosition);
+    console.log(pointIndex);
+    this.props.actions.startCreateNewTransition(
+      this.props.cursorPosition.x,
+      this.props.cursorPosition.y,
+      stateNodeKey,
+      pointIndex
+    );
+
     document.body.addEventListener('mouseup', this.handleStateNodePointMouseUp);
     document.body.addEventListener('mousemove', this.handleTransitionCreationMouseMove);
   }
 
   handleStateNodePointMouseUp(e, stateNodeKey, pointIndex, pointPosition) {
-    this.props.actions.finishCreateNewTransition();
+    const transitionCreationFinished = (
+      this.props.transitionCreationStarted &&
+        typeof stateNodeKey !== 'undefined' &&
+        typeof pointIndex !== 'undefined'
+    );
+    if (transitionCreationFinished) {
+      this.props.actions.finishCreateNewTransition(this.props.lastCreatedTransition, stateNodeKey, pointIndex);
+    }
+
     document.body.removeEventListener('mouseup', this.handleStateNodePointMouseUp);
     document.body.removeEventListener('mousemove', this.handleTransitionCreationMouseMove);
   }
@@ -182,7 +197,8 @@ export default class ViewportContainer extends Component {
       this.props.actions.unregisterStickyPoint(`${stateNodeKey}_${pointIndex}`);
       return;
     }
-    this.props.actions.registerStickyPoint(`${stateNodeKey}_${pointIndex}`, pointPosition);
+    const pointKey = `${ITEM_TYPES.STATE}.${stateNodeKey}.${pointIndex}`;
+    this.props.actions.registerStickyPoint(pointKey, pointPosition);
   }
 
   handleTransitionCreationMouseMove(e) {
@@ -302,6 +318,17 @@ export default class ViewportContainer extends Component {
       const stateNode = stateNodes[stateNodeKey];
       const selected = selectedItemType === ITEM_TYPES.STATE && selectedItemId === stateNodeKey;
       const showPoints = hoveredStateNode === stateNodeKey || selected || transitionCreationStarted;
+      let selectedPoints = [];
+
+      console.log(selectedItemType && transitions[selectedItemId]);
+      if(selectedItemType === ITEM_TYPES.TRANSITION && transitions[selectedItemId].from === stateNodeKey) {
+
+        selectedPoints = [transitions[selectedItemId].fromPoint];
+      }
+
+      if(selectedItemType === ITEM_TYPES.TRANSITION && transitions[selectedItemId].to === stateNodeKey) {
+        selectedPoints = [transitions[selectedItemId].toPoint];
+      }
 
       return (
         <StateNode
@@ -313,12 +340,16 @@ export default class ViewportContainer extends Component {
           textColor={stateNode.textColor}
           finalState={false}
           selected={selected}
+          selectedPoints={selectedPoints}
           showPoints={showPoints}
           onMouseEnter={(e) => this.handleStateNodeMouseEnter(e, stateNodeKey)}
           onMouseLeave={(e) => this.handleStateNodeMouseLeave(e, stateNodeKey)}
           onMouseDown={(e) => this.handleStateNodeMouseDown(e, stateNodeKey)}
           onPointMouseDown={
             (e, index, pointPosition) => this.handleStateNodePointMouseDown(e, stateNodeKey, index, pointPosition)
+          }
+          onPointMouseUp={
+            (e, index, pointPosition) => this.handleStateNodePointMouseUp(e, stateNodeKey, index, pointPosition)
           }
           onPointRef={
             (ref, index, pointPosition) => this.handleStateNodePointRef(ref, stateNodeKey, index, pointPosition)

@@ -3,8 +3,9 @@ const UPDATE_VIEWPORT_RECT = 'fsm/viewport/UPDATE_VIEWPORT_RECT';
 const UPDATE_VIEWPORT_SCALE = 'fsm/viewport/UPDATE_VIEWPORT_SCALE';
 const UPDATE_VIEWPORT_PAN_OFFSET = 'fsm/viewport/UPDATE_VIEWPORT_PAN_OFFSET';
 const UPDATE_VIEWPORT_SHOW_GRID = 'fsm/viewport/UPDATE_SHOW_GRID';
-const REGISTER_STICKY_POINT = 'fsm/viewport/REGISTER_STRICKY_POINT';
-const UNREGISTER_STICKY_POINT = 'fsm/viewport/UNREGISTER_STRICKY_POINT';
+const REGISTER_STICKY_POINT = 'fsm/viewport/REGISTER_STICKY_POINT';
+const UNREGISTER_STICKY_POINT = 'fsm/viewport/UNREGISTER_STICKY_POINT';
+const UPDATE_VIEWPORT_PROPERTY = 'fsm/viewport/UPDATE_VIEWPORT_PROPERTY';
 
 const initialState = {
   cursorPosition: { x: 0, y: 0 },
@@ -14,7 +15,9 @@ const initialState = {
   showGrid: true,
   snapDistance: 20,
   viewportSize: 10000,
-  stickyPoints: { }
+  stickyPoints: { },
+  lastMouseDownPoint: null,
+  lastMouseUpPoint: null
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -38,6 +41,8 @@ export default function reducer(state = initialState, action = {}) {
       delete newStickyPoints[action.key];
       return Object.assign({}, state, { 'stickyPoints': newStickyPoints });
     }
+    case UPDATE_VIEWPORT_PROPERTY:
+      return Object.assign({}, state, { [action.key]: action.value });
     default:
       return state;
   }
@@ -69,4 +74,8 @@ export function registerStickyPoint(key, value) {
 
 export function unregisterStickyPoint(key, value) {
   return { type: UNREGISTER_STICKY_POINT, key, value };
+}
+
+export function updateViewportProperty(key, value) {
+  return { type: UPDATE_VIEWPORT_PROPERTY, key, value };
 }

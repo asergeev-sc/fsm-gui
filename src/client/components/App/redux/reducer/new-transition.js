@@ -1,4 +1,5 @@
-import { createTransition, deleteTransition } from './transitions';
+import { createTransition, updateTransition, deleteTransition } from './transitions';
+import { updateSelectedItem, ITEM_TYPES } from './selected-item';
 
 const START_CREATE_NEW_TRANSITION = 'fsm/new-transition/START_CREATE_NEW_TRANSITION';
 const FINISH_CREATE_NEW_TRANSITION = 'fsm/new-transition/FINISH_CREATE_NEW_TRANSITION';
@@ -14,10 +15,12 @@ function capitalize(string) {
 
 const transitionKeyPrefix = 'transition_';
 const transitionTemplate = {
-  "name": "Transition 1",
-  "description": "Transition 1 description",
-  "from": "new",
-  "to": "onHold",
+  "name": null,
+  "description": null,
+  "from": null,
+  "to": null,
+  "fromPoint": null,
+  "toPoint": null,
   "options": {
     "properties": {
 
@@ -49,17 +52,17 @@ export default function reducer(state = initialState, action = {}) {
   }
 }
 
-export function startCreateNewTransition(fromPoint) {
+export function startCreateNewTransition(x, y, stateNodeKey, pointIndex) {
   const key = 'transition_' + Math.floor(Math.random() * 100);
   const name = capitalize(key).replace('_', ' ');
   const points = [
-    fromPoint.x, fromPoint.y,
-    fromPoint.x, fromPoint.y,
-    fromPoint.x, fromPoint.y,
-    fromPoint.x, fromPoint.y
+    x, y,
+    x, y,
+    x, y,
+    x, y
   ];
-  console.log('P:', points);
-  const value = Object.assign({}, transitionTemplate, { name, points });
+
+  const value = Object.assign({}, transitionTemplate, { name, points, from: stateNodeKey, fromPoint: pointIndex });
 
   return dispatch => {
     dispatch({ type: START_CREATE_NEW_TRANSITION, lastCreated: key });
@@ -67,6 +70,10 @@ export function startCreateNewTransition(fromPoint) {
   };
 }
 
-export function finishCreateNewTransition() {
-  return { type: FINISH_CREATE_NEW_TRANSITION };
+export function finishCreateNewTransition(transitionKey, stateNodeKey, pointIndex) {
+  return (dispatch) => {
+    dispatch(updateTransition(transitionKey, { to: stateNodeKey, toPoint: pointIndex }));
+    dispatch({ type: FINISH_CREATE_NEW_TRANSITION });
+    dispatch(updateSelectedItem(ITEM_TYPES.TRANSITION, transitionKey));
+  };
 }
