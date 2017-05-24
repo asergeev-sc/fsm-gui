@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import BezierCurve from '../BezierCurve';
 import './BezierTransition.less';
 import { DraggableCore } from 'react-draggable';
-import { getDistance, snapToPoints } from '../../svg-utils';
 
 const propTypes = {
   actions: PropTypes.arrayOf(PropTypes.string),
@@ -28,7 +27,7 @@ const propTypes = {
   pointsColor2: PropTypes.string,
   snapStep: PropTypes.number,
   stickyDistance: PropTypes.number,
-  stickyPoints: PropTypes.arrayOf(PropTypes.shape({ x: PropTypes.number, y: PropTypes.number }))
+  stickyPoints: PropTypes.objectOf(PropTypes.shape({ x: PropTypes.number, y: PropTypes.number }))
 };
 const defaultProps = {
   arrowPosition: 0,
@@ -52,7 +51,7 @@ const defaultProps = {
   pointsColor2: "#f00",
   snapStep: 30,
   stickyDistance: 20,
-  stickyPoints: [{ x: 20, y: 20 }, { x: 160, y: 160 }, { x: 220, y: 220 }]
+  stickyPoints: {}
 };
 
 // const smoothPointsTransition = (p1x, p1y, p2x, p2y, deltaX, deltaY) => {
@@ -116,14 +115,6 @@ class BezierTransition extends PureComponent {
       onChange,
       stickyPoints
     } = this.props;
-
-    // TODO Remove debug
-    let debugDots = (
-      <g>
-        {stickyPoints.map(
-          dot => <circle key={`${dot.x.toString() + dot.y.toString()}`} cx={dot.x} cy={dot.y} r="2" />)}
-      </g>
-    );
 
     let markerPath = arrowPosition === 1 ?
       `M${arrowSize},0 L${arrowSize},${arrowSize / 2} L${0},${arrowSize / 4}` :

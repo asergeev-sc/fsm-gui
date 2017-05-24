@@ -1,7 +1,9 @@
+import { snapPoint } from '../../../../svg-utils';
+
 const CREATE_TRANSITION = 'fsm/transitions/CREATE_TRANSITION';
 const UPDATE_TRANSITION = 'fsm/transitions/UPDATE_TRANSITION';
 const DELETE_TRANSITION = 'fsm/transitions/DELETE_TRANSITION';
-const REPLACE_TRANSITIONS = 'fsm/state-nodes/REPLACE_TRANSITIONS';
+const REPLACE_TRANSITIONS = 'fsm/transitions/REPLACE_TRANSITIONS';
 
 const initialState = {};
 
@@ -28,7 +30,10 @@ export function createTransition(key, value) {
 }
 
 export function updateTransition(key, value) {
-  return { type: UPDATE_TRANSITION, key, value };
+  return (dispatch, getState) => {
+    dispatch({ type: UPDATE_TRANSITION, key, value });
+    dispatch(snapTransitions(getState));
+  };
 }
 
 export function deleteTransition(key) {
@@ -37,4 +42,24 @@ export function deleteTransition(key) {
 
 export function replaceTransitions(value) {
   return { type: REPLACE_TRANSITIONS, value };
+}
+
+export function snapTransitions(getState) {
+  const state = getState();
+  const transitions = state.transitions;
+  const stickyPoints = state.viewport.stickyPoints;
+  const newTransitions = Object.keys(transitions).reduce((accum, transitionKey) => {
+    const transition = transitions[transitionKey];
+    let points = [...transition.points];
+    const bezierPoint1 = snapPoint(points[0], points[1], stickyPoints);
+    const bezierPoint4 = snapPoint(points[6], points[7], stickyPoints);
+    points[0] = bezierPoint1[0];
+    points[1] = bezierPoint1[1];
+    points[6] = bezierPoint4[0];
+    points[7] = bezierPoint4[1];
+    const newTransition = Object.assign({}, transition, { points });
+    return Object.assign({}, accum, { [transitionKey]: newTransition });
+  }, {});
+
+  return { type: REPLACE_TRANSITIONS, value: newTransitions };
 }

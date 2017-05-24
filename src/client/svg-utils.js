@@ -31,26 +31,21 @@ export function getDistance(x1, y1, x2, y2) {
   return Math.sqrt( a*a + b*b );
 }
 
-export function snapToPoints(bezier, points, xIndex, yIndex) {
-  // points - { x: nubmer, y: number }
-  const distances = points.map(
-    point => getDistance(bezier[xIndex], bezier[yIndex], point.x, point.y)
-  );
-  const minimalDistance = Math.min(...distances);
+export function snapPoint(x, y, stickyPoints, stickyDistance = 50) {
+  const bestCandidate = Object.keys(stickyPoints).reduce((accum, pointKey) => {
+    const point = stickyPoints[pointKey];
+    const distance = getDistance(x, y, point.x, point.y);
+    const isCandidate = distance < stickyDistance;
 
-  if(minimalDistance > this.props.stickyDistance) {
-    return bezier;
-  }
+    if (isCandidate && (accum.bestDistance === null || accum.bestDistance > distance)) {
+      return ({ bestDistance: distance, bestCandidate: [point.x, point.y] });
+    }
 
-  const snapPointIndex = distances.indexOf(minimalDistance);
-  const pointToSnap = snapPointIndex === -1 ? null : this.props.stickyPoints[snapPointIndex];
+    return accum;
 
-  if(pointToSnap !== null) {
-    bezier[xIndex] = pointToSnap.x;
-    bezier[yIndex] = pointToSnap.y;
-  }
+  }, { bestDistance: null, bestCandidate: [x, y] }).bestCandidate;
 
-  return bezier;
+  return bestCandidate;
 }
 
 export function getPointAtLine(x1, y1, x2, y2, ratio) {

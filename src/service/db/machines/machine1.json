@@ -68,6 +68,8 @@
         "description": "Transition 1 description",
         "from": "new",
         "to": "onHold",
+        "fromPoint": 0,
+        "toPoint": 7,
         "options": {
           "properties": {
 

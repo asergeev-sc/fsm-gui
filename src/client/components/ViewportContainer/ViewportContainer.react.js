@@ -60,6 +60,7 @@ const propTypes = {
   showGrid: PropTypes.bool,
   stateNodes: PropTypes.object,
   transitions: PropTypes.object,
+  stickyPoints: PropTypes.object,
   selectedItemType: PropTypes.string,
   selectedItemId: PropTypes.string,
   hoveredStateNode: PropTypes.string,
@@ -80,6 +81,7 @@ const defaultProps = {
     showGrid: state.viewport.showGrid,
     stateNodes: state.stateNodes,
     transitions: state.transitions,
+    stickyPoints: state.viewport.stickyPoints,
     selectedItemType: state.selectedItem.itemType,
     selectedItemId: state.selectedItem.itemId,
     transitionCreationStarted: state.newTransition.creationStarted,
@@ -318,6 +320,7 @@ export default class ViewportContainer extends Component {
       showGrid,
       stateNodes,
       transitions,
+      stickyPoints,
       hoveredStateNode,
       selectedItemType,
       selectedItemId,
@@ -379,6 +382,7 @@ export default class ViewportContainer extends Component {
           arrowSize={30}
           selected={selected}
           snap={false}
+          stickyPoints={stickyPoints}
         />
       );
     });

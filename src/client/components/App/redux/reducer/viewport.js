@@ -12,7 +12,7 @@ const initialState = {
   viewportScale: 1,
   viewportPanOffset: { x: 0, y: 0 },
   showGrid: true,
-  stickyPoints: {}
+  stickyPoints: { }
 };
 
 export default function reducer(state = initialState, action = {}) {
