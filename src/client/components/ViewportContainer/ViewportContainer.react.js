@@ -193,16 +193,24 @@ export default class ViewportContainer extends Component {
     this.props.actions.updateHoveredStateNode(null);
   }
 
-  handleStateNodePointMouseDown(e, pointIndex, key) {
+  handleStateNodePointMouseDown(e, stateNodeKey, pointIndex, pointPosition) {
     this.props.actions.startCreateNewTransition(this.props.cursorPosition);
     document.body.addEventListener('mouseup', this.handleStateNodePointMouseUp);
     document.body.addEventListener('mousemove', this.handleTransitionCreationMouseMove);
   }
 
-  handleStateNodePointMouseUp(e, pointIndex) {
+  handleStateNodePointMouseUp(e, stateNodeKey, pointIndex, pointPosition) {
     this.props.actions.finishCreateNewTransition();
     document.body.removeEventListener('mouseup', this.handleStateNodePointMouseUp);
     document.body.removeEventListener('mousemove', this.handleTransitionCreationMouseMove);
+  }
+
+  handleStateNodePointRef(ref, stateNodeKey, pointIndex, pointPosition) {
+    if(!ref) {
+      this.props.actions.unregisterStickyPoint(`${stateNodeKey}_${pointIndex}`);
+      return;
+    }
+    this.props.actions.registerStickyPoint(`${stateNodeKey}_${pointIndex}`, pointPosition);
   }
 
   handleTransitionCreationMouseMove(e) {
@@ -336,7 +344,12 @@ export default class ViewportContainer extends Component {
           onMouseEnter={(e) => this.handleStateNodeMouseEnter(e, stateNodeKey)}
           onMouseLeave={(e) => this.handleStateNodeMouseLeave(e, stateNodeKey)}
           onMouseDown={(e) => this.handleStateNodeMouseDown(e, stateNodeKey)}
-          onPointMouseDown={(e, pointIndex) => this.handleStateNodePointMouseDown(e, pointIndex, stateNodeKey)}
+          onPointMouseDown={
+            (e, index, pointPosition) => this.handleStateNodePointMouseDown(e, stateNodeKey, index, pointPosition)
+          }
+          onPointRef={
+            (ref, index, pointPosition) => this.handleStateNodePointRef(ref, stateNodeKey, index, pointPosition)
+          }
           onClick={(e) => this.handleStateNodeClick(e, stateNodeKey)}
           onDoubleClick={() => console.log('onDoubleClick')}
           onDragStart={(e, data) => console.log('DragStart', e, data)}

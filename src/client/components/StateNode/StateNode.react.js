@@ -92,6 +92,27 @@ class StateNode extends PureComponent {
     this.handlePointMouseUp = this.handlePointMouseUp.bind(this);
     this.handlePointMouseEnter = this.handlePointMouseEnter.bind(this);
     this.handlePointMouseLeave = this.handlePointMouseLeave.bind(this);
+    this.handlePointRef = this.handlePointRef.bind(this);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      this.props.label !== nextProps.label ||
+      this.props.lineWidth !== nextProps.lineWidth ||
+      this.props.color !== nextProps.color ||
+      this.props.bgColor !== nextProps.bgColor ||
+      this.props.textColor !== nextProps.textColor ||
+      this.props.snapStep !== nextProps.snapStep ||
+      this.props.x !== nextProps.x ||
+      this.props.y !== nextProps.y ||
+      this.props.selected !== nextProps.selected ||
+      this.props.finalState !== nextProps.finalState ||
+      this.props.snap !== nextProps.snap ||
+      this.props.showPoints !== nextProps.showPoints ||
+      this.props.debug !== nextProps.debug ||
+      this.state.labelElement !== nextState.labelElement ||
+      this.state.selectedPoint !== nextState.selectedPoint
+    );
   }
 
   handleStart(e, data) {
@@ -126,26 +147,30 @@ class StateNode extends PureComponent {
     this.props.onMouseLeave(e);
   }
 
-  handlePointMouseEnter(e, index) {
+  handlePointMouseEnter(e, index, pointPosition) {
     this.setState({ selectedPoint: index });
-    this.props.onPointMouseEnter(e, index);
+    this.props.onPointMouseEnter(e, index, pointPosition);
   }
 
-  handlePointMouseLeave(e, index) {
+  handlePointMouseLeave(e, index, pointPosition) {
     this.setState({ selectedPoint: null });
-    this.props.onPointMouseLeave(e, index);
+    this.props.onPointMouseLeave(e, index, pointPosition);
   }
 
-  handlePointMouseDown(e, index) {
+  handlePointMouseDown(e, index, pointPosition) {
     this.setState({ selectedPoint: index });
     this.props.onMouseDown(e);
-    this.props.onPointMouseDown(e, index);
+    this.props.onPointMouseDown(e, index, pointPosition);
   }
 
-  handlePointMouseUp(e, index) {
+  handlePointMouseUp(e, index, pointPosition) {
     this.setState({ selectedPoint: null });
     this.props.onMouseDown(e);
-    this.props.onPointMouseUp(e, index);
+    this.props.onPointMouseUp(e, index, pointPosition);
+  }
+
+  handlePointRef(ref, index, pointPosition) {
+    this.props.onPointRef(ref, index, pointPosition);
   }
 
   renderPoints(x, y, width, height, xPointsCount = 3) {
@@ -180,11 +205,13 @@ class StateNode extends PureComponent {
         strokeWidth="2"
         stroke={contrastBg}
         fill={this.state.selectedPoint === index ? contrastBg : '#fff'}
-        onMouseDown={(e) => this.handlePointMouseDown(e, index)}
-        onMouseUp={(e) => this.handlePointMouseUp(e, index)}
-        onMouseEnter={(e) => this.handlePointMouseEnter(e, index)}
-        onMouseLeave={(e) => this.handlePointMouseLeave(e, index)}
+        opacity={this.props.showPoints ? 1 : 0}
+        onMouseDown={(e) => this.handlePointMouseDown(e, index, pointPosition)}
+        onMouseUp={(e) => this.handlePointMouseUp(e, index, pointPosition)}
+        onMouseEnter={(e) => this.handlePointMouseEnter(e, index, pointPosition)}
+        onMouseLeave={(e) => this.handlePointMouseLeave(e, index, pointPosition)}
         className={`fsm--state-node__point ${this.props.drag ? 'fsm--state-node__point--drag' : ''}`}
+        ref={(ref) => this.handlePointRef(ref, index, pointPosition)}
       />
     ));
   }
@@ -213,6 +240,7 @@ class StateNode extends PureComponent {
       onDrag
     } = this.props;
 
+    console.log('renderNode');
     // const finalStateCircle = finalState ? (
     //   <path
     //     d={getCirclePath(x, y, radius - radius / 10)}
@@ -250,6 +278,7 @@ class StateNode extends PureComponent {
 
     const outline = (
       <rect
+        className="fsm--state-node__outline"
         x={labelX}
         y={labelY}
         rx="2"
@@ -262,7 +291,7 @@ class StateNode extends PureComponent {
       />
     );
 
-    const points = showPoints ? this.renderPoints(rectX, rectY, rectWidth, rectHeight) : null;
+    const points = this.renderPoints(rectX, rectY, rectWidth, rectHeight);
 
     return (
       <g
@@ -286,6 +315,7 @@ class StateNode extends PureComponent {
           >
             {outline}
             <rect
+              className="fsm--state-node__rect"
               x={rectX}
               y={rectY}
               rx="2"
