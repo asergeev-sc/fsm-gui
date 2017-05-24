@@ -12,40 +12,8 @@ import * as layoutActions from '../App/redux/reducer/layout';
 import { ITEM_TYPES } from '../App/redux/reducer/selected-item';
 import { straightensBezier } from '../../svg-utils';
 
-// TODO remove debug helpers
 import BezierTransition from '../BezierTransition';
 import StateNode from '../StateNode';
-// const debugViewportChildren = [
-//   (
-//     <g key="group">
-//       <BezierTransition
-//         input="Transition_0"
-//         highlighted={true}
-//         isSnap={false}
-//         bezier={[100,25 , 10,90 , 110,100 , 150,195]}
-//         isShowBezierHelpers={true}
-//         arrowPosition={2}
-//         onBezierChange={() => {}}
-//         key="Transition_0"
-//       />
-//       <StateNode
-//         name="State_0"
-//         code="0"
-//         x={300}
-//         y={300}
-//         finalState={true}
-//         highlighted={true}
-//         isSnap={false}
-//         onClick={() => console.log('onClick')}
-//         onDoubleClick={() => console.log('onDoubleClick')}
-//         onDragStart={(e, data) => console.log('DragStart', e, data)}
-//         onDragStop={(e, data) => console.log('DragStop', e, data)}
-//         onDrag={() => {}}
-//         key="State_0"
-//       />
-//     </g>
-//   )
-// ];
 
 const scaleFactor = 0.06;
 const minScale = 0.1;
@@ -63,6 +31,7 @@ const propTypes = {
   stickyPoints: PropTypes.object,
   selectedItemType: PropTypes.string,
   selectedItemId: PropTypes.string,
+  snapDistance: PropTypes.number,
   hoveredStateNode: PropTypes.string,
   transitionCreationStarted: PropTypes.bool,
   lastCreatedTransition: PropTypes.string,
@@ -82,6 +51,7 @@ const defaultProps = {
     stateNodes: state.stateNodes,
     transitions: state.transitions,
     stickyPoints: state.viewport.stickyPoints,
+    snapDistance: state.viewport.snapDistance,
     selectedItemType: state.selectedItem.itemType,
     selectedItemId: state.selectedItem.itemId,
     transitionCreationStarted: state.newTransition.creationStarted,
@@ -354,9 +324,9 @@ export default class ViewportContainer extends Component {
             (ref, index, pointPosition) => this.handleStateNodePointRef(ref, stateNodeKey, index, pointPosition)
           }
           onClick={(e) => this.handleStateNodeClick(e, stateNodeKey)}
-          onDoubleClick={() => console.log('onDoubleClick')}
-          onDragStart={(e, data) => console.log('DragStart', e, data)}
-          onDragStop={(e, data) => console.log('DragStop', e, data)}
+          onDoubleClick={() => {}}
+          onDragStart={(e, data) => {}}
+          onDragStop={(e, data) => {}}
           onDrag={(e, data) => this.handleStateNodeDrag(e, data, stateNodeKey)}
           snap={false}
         />

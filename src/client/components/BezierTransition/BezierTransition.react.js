@@ -54,17 +54,6 @@ const defaultProps = {
   stickyPoints: {}
 };
 
-// const smoothPointsTransition = (p1x, p1y, p2x, p2y, deltaX, deltaY) => {
-//   return [p1x + deltaX, p1y + deltaY, p2x + deltaX, p2y + deltaY];
-//   let halfDeltaX = deltaX / 2;
-//   let halfDeltaY = deltaY / 2;
-//   let p1xF = p1x;
-//   let p1yF = p1y;
-//   let p2xF = p2x;
-//   let p2yF = p2y;
-//   return ([ p1xF + halfDeltaX, p1yF + halfDeltaY, p2xF - halfDeltaX, p2yF - halfDeltaY ]);
-// };
-
 export default
 class BezierTransition extends PureComponent {
   constructor(props) {

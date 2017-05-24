@@ -48,11 +48,12 @@ export function snapTransitions(getState) {
   const state = getState();
   const transitions = state.transitions;
   const stickyPoints = state.viewport.stickyPoints;
+  const snapDistance = state.viewport.snapDistance;
   const newTransitions = Object.keys(transitions).reduce((accum, transitionKey) => {
     const transition = transitions[transitionKey];
     let points = [...transition.points];
-    const bezierPoint1 = snapPoint(points[0], points[1], stickyPoints);
-    const bezierPoint4 = snapPoint(points[6], points[7], stickyPoints);
+    const bezierPoint1 = snapPoint(points[0], points[1], stickyPoints, snapDistance);
+    const bezierPoint4 = snapPoint(points[6], points[7], stickyPoints, snapDistance);
     points[0] = bezierPoint1[0];
     points[1] = bezierPoint1[1];
     points[6] = bezierPoint4[0];

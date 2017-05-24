@@ -31,11 +31,11 @@ export function getDistance(x1, y1, x2, y2) {
   return Math.sqrt( a*a + b*b );
 }
 
-export function snapPoint(x, y, stickyPoints, stickyDistance = 50) {
+export function snapPoint(x, y, stickyPoints, snapDistance = 50) {
   const bestCandidate = Object.keys(stickyPoints).reduce((accum, pointKey) => {
     const point = stickyPoints[pointKey];
     const distance = getDistance(x, y, point.x, point.y);
-    const isCandidate = distance < stickyDistance;
+    const isCandidate = distance < snapDistance;
 
     if (isCandidate && (accum.bestDistance === null || accum.bestDistance > distance)) {
       return ({ bestDistance: distance, bestCandidate: [point.x, point.y] });

@@ -9,6 +9,7 @@ const propTypes = {
   cursorPosition: PropTypes.object,
   viewportRect: PropTypes.object,
   viewportScale: PropTypes.number,
+  viewportSize: PropTypes.number,
   viewportPanOffset: PropTypes.object,
   showGrid: PropTypes.bool
 };
@@ -18,6 +19,7 @@ const propTypes = {
     cursorPosition: state.viewport.cursorPosition,
     viewportRect: state.viewport.viewportRect,
     viewportScale: state.viewport.viewportScale,
+    viewportSize: state.viewport.viewportSize,
     viewportPanOffset: state.viewport.viewportPanOffset,
     showGrid: state.viewport.showGrid
   }),
@@ -44,14 +46,15 @@ export default class StatusLineContainer extends Component {
       viewportRect,
       viewportScale,
       viewportPanOffset,
+      viewportSize,
       showGrid
     } = this.props;
 
     const isOutOfViewport = (
       cursorPosition.x < 0 ||
       cursorPosition.y < 0 ||
-      cursorPosition.x > 10000 || // 10000 - viewport size. TODO - move it to configurable options
-      cursorPosition.y > 10000
+      cursorPosition.x > viewportSize ||
+      cursorPosition.y > viewportSize
     );
 
     return (

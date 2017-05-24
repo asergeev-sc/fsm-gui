@@ -8,6 +8,7 @@ import './StateNode.less';
 const paddingV = 20;
 const paddingH = 60;
 const pointOffset = 1;
+const pointOffsetMultiper = 2;
 const outlinePadding = 3;
 const getContrastColor = (color, amount = 10) => tinycolor(color).getBrightness() > 70 ?
   tinycolor(color).darken(amount) :
@@ -28,7 +29,6 @@ const propTypes = {
   finalState: PropTypes.bool,
   snap: PropTypes.bool,
   showPoints: PropTypes.bool,
-  debug: PropTypes.bool,
   onClick: PropTypes.func,
   onMousedDown: PropTypes.func,
   onMousedUp: PropTypes.func,
@@ -38,6 +38,7 @@ const propTypes = {
   onPointMouseUp: PropTypes.func,
   onPointMouseEnter: PropTypes.func,
   onPointMouseLeave: PropTypes.func,
+  onPointRef: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onDragStart: PropTypes.func,
   onDragStop: PropTypes.func,
@@ -56,7 +57,6 @@ const defaultProps = {
   finalState: false,
   snap: true,
   showPoints: false,
-  debug: true,
   onClick: () => {},
   onMouseDown: () => {},
   onMouseUp: () => {},
@@ -66,6 +66,7 @@ const defaultProps = {
   onPointMouseUp: () => {},
   onPointMouseEnter: () => {},
   onPointMouseLeave: () => {},
+  onPointRef: () => {},
   onDoubleClick: () => {},
   onDragStart: () => {},
   onDragStop: () => {},
@@ -109,7 +110,6 @@ class StateNode extends PureComponent {
       this.props.finalState !== nextProps.finalState ||
       this.props.snap !== nextProps.snap ||
       this.props.showPoints !== nextProps.showPoints ||
-      this.props.debug !== nextProps.debug ||
       this.state.labelElement !== nextState.labelElement ||
       this.state.selectedPoint !== nextState.selectedPoint
     );
@@ -178,20 +178,44 @@ class StateNode extends PureComponent {
     const edgePointsOffset = xStep / 4;
     const pointPositions = [
       // Top points
-      { x: x + xStep - edgePointsOffset, y: y - pointOffset },
-      { x: x + xStep * 2, y: y - pointOffset },
-      { x: x + xStep * 3 + edgePointsOffset, y: y - pointOffset },
+      {
+        x: x + xStep - edgePointsOffset, y: y + pointOffset * pointOffsetMultiper,
+        xG: x + xStep - edgePointsOffset, yG: y - pointOffset
+      },
+      {
+        x: x + xStep * 2, y: y + pointOffset * pointOffsetMultiper,
+        xG: x + xStep * 2, yG: y - pointOffset
+      },
+      {
+        x: x + xStep * 3 + edgePointsOffset, y: y + pointOffset * pointOffsetMultiper,
+        xG: x + xStep * 3 + edgePointsOffset, yG: y - pointOffset
+      },
 
       // Right points
-      { x: x + width + pointOffset, y: y + height / 2 },
+      {
+        x: x + width - pointOffset * pointOffsetMultiper, y: y + height / 2,
+        xG: x + width + pointOffset, yG: y + height / 2
+      },
 
       // Bottom point
-      { x: x + xStep - edgePointsOffset, y: y + height + pointOffset },
-      { x: x + xStep * 2, y: y + height + pointOffset },
-      { x: x + xStep * 3 + edgePointsOffset, y: y + height + pointOffset },
+      {
+        x: x + xStep - edgePointsOffset, y: y + height - pointOffset * pointOffsetMultiper,
+        xG: x + xStep - edgePointsOffset, yG: y + height + pointOffset
+      },
+      {
+        x: x + xStep * 2, y: y + height - pointOffset * pointOffsetMultiper,
+        xG: x + xStep * 2, yG: y + height + pointOffset
+      },
+      {
+        x: x + xStep * 3 + edgePointsOffset, y: y + height - pointOffset * pointOffsetMultiper,
+        xG: x + xStep * 3 + edgePointsOffset, yG: y + height + pointOffset
+      },
 
       // Left points
-      { x: x - pointOffset, y: y + height / 2 }
+      {
+        x: x + pointOffset * pointOffsetMultiper, y: y + height / 2,
+        xG: x - pointOffset, yG: y + height / 2
+      }
     ];
 
     const contrastBg = getContrastColor(this.props.bgColor);
@@ -199,8 +223,8 @@ class StateNode extends PureComponent {
     return pointPositions.map((pointPosition, index) => (
       <circle
         key={index}
-        cx={pointPosition.x}
-        cy={pointPosition.y}
+        cx={pointPosition.xG}
+        cy={pointPosition.yG}
         r={6}
         strokeWidth="2"
         stroke={contrastBg}
@@ -230,7 +254,6 @@ class StateNode extends PureComponent {
       finalState,
       snap,
       showPoints,
-      debug,
       onClick,
       onMouseDown,
       onMouseUp,
@@ -239,31 +262,6 @@ class StateNode extends PureComponent {
       onDragStop,
       onDrag
     } = this.props;
-
-    console.log('renderNode');
-    // const finalStateCircle = finalState ? (
-    //   <path
-    //     d={getCirclePath(x, y, radius - radius / 10)}
-    //     fill="none"
-    //     stroke={color}
-    //     strokeWidth={lineWidth}
-    //   />
-    // ) : null;
-
-    // const circlePoints = this.circlePathElement ? pathToPoints(this.circlePathElement, 32) : null;
-    // const segmentedCircle = circlePoints ? pointsToPath(circlePoints, true) : null;
-
-    // const debugPath = debug ? (
-    //   <path
-    //     d={segmentedCircle}
-    //     fill="none"
-    //     stroke={'#0ff'}
-    //     strokeWidth={lineWidth}
-    //   />
-    // ) : null;
-    // if(debug) {
-    //   console.log(`StateNode ${label}`, this);
-    // }
 
     const labelElementBBox = this.state.labelElement && this.state.labelElement.getBBox();
     const labelWidth = labelElementBBox && labelElementBBox.width;
