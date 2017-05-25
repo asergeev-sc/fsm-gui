@@ -321,12 +321,20 @@ export default class ViewportContainer extends Component {
       let selectedPoints = [];
 
       console.log(selectedItemType && transitions[selectedItemId]);
-      if(selectedItemType === ITEM_TYPES.TRANSITION && transitions[selectedItemId].from === stateNodeKey) {
+      if(
+        selectedItemType === ITEM_TYPES.TRANSITION &&
+        transitions[selectedItemId] &&
+        transitions[selectedItemId].from === stateNodeKey
+      ) {
 
         selectedPoints = [transitions[selectedItemId].fromPoint];
       }
 
-      if(selectedItemType === ITEM_TYPES.TRANSITION && transitions[selectedItemId].to === stateNodeKey) {
+      if(
+        selectedItemType === ITEM_TYPES.TRANSITION &&
+        transitions[selectedItemId] &&
+        transitions[selectedItemId].to === stateNodeKey
+      ) {
         selectedPoints = [transitions[selectedItemId].toPoint];
       }
 
