@@ -167,7 +167,7 @@ class Viewport extends Component {
       >
         <DraggableCore
           onDrag={this.handleDrag}
-          grid={snap && [gridSize, gridSize]}
+          grid={snap ? [gridSize, gridSize] : null}
         >
           <svg
             version="1.1"

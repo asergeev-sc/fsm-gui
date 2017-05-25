@@ -12,11 +12,10 @@ import forwardSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/arrow_forward.s
 import cutSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/content_cut.svg';
 import copySVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/content_copy.svg';
 import pasteSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/content_paste.svg';
-import panSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/open_with.svg';
-import selectSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/touch_app.svg';
+import selectSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/select_all.svg';
 import simulateSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/all_inclusive.svg';
 import helpSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/live_help.svg';
-import inspectorSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/chrome_reader_mode.svg';
+import inspectorSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/tune.svg';
 
 @connect(
   state => ({
@@ -98,15 +97,7 @@ export default class ToolbarContainer extends Component {
           {
             action: () => {},
             iconSVG: selectSVG,
-            title: 'Select objects',
-            label: '',
-            active: true,
-            disabled: false
-          },
-          {
-            action: () => {},
-            iconSVG: panSVG,
-            title: 'Pan',
+            title: 'Multiple select',
             label: '',
             active: false,
             disabled: false
@@ -140,7 +131,7 @@ export default class ToolbarContainer extends Component {
           {
             action: this.handleShowInspector,
             iconSVG: inspectorSVG,
-            title: 'Inspector',
+            title: 'Show inspector',
             label: '',
             active: showInspector,
             disabled: false

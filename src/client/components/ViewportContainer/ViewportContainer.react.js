@@ -75,7 +75,18 @@ export default class ViewportContainer extends Component {
       panning: false
     };
 
-    this.handleDelete = this.handleDelete.bind(this);
+    // To view crossair on transition creation
+    const cursorCss = '* { cursor: crosshair !important; }';
+    this.cursorStyleElement = document.createElement('style');
+    this.cursorStyleElement.type = 'text/css';
+    if (this.cursorStyleElement.styleSheet) {
+      this.cursorStyleElement.styleSheet.cssText = cursorCss;
+    } else {
+      this.cursorStyleElement.appendChild(document.createTextNode(cursorCss));
+    }
+
+
+    this.handleDeleteKey = this.handleDeleteKey.bind(this);
     this.handleWheel = this.handleWheel.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
@@ -166,13 +177,14 @@ export default class ViewportContainer extends Component {
   }
 
   handleStateNodePointMouseDown(e, stateNodeKey, pointIndex, pointPosition) {
-    console.log(pointIndex);
     this.props.actions.startCreateNewTransition(
       this.props.cursorPosition.x,
       this.props.cursorPosition.y,
       stateNodeKey,
       pointIndex
     );
+
+    document.head.appendChild(this.cursorStyleElement);
 
     document.body.addEventListener('mouseup', this.handleStateNodePointMouseUp);
     document.body.addEventListener('mousemove', this.handleTransitionCreationMouseMove);
@@ -187,6 +199,8 @@ export default class ViewportContainer extends Component {
     if (transitionCreationFinished) {
       this.props.actions.finishCreateNewTransition(this.props.lastCreatedTransition, stateNodeKey, pointIndex);
     }
+
+    // document.head.removeChild(this.cursorStyleElement);
 
     document.body.removeEventListener('mouseup', this.handleStateNodePointMouseUp);
     document.body.removeEventListener('mousemove', this.handleTransitionCreationMouseMove);
@@ -274,7 +288,13 @@ export default class ViewportContainer extends Component {
     this.props.actions.updateLayoutProperty('viewportFocused', false);
   }
 
-  handleDelete(e) {
+  handleTabKey(e) {
+    if(this.props.viewportFocused) {
+      e.preventDefault();
+    }
+  }
+
+  handleDeleteKey(e) {
     if(this.props.selectedItemType === ITEM_TYPES.VIEWPORT) {
       return false;
     }
@@ -292,9 +312,9 @@ export default class ViewportContainer extends Component {
 
   handleKeyDown(e) {
     switch(e.which) {
-      case 8: this.handleDelete(e); // Backspace key
-      case 9: e.preventDefault(); // TAB key
-      case 46: this.handleDelete(e); // Del key
+      case 8: this.handleDeleteKey(e); // Backspace key
+      case 9: this.handleTabKey(e); // TAB key
+      case 46: this.handleDeleteKey(e); // Del key
       default: return false;
     }
   }
@@ -307,6 +327,7 @@ export default class ViewportContainer extends Component {
       stateNodes,
       transitions,
       stickyPoints,
+      snapDistance,
       hoveredStateNode,
       selectedItemType,
       selectedItemId,
@@ -320,7 +341,6 @@ export default class ViewportContainer extends Component {
       const showPoints = hoveredStateNode === stateNodeKey || selected || transitionCreationStarted;
       let selectedPoints = [];
 
-      console.log(selectedItemType && transitions[selectedItemId]);
       if(
         selectedItemType === ITEM_TYPES.TRANSITION &&
         transitions[selectedItemId] &&
@@ -368,6 +388,7 @@ export default class ViewportContainer extends Component {
           onDragStop={(e, data) => {}}
           onDrag={(e, data) => this.handleStateNodeDrag(e, data, stateNodeKey)}
           snap={false}
+          snapDistance={snapDistance}
         />
       );
     });
@@ -401,6 +422,7 @@ export default class ViewportContainer extends Component {
         scale={viewportScale}
         gridSize={gridSize}
         showGrid={showGrid}
+        snap={false}
         onWheel={this.handleWheel}
         onMouseMove={this.handleMouseMove}
         onMouseLeave={this.handleMouseLeave}

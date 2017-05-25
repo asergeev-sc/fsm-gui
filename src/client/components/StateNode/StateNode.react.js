@@ -31,6 +31,7 @@ const propTypes = {
   finalState: PropTypes.bool,
   snap: PropTypes.bool,
   showPoints: PropTypes.bool,
+  snapDistance: PropTypes.number,
   onClick: PropTypes.func,
   onMousedDown: PropTypes.func,
   onMousedUp: PropTypes.func,
@@ -60,6 +61,7 @@ const defaultProps = {
   finalState: false,
   snap: true,
   showPoints: false,
+  snapDistance: 12,
   onClick: () => {},
   onMouseDown: () => {},
   onMouseUp: () => {},
@@ -225,12 +227,28 @@ class StateNode extends PureComponent {
 
     const contrastBg = getContrastColor(this.props.bgColor);
       return pointPositions.map((pointPosition, index) => {
-        const selected = this.state.selectedPoint === index ||
-              this.props.selectedPoints.some(selectedPoint => selectedPoint === index);
+        const selected = (
+          this.state.selectedPoint === index ||
+          this.props.selectedPoints.some(selectedPoint => selectedPoint === index)
+        );
+
         return (
-          <g>
+          <g
+            key={index}
+            onMouseDown={(e) => this.handlePointMouseDown(e, index, pointPosition)}
+            onMouseUp={(e) => this.handlePointMouseUp(e, index, pointPosition)}
+            onMouseEnter={(e) => this.handlePointMouseEnter(e, index, pointPosition)}
+            onMouseLeave={(e) => this.handlePointMouseLeave(e, index, pointPosition)}
+          >
             <circle
-              key={index}
+              className={`fsm--state-node__point-active-area`}
+              cx={pointPosition.xG}
+              cy={pointPosition.yG}
+              r={this.props.snapDistance}
+              fill={contrastBg}
+              opacity={this.props.showPoints || selected ? 0.3 : 0}
+            />
+            <circle
               className={`fsm--state-node__point ${this.props.drag ? 'fsm--state-node__point--drag' : ''}`}
               ref={(ref) => this.handlePointRef(ref, index, pointPosition)}
               cx={pointPosition.xG}
@@ -240,11 +258,7 @@ class StateNode extends PureComponent {
               stroke={contrastBg}
               fill={selected ? contrastBg : '#fff'}
               opacity={this.props.showPoints || selected ? 1 : 0}
-              onMouseDown={(e) => this.handlePointMouseDown(e, index, pointPosition)}
-              onMouseUp={(e) => this.handlePointMouseUp(e, index, pointPosition)}
-              onMouseEnter={(e) => this.handlePointMouseEnter(e, index, pointPosition)}
-              onMouseLeave={(e) => this.handlePointMouseLeave(e, index, pointPosition)}
-            />
+              />
           </g>
         );
       });
